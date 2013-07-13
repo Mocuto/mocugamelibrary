@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Instance Name="Canvas 1">
+	<Object TypeID="0" x="1010.00000000002" y="1617.41333333338" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="100" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="500" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="2823.33333333334" y="-13.2533333333342" name="Fleet2" hp="1" shooting="0">
+		<Timeline>
+			<Slot Time="200" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="0" EndValue="-8" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="0" EndValue="2" Duration="1" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="20" />
+			</Slot>
+			<Slot Time="260" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1024" y="2244.08" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="100" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="500" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1034" y="1954.08" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="100" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="500" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="2928.6666666666" y="416.080000000013" name="Fleet3" hp="1" shooting="0">
+		<Timeline>
+			<Slot Time="1" Tag="">
+				<Event VariableName="hitbox.density" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="300" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="0" EndValue="-8" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="0" EndValue="2" Duration="1" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="20" />
+				<Event VariableName="hitbox.density" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="360" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1376" y="826" name="Fleet4" hp="1" shooting="false">
+		<Timeline>
+			<Slot Time="1" Tag="Creation">
+				<Event VariableName="mainSprite.alpha" StartValue="1" EndValue="0" Duration="1" />
+				<Event VariableName="hitbox.density" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="500" Tag="Appear">
+				<Event VariableName="mainSprite.alpha" StartValue="0" EndValue="1" Duration="30" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="1" />
+				<Event VariableName="hitbox.density" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="680" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="720" Tag="Leave">
+				<Event VariableName="velocity.y" StartValue="1" EndValue="-10" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3140" y="670.133333333334" name="Object" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="1" Tag="">
+				<Event VariableName="density" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="800" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="1" EndValue="-6" Duration="240" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="1" />
+				<Event VariableName="hitbox.density" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="952" Tag="Move 2">
+				<Event VariableName="velocity.x" StartValue="&quot;current&quot;" EndValue="0" Duration="60" />
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="0" Duration="180" />
+			</Slot>
+			<Slot Time="1132" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="1192" Tag="Leave">
+				<Event VariableName="velocity.y" StartValue="-1" EndValue="-50" Duration="180" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1803.33333333331" y="-469.866666666662" name="Object" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="1000" Tag="Move 1">
+				<Event VariableName="y" StartValue="-300" EndValue="760" Duration="180" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="1240" Tag="Move 2">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+				<Event VariableName="velocity.x" StartValue="1" EndValue="10" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="2586.66666666673" y="-359.866666666669" name="Object" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="120" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+				<Event VariableName="velocity.x" StartValue="&quot;current&quot;" EndValue="-20" Duration="120" />
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-20" Duration="120" />
+			</Slot>
+			<Slot Time="1100" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-2" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="1" EndValue="10" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="2900" y="-200" name="Fleet6" hp="1" shooting="false">
+		<Timeline>
+			<Slot Time="1800" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="-3" EndValue="6" Duration="120" />
+			</Slot>
+			<Slot Time="1920" Tag="Move 2">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-1" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="5" Duration="120" />
+			</Slot>
+			<Slot Time="2040" Tag="Move 3">
+				<Event VariableName="velocity.x" StartValue="0" EndValue="-10" Duration="120" />
+				<Event VariableName="velocity.y" StartValue="1" EndValue="0" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1556.66666666668" y="1634.07999999998" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="1400" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="1900" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1553.33333333337" y="1974.07999999997" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="1400" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="1900" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1566.66666666672" y="2270.74666666661" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="1400" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="1900" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="2750.00000000003" y="1013.46666666667" name="Fleet7" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="1800" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="1" EndValue="-6" Duration="240" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="1952" Tag="Move 2">
+				<Event VariableName="velocity.x" StartValue="&quot;current&quot;" EndValue="0" Duration="60" />
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="0" Duration="180" />
+			</Slot>
+			<Slot Time="2132" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+			<Slot Time="2192" Tag="Leave">
+				<Event VariableName="velocity.y" StartValue="-1" EndValue="-50" Duration="180" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3066.66666666656" y="253.413333333327" name="Fleet8" hp="1" shooting="0">
+		<Timeline>
+			<Slot Time="1600" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="0" EndValue="-8" Duration="1" />
+				<Event VariableName="velocity.y" StartValue="0" EndValue="2" Duration="1" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="20" />
+			</Slot>
+			<Slot Time="1860" Tag="Stop Shooting">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3650" y="286.800000000003" name="Fleet10" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2100" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-30" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3640" y="760" name="Fleet10" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2160" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-30" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3640" y="1200" name="Fleet10" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2220" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-30" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3569.99999999996" y="46.6666666666772" name="Fleet11" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2920" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="x" StartValue="1" EndValue="2732" Duration="1" />
+				<Event VariableName="y" StartValue="500" EndValue="500" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3419.99999999989" y="46.8000000000012" name="Fleet11" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2800" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="x" StartValue="1" EndValue="2732" Duration="1" />
+				<Event VariableName="y" StartValue="1" EndValue="500" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="3710" y="50.0000000000105" name="Fleet11" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="3040" Tag="Move 1">
+				<Event VariableName="velocity.x" StartValue="1" EndValue="-10" Duration="1" />
+				<Event VariableName="x" StartValue="1" EndValue="2732" Duration="1" />
+				<Event VariableName="y" StartValue="500" EndValue="500" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1890.00000000005" y="1640.74666666666" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1890.00000000005" y="1900" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1890.00000000005" y="2200" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1300" y="1634.08" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1300" y="1900" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1300" y="2200" name="Object" hp="3" shooting="0">
+		<Timeline>
+			<Slot Time="3200" Tag="First Move">
+				<Event VariableName="velocity.y" StartValue="&quot;current&quot;" EndValue="-15" Duration="1" />
+			</Slot>
+			<Slot Time="3700" Tag="Stop Shoot">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+	<Object TypeID="0" x="1600" y="-469.866666666662" name="Object" hp="3" shooting="false">
+		<Timeline>
+			<Slot Time="2500" Tag="Move 1">
+				<Event VariableName="y" StartValue="-300" EndValue="760" Duration="180" />
+				<Event VariableName="shooting" StartValue="false" EndValue="true" Duration="1" />
+			</Slot>
+			<Slot Time="2750" Tag="Move 2">
+				<Event VariableName="shooting" StartValue="true" EndValue="false" Duration="1" />
+				<Event VariableName="velocity.x" StartValue="1" EndValue="10" Duration="1" />
+			</Slot>
+		</Timeline>
+	</Object>
+</Instance>
