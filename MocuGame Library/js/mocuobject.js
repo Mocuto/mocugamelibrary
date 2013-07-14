@@ -12,7 +12,7 @@
         this.acceleration = new MocuGame.Point(0, 0);
         this.exists = true;
         this.active = true;
-        if (typeof this.visible == 'undefined' || typeof this.visible == null)
+        if (typeof this.visible == 'undefined' || typeof this.visible == 'null')
             this.visible = false;
         else
             this.visible = true;
@@ -21,7 +21,6 @@
         this.timeline = new MocuGame.TimeLine();
         this.scale = new MocuGame.Point(1, 1);
         this.dying = false;
-        this.quad = null;
         this.name = "";
         this.life = 0;
         this.fillStyle = 'blue';
@@ -47,11 +46,6 @@
             this.worldPoint.x = this.x;
             this.worldPoint.y = this.y;
         }
-       
-        /*if (this.quad != null)
-            this.quad.reassign(this);
-        else if (this.parent != null)
-            this.quad = MocuGame.MasterQuad;*/
         this.timeline.update(deltaT);
         if (this.life > 0) {
             this.life -= 1;
@@ -121,14 +115,6 @@
         return returnGroup;
     }
     MocuGame.MocuObject.prototype.isColliding = function (MObj) {
-        /*if (MObj.quad == null || this.quad == null) {
-            //console.log("Exit cause of null");
-            return false;
-        }
-        if (MObj.quad != this.quad && MObj.quad != this.quad.parent && this.quad != MObj.quad.parent) {
-            //console.log("Exist because nonquad match");
-            return false;
-        }*/
         var pos1 = this.getWorldPoint();
         var pos2 = MObj.getWorldPoint();
         //console.log("My position is " + pos1.x + ", " + pos1.y );

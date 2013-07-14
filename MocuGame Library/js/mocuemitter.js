@@ -10,7 +10,6 @@
         this.maxSpawn = 10;
         this.currentSpawn = this.maxSpawn;
         this.particle = particle;
-        this.addToQuad = false;
         this.particleLife = 70;
         this.addGroup = this;
         this.dispAdd = true;

@@ -5,7 +5,6 @@
         this.scrollPos = 0;
         this.doesRestart = true;
  
-        //this.wrapsAround = true;
         this.restartDelay = 1;
         this.renderWidth = 0;
         this.restarting = false;

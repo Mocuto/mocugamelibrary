@@ -4,7 +4,6 @@
         MocuGame.MocuObject.call(this, point, size);
         this.objects = new Array();
         this.setParent = true;
-        this.addToQuad = true;
     }
     MocuGame.MocuGroup.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuGroup.constructor = MocuGame.MocuGroup;
@@ -41,8 +40,6 @@
             this.objects.push(object);
         if(this.setParent)
             object.parent = this;
-        if(this.addToQuad && typeof MocuGame.MasterQuad != 'undefined')
-            MocuGame.MasterQuad.add(object);
     }
     MocuGame.MocuGroup.prototype.remove = function (object) {
         for (var i = 0; i < this.objects.length; i += 1) {

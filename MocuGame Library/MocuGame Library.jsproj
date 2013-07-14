@@ -63,7 +63,6 @@
     <Content Include="js\buzz.js" />
     <Content Include="js\Canvas 1.dci" />
     <Content Include="js\Canvas1.js" />
-    <Content Include="js\default-Mocuto-PC.js" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
     <Content Include="js\event.js" />
@@ -80,14 +79,12 @@
     <Content Include="js\mocuanimation.js" />
     <Content Include="js\mocubackground.js" />
     <Content Include="js\mocuemitter.js" />
-    <Content Include="js\mocugame-Mocuto-PC.js" />
     <Content Include="js\mocugame.js" />
     <Content Include="js\mocugroup.js" />
     <Content Include="js\mocumenu.js" />
     <Content Include="js\mocumenuitem.js" />
     <Content Include="js\mocumusic.js" />
     <Content Include="js\mocuobject.js" />
-    <Content Include="js\mocuquad.js" />
     <Content Include="js\mocusound.js" />
     <Content Include="js\mocusprite.js" />
     <Content Include="js\mocustate.js" />
