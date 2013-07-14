@@ -2,6 +2,8 @@
     MocuGame.MocuObject = function (point, size) {
         point = (typeof point == 'undefined' || typeof point == null) ? new MocuGame.Point(0, 0) : point;
         size = (typeof size == 'undefined' || typeof size == null) ? new MocuGame.Point(0, 0) : size;
+        this.name = "";
+
         this.x = point.x;
         this.y = point.y;
         this.width = size.x;
@@ -21,7 +23,6 @@
         this.timeline = new MocuGame.TimeLine();
         this.scale = new MocuGame.Point(1, 1);
         this.dying = false;
-        this.name = "";
         this.life = 0;
         this.fillStyle = 'blue';
         this.alpha = 1;
@@ -59,7 +60,7 @@
         if (typeof displacement  == 'null' || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
         context.beginPath();
-        context.rect((this.x + displacement.x) * MocuGame.uniscalex, (this.y + displacement.y) * MocuGame.uniscaley, this.width * MocuGame.uniscalex, this.height * MocuGame.uniscaley);
+        context.rect((this.x + displacement.x) * MocuGame.uniscale, (this.y + displacement.y) * MocuGame.uniscale, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale);
         if (this.usesFade) {
             context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
             context.globalAlpha = this.fade.a;

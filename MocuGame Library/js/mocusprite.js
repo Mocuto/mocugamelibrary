@@ -80,10 +80,10 @@
         context.globalAlpha = this.alpha;
         context.globalCompositeOperation = this.drawmode;
         context.drawImage(blankCanvas, 0, 0, (this.width > blankCanvas.width) ? blankCanvas.width : this.width, (this.height > blankCanvas.height) ? blankCanvas.height : this.height,
-                 (-(this.width / 2) * this.scale.x) * MocuGame.uniscalex,
-                (-(this.height / 2) * this.scale.y) * MocuGame.uniscaley,
-                ((this.width) * this.scale.x) * MocuGame.uniscalex,
-                ((this.height) * this.scale.y) * MocuGame.uniscaley);
+                 (-(this.width / 2) * this.scale.x) * MocuGame.uniscale,
+                (-(this.height / 2) * this.scale.y) * MocuGame.uniscale,
+                ((this.width) * this.scale.x) * MocuGame.uniscale,
+                ((this.height) * this.scale.y) * MocuGame.uniscale);
         blankContext.clearRect(0, 0, blankCanvas.width, blankCanvas.height);
         
     }
@@ -95,7 +95,7 @@
             this.x + displacement.x + this.width < 0 || this.y + displacement.y + this.height < 0) //Object is off screen
             return;
         
-        context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscalex, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscaley);
+        context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
         context.scale(this.flip.x, this.flip.y);
         context.rotate((this.angle * 3.14159265359) / 180);
         
@@ -105,15 +105,15 @@
             this.colorEffect(context, displacement);
         else {
             context.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
-                (-(this.width / 2) * this.scale.x) * MocuGame.uniscalex,
-                (-(this.height / 2) * this.scale.y) * MocuGame.uniscaley,
-                ((this.width) * this.scale.x) * MocuGame.uniscalex,
-                ((this.height) * this.scale.y) * MocuGame.uniscaley);
+                (-(this.width / 2) * this.scale.x) * MocuGame.uniscale,
+                (-(this.height / 2) * this.scale.y) * MocuGame.uniscale,
+                ((this.width) * this.scale.x) * MocuGame.uniscale,
+                ((this.height) * this.scale.y) * MocuGame.uniscale);
         }
         context.rotate(-(this.angle * 3.14159265359) / 180);
         context.scale(this.flip.x, this.flip.y);
         //console.log(this.img.src + "/" + this.frame.x + "/" + this.frame.y);
-        context.translate((-((this.x + this.width / 2) + displacement.x))*MocuGame.uniscalex, (-((this.y + this.height / 2) + displacement.y))*MocuGame.uniscaley);
+        context.translate((-((this.x + this.width / 2) + displacement.x))*MocuGame.uniscale, (-((this.y + this.height / 2) + displacement.y))*MocuGame.uniscale);
         context.globalCompositeOperation = "source-over";
     }
 })();

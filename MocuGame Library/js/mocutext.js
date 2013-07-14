@@ -19,11 +19,11 @@
             displacement = new MocuGame.Point(0, 0);
 
         
-        context.translate(((this.x + displacement.x)) * MocuGame.uniscalex, ((this.y + this.height/2) + displacement.y) * MocuGame.uniscaley);
+        context.translate(((this.x + displacement.x)) * MocuGame.uniscale, ((this.y + this.height/2) + displacement.y) * MocuGame.uniscale);
         if (this.align == "center" || this.align == "start")
-            context.translate((this.width / 2) * MocuGame.uniscalex, 0);
+            context.translate((this.width / 2) * MocuGame.uniscale, 0);
 
-        context.scale(this.flip.x * this.scale.x * (MocuGame.uniscalex * 2), this.flip.y * this.scale.y * (MocuGame.uniscaley * 2));
+        context.scale(this.flip.x * this.scale.x * (MocuGame.uniscale * 2), this.flip.y * this.scale.y * (MocuGame.uniscale * 2));
         context.rotate((this.angle * 3.14159265359) / 180);
 
         context.globalCompositeOperation = this.drawmode;
@@ -60,11 +60,11 @@
  
 
         context.rotate(-(this.angle * 3.14159265359) / 180);
-        context.scale(this.flip.x / this.scale.x / (MocuGame.uniscalex * 2), this.flip.y / this.scale.y / (MocuGame.uniscaley * 2));
+        context.scale(this.flip.x / this.scale.x / (MocuGame.uniscale * 2), this.flip.y / this.scale.y / (MocuGame.uniscale * 2));
         //console.log(this.img.src + "/" + this.frame.x + "/" + this.frame.y);
-        context.translate((-((this.x) + displacement.x)) * MocuGame.uniscalex, (-((this.y + this.height/2) + displacement.y)) * MocuGame.uniscaley);
+        context.translate((-((this.x) + displacement.x)) * MocuGame.uniscale, (-((this.y + this.height/2) + displacement.y)) * MocuGame.uniscale);
         if (this.align == "center" || this.align == "start")
-            context.translate(-(this.width / 2) * MocuGame.uniscalex, 0);
+            context.translate(-(this.width / 2) * MocuGame.uniscale, 0);
         context.globalCompositeOperation = "source-over";
     }
     MocuGame.MocuText.prototype.animate = function () {

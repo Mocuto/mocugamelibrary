@@ -1,81 +1,130 @@
-﻿(function () {
-    MocuGame.Event = function (object, varname, startval, endval, time, interp) {5
-        varname = (typeof varname == 'undefined' || typeof varname == null) ? "empty" : varname;
-        startval = (typeof startval == 'undefined' || typeof startval == null) ? 1 : startval;
-        endval = (typeof endval == 'undefined' || typeof endval == null) ? 1 : endval;
+﻿/*
+    event.js
+    Component of the Timeline System. Transitions a set variable from a start value to an end value
+    over a given duration.
+
+    TODO: Put license here
+
+    Written by Olutobi Akomolede AKA Mocuto Oshi.
+*/
+
+(function () {
+    /*
+        Event constructor. Initializes the Event object with its reference object, the variable name,
+        starting value, ending value, duration, and interpolation method.
+
+        Paramaters:
+        object (MocuObject)
+        - Object containing the variable that is transitioned.
+        variableName (String)
+        - Name of the variable that is to be transitioned.
+        startValue 
+        - The value that the variable will start at.
+        endValue
+        - The value that the variable will end at.
+        time (Number)
+        - The duration in frames the transition will take.
+        interp (String)
+        - The method used to interpolate between values.
+    */
+
+    MocuGame.Event = function (object, variableName, startValue, endValue, time, interp) {5
+        variableName = (typeof variableName == 'undefined' || typeof variableName == null) ? "empty" : variableName;
+        startValue = (typeof startValue == 'undefined' || typeof startValue == null) ? 1 : startValue;
+        endValue = (typeof endValue == 'undefined' || typeof endValue == null) ? 1 : endValue;
         time = (typeof time == 'undefined' || typeof time == null) ? 1 : time;
         interp = (typeof interp == 'undefined' || typeof interp == null) ? "linear" : interp;
-        this.original_varname = varname;
+
         this.object = object;
-        var splitarray = varname.split(".");
+
+        this.original_variableName = variableName;
+        var splitarray = variableName.split(".");
         if (splitarray.length > 1) {
             this.object = object[splitarray[0]];
-            this.varname = splitarray[1];
+            this.variableName = splitarray[1];
         }
         else
-            this.varname = varname;
-        this.elapsed = false;
-        this.actual_startval = startval;
-        this.startval = (startval == "current") ? this.object[this.varname] : startval;
-        this.endval = endval;
-        
-        if (typeof this.endval != "number") {
+            this.variableName = variableName;
+
+        this.actualStartValue = startValue;
+        this.startValue = (startValue == "current") ? this.object[this.variableName] : startValue;
+        this.endValue = endValue;
+
+        if (typeof this.endValue != "number") {
             this.type = "nonnumerical";
-            //console.log("NON NUMBER");
         }
         else
             this.type = "numerical";
-        this.operation_time = time;
-        this.current_time = 0;
-        this.start_time = 0;
-        this.rate = (this.endval - this.startval) / time;
-        this.lastval = null;
-        //console.log("Rate is: " + this.rate);
-        this.started = false;
-        this.interp = interp;
-        //console.log("cloning event in event: " + this.operation_time + " " + this.startval + " " + this.endval + " " + this.object);
-    }
-    MocuGame.Event.prototype.start = function () {
-        this.startval = (this.actual_startval == "current") ? this.object[this.varname] : this.actual_startval;
-    }
-    MocuGame.Event.prototype.update = function (Current_time, deltaT) {
-        //console.log("Got here YES??");
 
+        this.elapsed = false;
+
+        this.operationTime = time;
+
+        this.interp = interp;
+
+        this.currentTime = 0;
+        this.startTime = 0;
+
+        this.rate = (this.endValue - this.startValue) / time;
+
+        this.lastValue = null;
+        this.isStarted = false;
+    }
+    /*
+        start is a function with assignsthe startValue based off of whether actualStartValue is equal to
+        "current" or a variable.
+    */
+    MocuGame.Event.prototype.start = function () {
+        this.startValue = (this.actualStartValue == "current") ? this.object[this.variableName] : this.actualStartValue;
+    }
+
+    /*
+        update is a function which updates the variable's value based on the currentTime. If the
+        currentTime surpasses the operationTime, the variable's value is automatically set to the
+        specified endValue and the event is considered complete.
+
+        Parameters:
+        currentTime (Number)
+        - The current time of operation in reference to the start value.
+        deltaT (Number)
+        - The amount of time in frames since the last update call.
+    */
+
+    MocuGame.Event.prototype.update = function (currentTime, deltaT) {
         if (!this.elapsed) {
             switch (this.interp) {
                 case "linear":
-                    this.rate = (this.endval - this.startval) / this.operation_time;
+                    this.rate = (this.endValue - this.startValue) / this.operationTime;
                     break;
                 case "cubic":
-                    this.rate = 3 * Math.pow(this.current_time, 2) * ((this.endval - this.startval) / Math.pow(this.operation_time, 3));
+                    this.rate = 3 * Math.pow(this.currentTime, 2) * ((this.endValue - this.startValue) / Math.pow(this.operationTime, 3));
                     break;
                 case "log":
-                    //this.rate = (1 / (this.current_time + 1)) * ((this.endval - this.startval) / Math.log(this.operation_time + 1));
-                    this.rate = 3 * Math.pow(this.operation_time - this.current_time, 2) * ((this.endval - this.startval) / Math.pow(this.operation_time, 3));
+                    this.rate = 3 * Math.pow(this.operationTime - this.currentTime, 2) * ((this.endValue - this.startValue) / Math.pow(this.operationTime, 3));
                     break;
             }
-            if (!this.started) {
+            if (!this.isStarted) {
                 this.start();
-                this.object[this.varname] = this.startval;
-                this.started = true;
+                this.object[this.variableName] = this.startValue;
+                this.isStarted = true;
             }
             if (this.type == "numerical") {
-                if (this.lastval != null)
-                    this.object[this.varname] = this.lastval;
-                this.object[this.varname] += this.rate * deltaT;
-                this.lastval = this.object[this.varname];
+                if (this.lastValue != null)
+                    this.object[this.variableName] = this.lastValue;
+                this.object[this.variableName] += this.rate * deltaT;
+                this.lastValue = this.object[this.variableName];
                 
             }
-            this.current_time += 1 * deltaT;
-            if (this.current_time >= this.operation_time) {
-                if (!this.elapsed)
-                    this.object[this.varname] = this.endval;
+            this.currentTime += 1 * deltaT;
+            if (this.currentTime >= this.operationTime) {
+                if (!this.elapsed) {
+                    this.object[this.variableName] = this.endValue;
+                }
                 this.elapsed = true;
             }
         }
         else {
-            //if (this.type != "numerical")
-                //this.object[this.varname] = this.endval;
+            
         }
     }
 })();

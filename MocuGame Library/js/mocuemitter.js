@@ -1,6 +1,9 @@
 ﻿(function () {
-    MocuGame.MocuEmitter = function (point, particle) {
+    MocuGame.MocuEmitter = function (point, particleClass, particleProperties, particleTimeline) {
         MocuGame.MocuGroup.call(this, point, new MocuGame.Point(500, 500));
+        this.particleClass = particleClass;
+        this.particleProperties = particleProperties;
+        this.particleTimeline = particleTimeline;
 
         this.subEmitters = new MocuGame.MocuGroup();
         this.add(this.subEmitters);
@@ -9,7 +12,7 @@
         this.angleRange = new Array(0, 1);
         this.maxSpawn = 10;
         this.currentSpawn = this.maxSpawn;
-        this.particle = particle;
+
         this.particleLife = 70;
         this.addGroup = this;
         this.dispAdd = true;
@@ -27,7 +30,9 @@
  
             //console.log("Spawn!" + this.objects.length);
             this.currentSpawn = this.maxSpawn;
-            var clone = MocuGame.cloneObj(this.particle);
+            var clone = this.particleClass.constructor();
+            for (key in this.particleProperties) {
+            }
             for (var i = 0; i < this.particle.timeline.slots.length; i += 1)
             {
                 var slot = this.particle.timeline.slots[i];

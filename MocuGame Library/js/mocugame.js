@@ -205,6 +205,24 @@
     }
 
     /*
+        onLoaded is a callback which is called when the manifests loaded in init
+        are completely loaded. Preferabbly is overriden.
+    */
+
+    MocuGame.onLoaded = function () {
+        console.log("Resources loaded");
+    }
+
+    /*
+        onProgress is a callback which is called when the manifests load in init
+        have made progress. Preferabby is overriden.
+    */
+
+    MocuGame.onProgress = function () {
+
+    }
+
+    /*
         loadManifests is a function which loads a list of files.
 
         Parameters:
