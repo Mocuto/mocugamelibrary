@@ -14,16 +14,16 @@
     MocuGame.MocuMenuItem.prototype.advance = function (direction) {
         /*switch (direction) {
             case "left":
-                this.parentMenu.changeSelection(this.leftItem);
+                this.parentMenu.changeFocus(this.leftItem);
                 break;
             case "right":
-                this.parentMenu.changeSelection(this.rightItem);
+                this.parentMenu.changeFocus(this.rightItem);
                 break;
             case "top":
-                this.parentMenu.changeSelection(this.topItem);
+                this.parentMenu.changeFocus(this.topItem);
                 break;
             case "bottom":
-                this.parentMenu.changeSelection(this.bottomItem);
+                this.parentMenu.changeFocus(this.bottomItem);
                 break;
             case "enter":
                 this.parentMenu.select(this);
@@ -34,7 +34,7 @@
     
         else if (this.adjacentItems[direction] != undefined) {
             console.log("Enter pre");
-            this.parentMenu.changeSelection(this.adjacentItems[direction]);
+            this.parentMenu.changeFocus(this.adjacentItems[direction]);
         }
     }
     MocuGame.MocuMenuItem.prototype.onSelected = function () {

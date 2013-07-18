@@ -114,7 +114,7 @@
         context (Object)
         - The game canvas' context.
         displacement (MocuPoint)
-        - The displacement of the object, based off it's parent's position.
+        - The displacement of the object, based off its parent's position.
     */
     MocuGame.Marquee.prototype.draw = function (context, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined')
