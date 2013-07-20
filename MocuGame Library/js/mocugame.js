@@ -13,12 +13,22 @@
 (function () {
 
     MocuGame.objects = new Array();
-    MocuGame.currentState = null;
-    MocuGame.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
+
     MocuGame.worldPoint = new MocuGame.Point(0, 0);
-    MocuGame.fadeRect.usesFade = true;
-    MocuGame.targetResolutionWidth = 1920;
+
+    MocuGame.currentState = null;
+    MocuGame.currentMusic = null;
+
     MocuGame.Key = Key;
+
+    MocuGame.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
+    MocuGame.fadeRect.usesFade = true;
+
+    MocuGame.timeline = new MocuGame.TimeLine();
+
+    MocuGame.targetResolutionWidth = 1920;
+
+
 
     /*
         requests a frame from the window. Please kindly ignore this.
@@ -321,13 +331,13 @@
     */
 
     MocuGame.fadeTo = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + 1);
+        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + 1);
         slot.addEvent(new MocuGame.Event(MocuGame.fadeRect.fade, "a", 0, rgba.a, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + time);
+        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time);
         slot2.addEvent(new MocuGame.Action(callback, caller));
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + time + 1);
+        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "active", true, false, 1));
 
         MocuGame.fadeRect.timeline.addSlot(slot);
@@ -360,13 +370,13 @@
     */
 
     MocuGame.fadeFrom = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + 1);
+        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + 1);
         slot.addEvent(new MocuGame.Event(MocuGame.fadeRect.fade, "a", rgba.a, 0, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + time);
+        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time);
         slot2.addEvent(new MocuGame.Action(callback, caller));
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currenttime + time + 1);
+        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "active", true, false, 1));
         slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "visible", true, false, 1));
 
@@ -404,6 +414,7 @@
             }
         }
         if (MocuGame.currentMusic != null) MocuGame.currentMusic.checkLoop();
+
         // request new frame
         requestAnimFrame(function () {
             MocuGame.animate();

@@ -70,7 +70,7 @@
     */
 
     MocuGame.Marquee.prototype.restart = function (num) {
-        var slot = new MocuGame.TimeSlot(this.timeline.currenttime + this.restartDelay);
+        var slot = new MocuGame.TimeSlot(this.timeline.currentTime + this.restartDelay);
         slot.addEvent(new MocuGame.Event(this, "restarting", false, false, 1));
         if (num > 0) {
             slot.addEvent(new MocuGame.Event(this, "scrollPosition", 1, -2*this.renderWidth + 1, 1));

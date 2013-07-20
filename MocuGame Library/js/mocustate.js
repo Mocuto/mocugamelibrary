@@ -5,6 +5,9 @@
         this.d = new Date();
         this.lastRun = this.d.getTime();
         this.initialized = false;
+
+        this.fadeRect = null;
+        this.currentMusic = null;
     }
     MocuGame.MocuState.prototype = new MocuGame.MocuGroup;
     MocuGame.MocuState.constructor = MocuGame.MocuState;
@@ -28,6 +31,7 @@
         if(fixedDeltaT < 20)
             MocuGame.MocuGroup.prototype.update.call(this, fixedDeltaT);
         this.fadeRect.update(fixedDeltaT);
+
     }
     MocuGame.MocuState.prototype.draw = function (context, point) {
         MocuGame.MocuGroup.prototype.draw.call(this, context, point);

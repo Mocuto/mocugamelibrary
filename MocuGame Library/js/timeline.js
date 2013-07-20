@@ -1,13 +1,13 @@
 ﻿(function () {
     MocuGame.TimeLine = function () {
         this.slots = new Array();
-        this.currenttime = 0;
+        this.currentTime = 0;
     }
     MocuGame.TimeLine.prototype.update = function (deltaT) {
-        this.currenttime += 1 * deltaT;
+        this.currentTime += 1 * deltaT;
         for(var i = 0; i < this.slots.length; i += 1)
         {
-            this.slots[i].update(this.currenttime, deltaT);
+            this.slots[i].update(this.currentTime, deltaT);
         }
     }
     MocuGame.TimeLine.prototype.slotFix = function (slot) {
@@ -17,10 +17,10 @@
             {
                 var equiv_event = this.slots[i].getEvent(n.object, n.varname);
                 if (equiv_event != null) {
-                    //If events coincide
+
                     if (this.slots[i].time < slot.time && (this.slots[i].time + equiv_event.operation_time) < (slot.time + slot.events[n].operation_time)) {
                         equiv_event.operation_time = (slot.time - this.slots[i].time) - 1;
-                        //console.log("COINCIDE DETECTED!");
+
                     }
                 }
             }
@@ -49,6 +49,6 @@
         for (var i = 0; i < this.slots.length; i += 1) {
             this.slots[i].restart();
         }
-        this.currenttime = 0;
+        this.currentTime = 0;
     }
 })();

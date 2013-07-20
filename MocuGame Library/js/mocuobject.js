@@ -6,11 +6,15 @@
 
         this.x = point.x;
         this.y = point.y;
-        this.width = size.x;
-        this.height = size.y;
-        this.worldPoint = new MocuGame.Point(0, 0);
+
         this.velocity = new MocuGame.Point(0, 0);
         this.angularVelocity = 0;
+
+        this.width = size.x;
+        this.height = size.y;
+
+        this.worldPoint = new MocuGame.Point(0, 0);
+
         this.acceleration = new MocuGame.Point(0, 0);
         this.exists = true;
         this.active = true;
@@ -31,14 +35,16 @@
         
     }
     MocuGame.MocuObject.prototype.update = function (deltaT) {
-        this.quad = MocuGame.MasterQuad;
         if (typeof deltaT == 'undefined')
             deltaT = 0;
         this.x += this.velocity.x * deltaT;
         this.y += this.velocity.y * deltaT;
+
         this.velocity.x += this.acceleration.x * deltaT;
         this.velocity.y += this.acceleration.y * deltaT;
+
         this.angle += this.angularVelocity * deltaT;
+
         if (this.parent != null) {
             this.worldPoint.x = this.parent.worldPoint.x + this.x;
             this.worldPoint.y = this.parent.worldPoint.y + this.y;
@@ -53,7 +59,6 @@
             if (this.life == 0)
                 this.exists = false;
         }
-        //console.log("Older update");
     }
     MocuGame.MocuObject.prototype.draw = function (context, displacement) {
         context.globalAlpha = this.alpha;
