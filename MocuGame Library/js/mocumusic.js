@@ -14,7 +14,7 @@
         and other fields.
 
         Parameters
-        loc (String)
+        location (String)
         - The path of the audio which will be played.
         loop (Boolean) (optional)
         - Whether the music loops. Default is true.

@@ -52,7 +52,7 @@
     }
 
     /*
-        onEnd is a callback which is called when the marquee has reached an endpoint, but only if
+        onEnd is a callback which is called when the marquee has reached an endPoint, but only if
         doesRestart is set to false
     */
 
