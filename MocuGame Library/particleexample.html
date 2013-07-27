@@ -49,8 +49,7 @@
         sprite.timeline.addSlot(slot);
 
         var emitter = new MocuGame.MocuEmitter(new MocuGame.Point(320, 240), sprite, 120, new Array("fade.r", "fade.a", "isMovementPolar"), { "velocity.y": new Array(0, 360)}, sprite.timeline);
-        emitter.particleLife = 20;
-        emitter.life = 20;
+        emitter.particleLife = 40;
 
         var state = new MocuGame.MocuState(60);
 

@@ -87,7 +87,10 @@
     <Content Include="js\rgba.js" />
     <Content Include="js\timeline.js" />
     <Content Include="js\timeslot.js" />
+    <Content Include="musicexample.html" />
+    <Content Include="music\testmusic.mp3" />
     <Content Include="page.html" />
+    <Content Include="particleexample.html" />
     <Content Include="spriteexample.html" />
     <None Include="MocuGame Library_TemporaryKey.pfx" />
   </ItemGroup>

@@ -123,7 +123,6 @@
                 for (var n = 0; n < this.particleTimeline.slots[i].events.length; n++) {
                     slot.addEvent(new MocuGame.Event(clone, oSlot.events[n].originalVariableName,
                         oSlot.events[n].startValue, oSlot.events[n].endValue, oSlot.events[n].operationTime, oSlot.events[n].interp));
-                    console.log(slot);
                 }
                 clone.timeline.addSlot(slot);
             }
