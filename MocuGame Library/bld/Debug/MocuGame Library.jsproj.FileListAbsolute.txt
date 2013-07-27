@@ -1,0 +1,13 @@
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bin\Debug\resources.pri
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bin\Debug\AppxManifest.xml
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bin\Debug\MocuGame Library.build.appxrecipe
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\priconfig.xml.intermediate
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\layout.resfiles.intermediate
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\resources.resfiles.intermediate
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\pri.resfiles.intermediate
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\priconfig.xml
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\layout.resfiles
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\resources.resfiles
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\pri.resfiles
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\LanguageQualifiers.txt
+C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\ProjectArchitectures.txt

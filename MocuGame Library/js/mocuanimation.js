@@ -29,11 +29,11 @@
         - Subtoken[1] is the y location of the frame on the sprite sheet.
     */
 
-    MocuGame.MocuAnimation = function(name, coords, speed, doesLoop)
+    MocuGame.MocuAnimation = function(name, coords, speed, doesLoop, doesReverseWhenFinished)
     {
         this.name = name;
         coords = (typeof coords == 'undefined' || typeof coords == null) ? "0,0" : coords;
-        this.speed = Math.round(Math.max(speed, 100));
+        this.speed = Math.round(Math.min(speed, 100));
         this.doesLoop = doesLoop;
 
         this.coordinates = new Array();
@@ -42,15 +42,27 @@
         this.frame = 0;
         this.isFinished = false;
 
+        if (coords.length == 0) {
+            return;
+        }
         var tokens = coords.split(" ");
         this.length = tokens.length;
-        for (var i = 0; i < this.length; i += 1) {
+        for (var i = 0; i < tokens.length; i += 1) {
             var newloc = new MocuGame.Point(0, 0);
-            var subtokens = subtokens[i].split(",");
+            var subtokens = tokens[i].split(",");
             newloc.x = subtokens[0];
             newloc.y = subtokens[1];
             this.coordinates.push(newloc);
         }
+        if (doesReverseWhenFinished == true) {
+            var reversed = new Array();
+            reversed.push.apply(reversed, this.coordinates);
+            reversed.reverse();
+            this.coordinates.push.apply(this.coordinates, reversed);
+        }
+
+        this.timer = null;
+        this.isPlaying = false;
     }
 
     /*
@@ -74,6 +86,39 @@
                 }
             }
             this.frameJuice = this.maxFrameJuice;
+        }
+    }
+    
+    /*
+        start is a function which starts the animation update timer.
+    */
+    MocuGame.MocuAnimation.prototype.start = function () {
+        this.timer = window.setTimeout( MocuGame.MocuAnimation.prototype.update.bind(this)
+        , 1000 / this.speed, this);
+    }
+
+    /*
+        stop is a function which ends the animation update timer.
+    */
+
+    MocuGame.MocuAnimation.prototype.stop = function () {
+        window.clearTimeout(this.timer);
+    }
+
+    MocuGame.MocuAnimation.prototype.update = function () {
+        this.frame += 1;
+        if (this.frame >= this.length) {
+            if (this.doesLoop) {
+                this.frame = 0;
+                this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this), 1000 / this.speed, this);
+            }
+            else {
+                this.isFinished = true;
+                this.frame -= 1;
+            }
+        }
+        else {
+            this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this), 1000 / this.speed, this);
         }
     }
 })();

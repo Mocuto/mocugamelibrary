@@ -26,15 +26,17 @@
         this.x = point.x;
         this.y = point.y;
 
-        this.velocationity = new MocuGame.Point(0, 0);
-        this.angularVelocationity = 0;
+        this.velocity = new MocuGame.Point(0, 0);
+        this.acceleration = new MocuGame.Point(0, 0);
+        this.angularvelocity = 0;
+
+        this.isMovementPolar = false;
 
         this.width = size.x;
         this.height = size.y;
 
         this.worldPoint = new MocuGame.Point(0, 0);
 
-        this.acceleration = new MocuGame.Point(0, 0);
         this.exists = true;
         this.active = true;
         if (typeof this.visible == 'undefined' || typeof this.visible == 'null')
@@ -43,7 +45,7 @@
             this.visible = true;
         this.density = true;
         this.parent = null;
-        this.timeline = new MocuGame.TimeLine();
+        this.timeline = new MocuGame.Timeline();
         this.scale = new MocuGame.Point(1, 1);
         this.dying = false;
         this.life = 0;
@@ -65,13 +67,22 @@
     MocuGame.MocuObject.prototype.update = function (deltaT) {
         if (typeof deltaT == 'undefined')
             deltaT = 0;
-        this.x += this.velocationity.x * deltaT;
-        this.y += this.velocationity.y * deltaT;
+        if (this.isMovementPolar == true) {
+            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y));
+            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y));
 
-        this.velocationity.x += this.acceleration.x * deltaT;
-        this.velocationity.y += this.acceleration.y * deltaT;
+            this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y));
+            this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y));
+        }
+        else {
+            this.x += this.velocity.x * deltaT;
+            this.y += this.velocity.y * deltaT;
 
-        this.angle += this.angularVelocationity * deltaT;
+            this.velocity.x += this.acceleration.x * deltaT;
+            this.velocity.y += this.acceleration.y * deltaT;
+        }
+
+        this.angle += this.angularvelocity * deltaT;
 
         if (this.parent != null) {
             this.worldPoint.x = this.parent.worldPoint.x + this.x;
@@ -84,8 +95,9 @@
         this.timeline.update(deltaT);
         if (this.life > 0) {
             this.life -= 1;
-            if (this.life == 0)
-                this.exists = false;
+            if (this.life == 0) {
+                this.killAndRemove();
+            }
         }
     }
 
@@ -209,7 +221,7 @@
         Array - List of the collision types that occured with the given object and the caller.
     */
 
-    MocuGame.MocuGroup.prototype.collidesWith = function (object) {
+    MocuGame.MocuObject.prototype.collidesWith = function (object) {
         if (this.overlapsWith(object) == true) {
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf("RIGHT") != -1) {
@@ -313,6 +325,17 @@
     */
     MocuGame.MocuObject.prototype.kill = function () {
         this.exists = false;
-        
+    }
+
+    /*
+        killAndRemove is a function which sets the MocuObject to no longer exist, then removes it from its parent.
+    */
+
+    MocuGame.MocuObject.prototype.killAndRemove = function () {
+        this.kill();
+        this.exists = false;
+        if (this.parent != null) {
+            this.parent.remove(this);
+        }
     }
 })();

@@ -60,7 +60,7 @@
             }
             else  {
                 this.events[i].elapsed = false;
-                this.events[i].lastval = null;
+                this.events[i].lastValue = null;
                 this.events[i].started = false;
                 this.events[i].currentTime = 0;
             }

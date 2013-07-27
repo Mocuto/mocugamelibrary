@@ -58,6 +58,7 @@
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
+    MocuGame.MocuSprite.prototype.constructor = MocuGame.MocuSprite.constructor;
 
     /*
         addAnimation is a function which adds a new animation to the MocuSprite's set of animations
@@ -73,8 +74,8 @@
         - Whether the animation loops.
     */
 
-    MocuGame.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop) {
-        var newanim = new MocuGame.MocuAnimation(name, coords, speed, loop);
+    MocuGame.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
+        var newanim = new MocuGame.MocuAnimation(name, coords, speed, loop, reverse);
         this.animations.push(newanim);
     }
 
@@ -88,10 +89,14 @@
     */
 
     MocuGame.MocuSprite.prototype.play = function (name) {
+        if (typeof this.anim != "undefined") {
+            this.anim.stop();
+        }
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].name == name) {
                 this.anim = this.animations[i];
                 this.anim.frame = 0;
+                this.anim.start();
                 break;
             }
         }
@@ -107,7 +112,6 @@
     */
 
     MocuGame.MocuSprite.prototype.animate = function (deltaT) {
-        this.anim.update(deltaT);
         this.frame.x = this.anim.coordinates[this.anim.frame].x;
         this.frame.y = this.anim.coordinates[this.anim.frame].y;
     }
@@ -139,8 +143,8 @@
     */
 
     MocuGame.MocuSprite.prototype.colorEffect = function (context, displacement) {
-        var blankCanvas = document.getElementById('blankCanvas');
-        var blankContext = blankCanvas.getContext('2d');
+        var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         blankContext.globalCompositeOperation = "source-over";

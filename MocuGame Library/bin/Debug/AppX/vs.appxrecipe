@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>MOCUTOPRO</Machine>
+    <WindowsUser>Mocuto</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <RegisteredManifestChecksum>B5D2F0E29F220DB957CC0A4CB1FBA12BA93C1E5E5C2D856DDD233A2E987B0B16</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>0a9ea545-8362-47d0-ac9d-a4aade2e9a80_1.0.0.0_neutral__ez01d60bmdgbt</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>0a9ea545-8362-47d0-ac9d-a4aade2e9a80_ez01d60bmdgbt!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>0a9ea545-8362-47d0-ac9d-a4aade2e9a80</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=Mocuto</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-07-27T06:35:08.139</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\default.html">
+      <PackagePath>default.html</PackagePath>
+      <Modified>2013-07-27T05:53:41.837</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\page.html">
+      <PackagePath>page.html</PackagePath>
+      <Modified>2013-07-27T06:35:06.558</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\spriteexample.html">
+      <PackagePath>spriteexample.html</PackagePath>
+      <Modified>2013-07-27T06:35:40.394</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\images\logo.png">
+      <PackagePath>images\logo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-01-28T05:25:26.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\images\Mocuto.png">
+      <PackagePath>images\Mocuto.png</PackagePath>
+      <Modified>2011-10-06T04:11:44.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\images\smalllogo.png">
+      <PackagePath>images\smalllogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-01-28T05:25:26.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\images\splashscreen.png">
+      <PackagePath>images\splashscreen.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-01-28T05:25:26.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\images\storelogo.png">
+      <PackagePath>images\storelogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-01-28T05:25:26.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\action.js">
+      <PackagePath>js\action.js</PackagePath>
+      <Modified>2013-07-20T08:56:22.749</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\default.js">
+      <PackagePath>js\default.js</PackagePath>
+      <Modified>2013-07-27T05:53:40.442</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\Dependencies\audio-fx.min.js">
+      <PackagePath>js\Dependencies\audio-fx.min.js</PackagePath>
+      <Modified>2013-07-20T08:56:22.726</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\Dependencies\keyLib.js">
+      <PackagePath>js\Dependencies\keyLib.js</PackagePath>
+      <Modified>2013-07-14T09:36:10.372</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\Dependencies\preloadjs.min.js">
+      <PackagePath>js\Dependencies\preloadjs.min.js</PackagePath>
+      <Modified>2013-02-12T17:24:32.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\event.js">
+      <PackagePath>js\event.js</PackagePath>
+      <Modified>2013-07-20T08:56:22.768</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\marquee.js">
+      <PackagePath>js\marquee.js</PackagePath>
+      <Modified>2013-07-25T14:51:54.307</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocu.js">
+      <PackagePath>js\mocu.js</PackagePath>
+      <Modified>2013-07-14T12:01:21.255</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocuanimation.js">
+      <PackagePath>js\mocuanimation.js</PackagePath>
+      <Modified>2013-07-27T06:28:23.725</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocubackground.js">
+      <PackagePath>js\mocubackground.js</PackagePath>
+      <Modified>2013-07-14T16:45:03.038</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocuemitter.js">
+      <PackagePath>js\mocuemitter.js</PackagePath>
+      <Modified>2013-07-19T02:19:11.175</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocugame.js">
+      <PackagePath>js\mocugame.js</PackagePath>
+      <Modified>2013-07-27T06:35:05.384</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocugroup.js">
+      <PackagePath>js\mocugroup.js</PackagePath>
+      <Modified>2013-07-18T15:42:51.398</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocumenu.js">
+      <PackagePath>js\mocumenu.js</PackagePath>
+      <Modified>2013-07-18T16:27:11.738</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocumenuitem.js">
+      <PackagePath>js\mocumenuitem.js</PackagePath>
+      <Modified>2013-07-20T08:18:21.882</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocumusic.js">
+      <PackagePath>js\mocumusic.js</PackagePath>
+      <Modified>2013-07-26T03:32:51.523</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocuobject.js">
+      <PackagePath>js\mocuobject.js</PackagePath>
+      <Modified>2013-07-27T06:31:14.310</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocusound.js">
+      <PackagePath>js\mocusound.js</PackagePath>
+      <Modified>2013-07-25T14:43:12.738</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocusprite.js">
+      <PackagePath>js\mocusprite.js</PackagePath>
+      <Modified>2013-07-27T06:35:33.013</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocustate.js">
+      <PackagePath>js\mocustate.js</PackagePath>
+      <Modified>2013-07-26T03:30:16.353</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\mocutext.js">
+      <PackagePath>js\mocutext.js</PackagePath>
+      <Modified>2013-07-27T05:26:51.620</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\notification.js">
+      <PackagePath>js\notification.js</PackagePath>
+      <Modified>2013-07-27T05:02:57.768</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\point.js">
+      <PackagePath>js\point.js</PackagePath>
+      <Modified>2013-07-14T12:17:15.115</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\pointer.js">
+      <PackagePath>js\pointer.js</PackagePath>
+      <Modified>2013-07-14T16:44:45.253</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\rgba.js">
+      <PackagePath>js\rgba.js</PackagePath>
+      <Modified>2013-07-27T05:07:52.071</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\timeline.js">
+      <PackagePath>js\timeline.js</PackagePath>
+      <Modified>2013-07-27T05:13:48.266</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\js\timeslot.js">
+      <PackagePath>js\timeslot.js</PackagePath>
+      <Modified>2013-07-27T05:20:29.081</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\css\default.css">
+      <PackagePath>css\default.css</PackagePath>
+      <Modified>2013-07-27T05:55:51.452</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2013-07-27T06:35:07.979</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResolvedSDKReference Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\">
+      <Name>Microsoft.WinJS.1.0</Name>
+      <Version>1.0.9200.20602</Version>
+      <Architecture>Neutral</Architecture>
+      <FrameworkIdentity>Name=Microsoft.WinJS.1.0, MinVersion=1.0.9200.20602</FrameworkIdentity>
+      <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\Microsoft.WinJS.1.0.appx</AppxLocation>
+    </ResolvedSDKReference>
+  </ItemGroup>
+</Project>

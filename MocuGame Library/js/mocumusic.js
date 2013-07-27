@@ -29,6 +29,11 @@
 
     MocuGame.MocuMusic = function (loc, loop, autoplay, loopStart, loopEnd) {
         this.audio = MocuGame.preload.getResult(loc);
+
+        if (this.audio == null) {
+            this.audio = new Audio(loc);
+        }
+
         this.audio.volume = 0.8;
 
         this.__defineGetter__("volume", function () {

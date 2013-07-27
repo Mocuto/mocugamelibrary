@@ -28,7 +28,7 @@
         - The method used to interpolate between values.
     */
 
-    MocuGame.Event = function (object, variableName, startValue, endValue, time, interp) {5
+    MocuGame.Event = function (object, variableName, startValue, endValue, time, interp) {
         variableName = (typeof variableName == 'undefined' || typeof variableName == null) ? "empty" : variableName;
         startValue = (typeof startValue == 'undefined' || typeof startValue == null) ? 1 : startValue;
         endValue = (typeof endValue == 'undefined' || typeof endValue == null) ? 1 : endValue;
@@ -37,14 +37,19 @@
 
         this.object = object;
 
-        this.original_variableName = variableName;
+        this.originalVariableName = variableName;
         var splitarray = variableName.split(".");
         if (splitarray.length > 1) {
-            this.object = object[splitarray[0]];
-            this.variableName = splitarray[1];
+            var index = 0;
+            do {
+                this.object = this.object[splitarray[index]];
+                this.variableName = splitarray[index + 1];
+                index++;
+            } while (index < splitarray.length - 1);
         }
-        else
+        else {
             this.variableName = variableName;
+        }
 
         this.actualStartValue = startValue;
         this.startValue = (startValue == "current") ? this.object[this.variableName] : startValue;
