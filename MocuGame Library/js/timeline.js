@@ -1,38 +1,58 @@
-﻿(function () {
-    MocuGame.TimeLine = function () {
+﻿/*
+    timeline.js
+    Object that store TimeSlots. Handles the animation of values.
+
+    TODO: Put license here
+
+    Written by Olutobi Akomolede AKA Mocuto Oshi.
+*/
+
+(function () {
+
+    /*
+        TimeLine constructor. 
+    */
+
+    MocuGame.Timeline = function () {
         this.slots = new Array();
         this.currentTime = 0;
     }
-    MocuGame.TimeLine.prototype.update = function (deltaT) {
+
+    /*
+        update is a function which updates the Timeline's slots.
+
+        Parameters:
+        deltaT (Number)
+        - The time elapsed since the last update call.
+    */
+
+    MocuGame.Timeline.prototype.update = function (deltaT) {
         this.currentTime += 1 * deltaT;
         for(var i = 0; i < this.slots.length; i += 1)
         {
             this.slots[i].update(this.currentTime, deltaT);
         }
     }
-    MocuGame.TimeLine.prototype.slotFix = function (slot) {
-        nocheckIndex = this.slots.indexOf(slot);
-        for (var i = 0; i < this.slots.length; i += (i != nocheckIndex - 1 ? 1 : 2)) {
-            for(var n = 0; n < slot.events.length; n += 1)
-            {
-                var equiv_event = this.slots[i].getEvent(n.object, n.varname);
-                if (equiv_event != null) {
 
-                    if (this.slots[i].time < slot.time && (this.slots[i].time + equiv_event.operation_time) < (slot.time + slot.events[n].operation_time)) {
-                        equiv_event.operation_time = (slot.time - this.slots[i].time) - 1;
+    /*
+        addSlot is a function which adds a TimeSlot to the Timeline.
 
-                    }
-                }
-            }
-        }
-    }
-    MocuGame.TimeLine.prototype.addSlot = function (slot, repeat, timeInc) {
+        Parameters:
+        slot (TimeSlot)
+        - The slot to be added to the timeline.
+        repeat (Number)
+        - The amount of times this slot will be repeated.
+        repeatInterval (Number)
+        - The time interval between each repeat of the slot.
+    */
+
+    MocuGame.Timeline.prototype.addSlot = function (slot, repeat, repeatInterval) {
         this.slots.push(slot);
         this.slotFix(slot);
         repeat = (typeof repeat == 'undefined') ? 0 : repeat;
-        timeInc = (typeof timeInc == 'undefined') ? 0 : timeInc;
+        repeatInterval = (typeof repeatInterval == 'undefined') ? 0 : repeatInterval;
         for (var i = 0; i < repeat; i += 1) {
-            var newslot = new MocuGame.TimeSlot(slot.time + timeInc * (i + 1));
+            var newslot = new MocuGame.TimeSlot(slot.time + repeatInterval * (i + 1));
 
             for (var n = 0; n < slot.events.length; n += 1) {
                 var event = slot.events[n];
@@ -42,10 +62,14 @@
                     newslot.addEvent(new MocuGame.Event(event.object, event.original_varname, event.startval, event.endval, event.operation_time));
             }
             this.slots.push(newslot);
-            this.slotFix(newslot);
         }
     }
-    MocuGame.TimeLine.prototype.restart = function () {
+
+    /*
+        restart is a function which restarts the Timeline and its respective slots.
+    */
+
+    MocuGame.Timeline.prototype.restart = function () {
         for (var i = 0; i < this.slots.length; i += 1) {
             this.slots[i].restart();
         }
