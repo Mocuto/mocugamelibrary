@@ -1,2 +1,3 @@
-**/bin/
-**/bld/
+bin/
+bld/
+obj/

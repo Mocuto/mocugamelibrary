@@ -68,11 +68,11 @@
         if (typeof deltaT == 'undefined')
             deltaT = 0;
         if (this.isMovementPolar == true) {
-            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y));
-            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y));
+            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
+            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
 
-            this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y));
-            this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y));
+            this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+            this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
         }
         else {
             this.x += this.velocity.x * deltaT;
