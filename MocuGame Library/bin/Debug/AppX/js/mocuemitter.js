@@ -29,9 +29,10 @@
         - The timeline to be applied to each clone.
     */
 
-    MocuGame.MocuEmitter = function (point, particle, particleProperties, randomizedProperties, particleTimeline) {
+    MocuGame.MocuEmitter = function (point, particle, speed, particleProperties, randomizedProperties, particleTimeline) {
         MocuGame.MocuGroup.call(this, point, new MocuGame.Point(500, 500));
         this.particle = particle;
+        this.speed = speed;
         this.particleProperties = particleProperties;
         this.randomizedProperties = randomizedProperties;
         this.particleTimeline = particleTimeline;
@@ -49,10 +50,14 @@
         this.dispAdd = true;
 
         this.particleProperties.push.apply(this.particleProperties, MocuGame.MocuEmitter.defaultProperties);
+
+        this.timer = null;
+
+        this.start();
     }
     MocuGame.MocuEmitter.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuEmitter.constructor = MocuGame.MocuEmitter;
-    MocuGame.MocuEmitter.defaultProperties = ["x", "y", "velocity", "acceleration", "img"];
+    MocuGame.MocuEmitter.defaultProperties = ["x", "y", "width", "height", "velocity.x", "velocity.y", "acceleration.x", "acceleration.y", "img"];
 
 
     /*
@@ -63,53 +68,146 @@
     */
 
     MocuGame.MocuEmitter.prototype.generateClone = function () {
-        var clone = this.particle.constructor();
+        var clone = new this.particle.constructor();
+        clone.visible = true;
         if (typeof this.particleProperties != "undefined") {
 
-            for (var i = 0; i < this.particleProperties; i++) {
-                clone[i] == this.particle[i];
+            for (var i = 0; i < this.particleProperties.length; i++) {
+
+
+                var splitarray = this.particleProperties[i].split(".");
+
+                if (splitarray.length > 1) {
+                    var object = this.particle;
+                    var variableName = splitarray[0];
+                    if (typeof object[variableName] == "object") {
+                        if (typeof clone[variableName] == "undefined") {
+                            clone[variableName] = new object[variableName].constructor();
+                        }
+                    }
+                    else {
+                        clone[variableName] = object[variableName];
+                    }
+                    var cloneobj = clone[variableName];
+                    var index = 0;
+                    do {
+                        object = object[splitarray[index]];
+                        cloneobj = clone[splitarray[index]];
+
+                        variableName = splitarray[index + 1];
+                        
+
+                        if (typeof object[variableName] == "object") {
+                            cloneobj[variableName] = new object[variableName].constructor();
+                        }
+                        else {
+                            cloneobj[variableName] = object[variableName];
+                        }
+
+                        index++;
+                    } while (index < splitarray.length - 1);
+
+                }
+                else {
+                    if ((this.particle[this.particleProperties[i]] != null) &&
+                        (typeof this.particle[this.particleProperties[i]] != "undefined")) {
+                        clone[this.particleProperties[i]] = this.particle[this.particleProperties[i]];
+                    }
+                }
             }
         }
         if (typeof this.particleTimeline != "undefined") {
-            clone.timeline.slots.push.apply(clone.timeline.slots, this.particleTimeline);
-            for (var i = 0; i < clone.timeline.slots.length; i++) {
-                var slot = clone.timeline.slots[i];
-                for (var n = 0; n < slot.events.length; n++) {
-                    slot.events[n].object = clone;
+            for (var i = 0; i < this.particleTimeline.slots.length; i++) {
+                var oSlot = this.particleTimeline.slots[i];
+                var slot = new MocuGame.TimeSlot(oSlot.time);
+                for (var n = 0; n < this.particleTimeline.slots[i].events.length; n++) {
+                    slot.addEvent(new MocuGame.Event(clone, oSlot.events[n].originalVariableName,
+                        oSlot.events[n].startValue, oSlot.events[n].endValue, oSlot.events[n].operationTime, oSlot.events[n].interp));
                 }
+                clone.timeline.addSlot(slot);
             }
         }
         if (typeof this.randomizedProperties != "undefined") {
             for (var key in this.randomizedProperties) {
-                clone[key] = this.randomizedProperties[key][0] + (Math.random() * this.randomizedProperties[key][1]);
+                var splitarray = key.split(".");
+                if (splitarray.length > 1) {
+                    var object = clone;
+                    var variableName = splitarray[0];
+                    var index = 0;
+                    do {
+                        object = object[splitarray[index]];
+                        variableName = splitarray[index + 1];
+                        index++;
+                    } while (index < splitarray.length - 1);
+                    object[variableName] = this.randomizedProperties[key][0] + (Math.random() * this.randomizedProperties[key][1]);
+
+                }
+                else {
+                    clone[key] = this.randomizedProperties[key][0] + (Math.random() * this.randomizedProperties[key][1]);
+                }
             }
         }
         return clone;
     }
 
     /*
-        update is a function which is inherited from MocuGroup. Spawns an enemy based off a timer.
+        onParticleAdded is a callback called when a particle is added to the addGroup. Should be overriden.
 
         Parameters:
-        deltaT (Number)
-        - Time elapsed since last update call.
+        clone (MocuObject)
+        - The clone that was added to the addGroup.
     */
 
-    MocuGame.MocuEmitter.prototype.update = function (deltaT) {
-        MocuGame.MocuGroup.prototype.update.call(this);
+    MocuGame.MocuEmitter.prototype.onParticleAdded = function (clone) {
+    }
 
-        this.currentSpawn -= 1 * deltaT;
+    /*
+        start is a function which triggers the emitter to start emitting particles.
+    */
 
-        if (this.currentSpawn <= 0) {
-            this.currentSpawn = this.maxSpawn;
-            var clone = this.generateClone();
-            this.addGroup.add(clone);
-            
-            if (this.dispAdd) {
-                clone.x += this.getWorldPoint().x;
-                clone.y += this.getWorldPoint().y;
+    MocuGame.MocuEmitter.prototype.start = function () {
+        this.timer = window.setInterval((function () {
+            for (var i = 0; i < Math.ceil(this.speed / 60) ; i++) {
+                this.addParticle();
             }
-            clone.life = this.particleLife;
+        }).bind(this), 1000 / this.speed);
+    }
+
+    /*
+        stop is a function which ends the emission of particles.
+    */
+
+    MocuGame.MocuEmitter.prototype.stop = function () {
+        window.clearInterval(this.timer);
+    }
+
+    /*
+        addParticle is a function which adds a particle to the addGroup.
+    */
+    
+    MocuGame.MocuEmitter.prototype.addParticle = function () {
+
+        this.addGroup = MocuGame.currentState;
+
+        this.currentSpawn = this.maxSpawn;
+        var clone = this.generateClone();
+        this.addGroup.add(clone);
+
+        if (this.dispAdd) {
+            clone.x += this.getWorldPoint().x;
+            clone.y += this.getWorldPoint().y;
         }
+        clone.life = this.particleLife;
+
+        this.onParticleAdded(clone);
+    }
+
+    /*
+        kill is a function overriden from MocuObject which stops the timer when called, then does its inherited behavior.
+    */
+
+    MocuGame.MocuEmitter.prototype.kill = function () {
+        this.stop();
+        MocuGame.MocuObject.prototype.kill.call(this);
     }
 })();

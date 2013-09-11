@@ -58,6 +58,7 @@
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
+    MocuGame.MocuSprite.prototype.constructor = MocuGame.MocuSprite.constructor;
 
     /*
         addAnimation is a function which adds a new animation to the MocuSprite's set of animations
@@ -73,8 +74,8 @@
         - Whether the animation loops.
     */
 
-    MocuGame.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop) {
-        var newanim = new MocuGame.MocuAnimation(name, coords, speed, loop);
+    MocuGame.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
+        var newanim = new MocuGame.MocuAnimation(name, coords, speed, loop, reverse);
         this.animations.push(newanim);
     }
 
@@ -142,8 +143,8 @@
     */
 
     MocuGame.MocuSprite.prototype.colorEffect = function (context, displacement) {
-        var blankCanvas = document.getElementById('blankCanvas');
-        var blankContext = blankCanvas.getContext('2d');
+        var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         blankContext.globalCompositeOperation = "source-over";

@@ -29,11 +29,11 @@
         - Subtoken[1] is the y location of the frame on the sprite sheet.
     */
 
-    MocuGame.MocuAnimation = function(name, coords, speed, doesLoop)
+    MocuGame.MocuAnimation = function(name, coords, speed, doesLoop, doesReverseWhenFinished)
     {
         this.name = name;
         coords = (typeof coords == 'undefined' || typeof coords == null) ? "0,0" : coords;
-        this.speed = Math.round(Math.max(speed, 100));
+        this.speed = Math.round(Math.min(speed, 100));
         this.doesLoop = doesLoop;
 
         this.coordinates = new Array();
@@ -53,6 +53,12 @@
             newloc.x = subtokens[0];
             newloc.y = subtokens[1];
             this.coordinates.push(newloc);
+        }
+        if (doesReverseWhenFinished == true) {
+            var reversed = new Array();
+            reversed.push.apply(reversed, this.coordinates);
+            reversed.reverse();
+            this.coordinates.push.apply(this.coordinates, reversed);
         }
 
         this.timer = null;

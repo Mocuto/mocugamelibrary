@@ -48,7 +48,6 @@
 
     MocuGame.Timeline.prototype.addSlot = function (slot, repeat, repeatInterval) {
         this.slots.push(slot);
-        this.slotFix(slot);
         repeat = (typeof repeat == 'undefined') ? 0 : repeat;
         repeatInterval = (typeof repeatInterval == 'undefined') ? 0 : repeatInterval;
         for (var i = 0; i < repeat; i += 1) {

@@ -24,7 +24,7 @@
     MocuGame.MocuText = function (point, size, text) {
         MocuGame.MocuSprite.call(this,point, size);
         this.text = text;
-        this.font = "14px Verdana";
+        this.font = "14px Helvetica";
         this.fade.r = 0;
         this.fade.g = 0;
         this.fade.b = 0;

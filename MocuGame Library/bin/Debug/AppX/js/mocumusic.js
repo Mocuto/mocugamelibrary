@@ -29,15 +29,12 @@
 
     MocuGame.MocuMusic = function (loc, loop, autoplay, loopStart, loopEnd) {
         this.audio = MocuGame.preload.getResult(loc);
+
+        if (this.audio == null) {
+            this.audio = new Audio(loc);
+        }
+
         this.audio.volume = 0.8;
-
-        this.__defineGetter__("volume", function () {
-            return this.audio.volume;
-        });
-
-        this.__defineSetter__("volume", function (value) {
-            this.audio.volume = value;
-        });
 
         this.audio.loop = (typeof loop == "undefined") ? true : loop;
 
@@ -119,10 +116,11 @@
             return;
         }
         var slot = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(this, "volume", "current", 0, duration));
+        slot.addEvent(new MocuGame.Event(this, "audio.volume", "current", 0.005, duration));
 
 
         var slot2 = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + duration + 1);
+        slot2.addEvent(new MocuGame.Action(MocuGame.MocuMusic.prototype.stop, this));
 
         if (callback != null) {
             slot.addEvent(new MocuGame.Action(callback, caller));
@@ -155,7 +153,7 @@
         }
 
         var slot = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(this, "volume", 0, MocuGame.MocuMusic.DEFAULT_VOLUME, duration));
+        slot.addEvent(new MocuGame.Event(this, "audio.volume", 0, MocuGame.MocuMusic.DEFAULT_VOLUME, duration));
 
         var slot2 = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + duration + 1);
         if (callback != null) {

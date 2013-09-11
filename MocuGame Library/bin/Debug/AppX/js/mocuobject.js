@@ -27,14 +27,16 @@
         this.y = point.y;
 
         this.velocity = new MocuGame.Point(0, 0);
+        this.acceleration = new MocuGame.Point(0, 0);
         this.angularvelocity = 0;
+
+        this.isMovementPolar = false;
 
         this.width = size.x;
         this.height = size.y;
 
         this.worldPoint = new MocuGame.Point(0, 0);
 
-        this.acceleration = new MocuGame.Point(0, 0);
         this.exists = true;
         this.active = true;
         if (typeof this.visible == 'undefined' || typeof this.visible == 'null')
@@ -65,11 +67,20 @@
     MocuGame.MocuObject.prototype.update = function (deltaT) {
         if (typeof deltaT == 'undefined')
             deltaT = 0;
-        this.x += this.velocity.x * deltaT;
-        this.y += this.velocity.y * deltaT;
+        if (this.isMovementPolar == true) {
+            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
+            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
 
-        this.velocity.x += this.acceleration.x * deltaT;
-        this.velocity.y += this.acceleration.y * deltaT;
+            this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+            this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+        }
+        else {
+            this.x += this.velocity.x * deltaT;
+            this.y += this.velocity.y * deltaT;
+
+            this.velocity.x += this.acceleration.x * deltaT;
+            this.velocity.y += this.acceleration.y * deltaT;
+        }
 
         this.angle += this.angularvelocity * deltaT;
 
@@ -84,8 +95,9 @@
         this.timeline.update(deltaT);
         if (this.life > 0) {
             this.life -= 1;
-            if (this.life == 0)
-                this.exists = false;
+            if (this.life == 0) {
+                this.killAndRemove();
+            }
         }
     }
 
@@ -313,6 +325,17 @@
     */
     MocuGame.MocuObject.prototype.kill = function () {
         this.exists = false;
-        
+    }
+
+    /*
+        killAndRemove is a function which sets the MocuObject to no longer exist, then removes it from its parent.
+    */
+
+    MocuGame.MocuObject.prototype.killAndRemove = function () {
+        this.kill();
+        this.exists = false;
+        if (this.parent != null) {
+            this.parent.remove(this);
+        }
     }
 })();

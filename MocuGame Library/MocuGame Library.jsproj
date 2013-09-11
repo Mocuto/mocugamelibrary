@@ -70,6 +70,7 @@
     <Content Include="js\mocu.js" />
     <Content Include="js\mocuanimation.js" />
     <Content Include="js\mocubackground.js" />
+    <Content Include="js\mocucamera.js" />
     <Content Include="js\mocuemitter.js" />
     <Content Include="js\mocugame.js" />
     <Content Include="js\mocugroup.js" />
@@ -81,6 +82,8 @@
     <Content Include="js\mocusprite.js" />
     <Content Include="js\mocustate.js" />
     <Content Include="js\mocutext.js" />
+    <Content Include="js\mocutile.js" />
+    <Content Include="js\mocutilemap.js" />
     <Content Include="js\notification.js" />
     <Content Include="js\point.js" />
     <Content Include="js\pointer.js" />

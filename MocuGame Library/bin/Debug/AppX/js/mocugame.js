@@ -185,7 +185,7 @@
 
         MocuGame.resolution = resolution;
         MocuGame.gameBounds = gameBounds;
-        MocuGame.uniscale = Math.ceil(MocuGame.targetResolutionWidth / MocuGame.resolution.x);
+        MocuGame.uniscale = MocuGame.resolution.x /  MocuGame.targetResolutionWidth;
 
         MocuGame.touchenabled = false;
         MocuGame.isWindows8 = true;
@@ -227,7 +227,7 @@
 
         MocuGame.resolution = resolution;
         MocuGame.gameBounds = gameBounds;
-        MocuGame.uniscale = Math.ceil(MocuGame.targetResolutionWidth / MocuGame.resolution.x);
+        MocuGame.uniscale = (MocuGame.resolution.x / MocuGame.targetResolutionWidth);
     }
 
     /*

@@ -22,7 +22,7 @@
         this.callback = callback;
         this.obj = obj;
         this.elapsed = false;
-        this.lastval = null;
+        this.lastValue = null;
         this.started = false;
         this.current_time = 0;
     }
