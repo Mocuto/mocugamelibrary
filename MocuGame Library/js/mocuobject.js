@@ -54,7 +54,7 @@
         this.usesFade = false;
         this.fade = new MocuGame.RGBA(1, 0, 0, 0);
         
-    }
+    };
 
     /*
         update is a function which changes the MocuObject's properties based off its current state.
@@ -94,12 +94,12 @@
         }
         this.timeline.update(deltaT);
         if (this.life > 0) {
-            this.life -= 1;
+            this.life -= deltaT;
             if (this.life == 0) {
                 this.killAndRemove();
             }
         }
-    }
+    };
 
     /*
         draw is a function which renders the bonding box of the MocuObject onto the canvas.
@@ -131,7 +131,7 @@
         context.closePath();
         context.globalCompositeOperation = "source-over";
 
-    }
+    };
 
     /*
         getWorldPoint is a function which returns the objects position on the canvas.
@@ -143,7 +143,7 @@
 
     MocuGame.MocuObject.prototype.getWorldPoint = function () {
         return this.worldPoint;
-    }
+    };
 
     /*
         getOverlapsInGroup is a function which returns all objects in a given MocuGroup that overlap 
@@ -174,7 +174,7 @@
             }
         }
         return returnGroup;
-    }
+    };
 
     /*
         overlapsWith is a function which tests whether a given object overlaps with the caller.
@@ -207,7 +207,7 @@
         if (object.exists) {
             return true;
         }
-    }
+    };
 
     /*
         collidesWith is a function which applies position readjusting to the caller if it overlaps
@@ -239,7 +239,7 @@
             return collisionTypes;
         }
         return false;
-    }
+    };
 
     MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
         //Check for right side, relative to caller
@@ -266,7 +266,7 @@
             collisionTypes.push("BOTTOM");
         }
         return collisionTypes;
-    }
+    };
 
     /*
         containsPoint is a funtion which returns true if the given point is within the bounds of
@@ -286,7 +286,7 @@
             && point.y < pos.y + this.height && point.y > pos.y)
             return true;
         return false;
-    }
+    };
 
     /*
         containsLine is a function which checks whether a line segment formed by two points intersects a
@@ -318,14 +318,14 @@
         else {
             return true;
         }
-    }
+    };
 
     /*
         kill is a function which sets the MocuObject to no longer exist
     */
     MocuGame.MocuObject.prototype.kill = function () {
         this.exists = false;
-    }
+    };
 
     /*
         killAndRemove is a function which sets the MocuObject to no longer exist, then removes it from its parent.
@@ -337,5 +337,5 @@
         if (this.parent != null) {
             this.parent.remove(this);
         }
-    }
+    };
 })();
