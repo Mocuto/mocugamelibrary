@@ -2,6 +2,7 @@ css\default.css
 default.html
 images\logo.png
 images\Mocuto.png
+images\sampletile.png
 images\smalllogo.png
 images\splashscreen.png
 images\storelogo.png
@@ -15,6 +16,7 @@ js\marquee.js
 js\mocu.js
 js\mocuanimation.js
 js\mocubackground.js
+js\mocucamera.js
 js\mocuemitter.js
 js\mocugame.js
 js\mocugroup.js
@@ -26,6 +28,8 @@ js\mocusound.js
 js\mocusprite.js
 js\mocustate.js
 js\mocutext.js
+js\mocutile.js
+js\mocutilemap.js
 js\notification.js
 js\point.js
 js\pointer.js

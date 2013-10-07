@@ -22,7 +22,7 @@
     */
     MocuGame.Point = function (a, b) {
         this.x = a;
-        if (typeof b == 'undefined')
+        if (typeof b === 'undefined')
             b = a;
         this.y = b;
     }

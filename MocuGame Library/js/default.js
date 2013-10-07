@@ -15,11 +15,17 @@
                 //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
 
                 MocuGame.targetResolutionWidth = window.innerWidth;
-                MocuGame.prepareCanvas("myCanvas", new MocuGame.Point(640, 480),
+                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(640, 480),
                     new MocuGame.Point(window.innerWidth, window.innerHeight));
+
+                var tilemap = new MocuGame.MocuTilemap(new MocuGame.Point(0, 0), new MocuGame.Point(64, 64), new MocuGame.Point(32, 32),
+    "(5 1 2 3 0),(5 0 1 2 3),(5 2 3 0 1),(5 3 0 1 2)", "images/sampletile.png", new MocuGame.Point(64,64));
 
                 var state = new MocuGame.MocuState(60);
                 state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+
+
+                state.add(tilemap);
 
                 MocuGame.init(state);
 

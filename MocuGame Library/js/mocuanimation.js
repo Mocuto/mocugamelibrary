@@ -48,6 +48,10 @@
         var tokens = coords.split(" ");
         this.length = tokens.length;
         for (var i = 0; i < tokens.length; i += 1) {
+            if (tokens[i].length == 0) {
+                this.length--;
+                continue;
+            }
             var newloc = new MocuGame.Point(0, 0);
             var subtokens = tokens[i].split(",");
             newloc.x = subtokens[0];

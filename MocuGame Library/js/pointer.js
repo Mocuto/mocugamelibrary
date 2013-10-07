@@ -39,7 +39,7 @@
     */
 
     MocuGame.Pointer.prototype.updatePosition = function (e, down) {
-        this.lastPosition = new MocuGame.Point(this.pos.x, this.pos.y);
+        this.lastPosition = new MocuGame.Point(this.position.x, this.position.y);
         this.position = new MocuGame.Point(e.clientX / MocuGame.uniscale, e.clientY / MocuGame.uniscale);
         this.isDown = down;
     }

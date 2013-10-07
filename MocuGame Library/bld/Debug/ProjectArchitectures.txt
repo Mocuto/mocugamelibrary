@@ -1,1 +1,1 @@
-C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\MocuGame Library.jsproj;neutral
+C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\MocuGame Library.jsproj;neutral

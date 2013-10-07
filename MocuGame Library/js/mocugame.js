@@ -169,7 +169,32 @@
         }
         return temp;
     }
+
+    /*
+        createArray is a function that creates an array of any dimensions.
+
+        Paramaters:
+        length... (Integers)
+        - The length of the array. Multiple lengths can be specified for multidimensional arrays.
+
+        Returns:
+        (Array) new array.
+    */
+
+    MocuGame.createArray = function (length) {
+        var arr = new Array(length || 0),
+            i = length;
+
+        if (arguments.length > 1) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            while (i--) arr[length - 1 - i] = MocuGame.createArray.apply(this, args);
+        }
+
+        return arr;
+    };
+
     MocuGame.prepareCanvasForWindows8 = function (canvasId, gameBounds, resolution) {
+        var body = document.body;
         var canvas = document.getElementById(canvasId);
         var context = canvas.getContext('2d');
         context.canvas.width = resolution.x;
@@ -182,9 +207,12 @@
         blankCanvas.width = context.canvas.width;
         blankCanvas.height = context.canvas.height;
         MocuGame.blankCanvas = blankCanvas;
+        MocuGame.blankContext = blankCanvas.getContext('2d');
 
         MocuGame.resolution = resolution;
         MocuGame.gameBounds = gameBounds;
+        MocuGame.gameWidth = gameBounds.x;
+        MocuGame.gameHeight = gameBounds.y;
         MocuGame.uniscale = MocuGame.resolution.x /  MocuGame.targetResolutionWidth;
 
         MocuGame.touchenabled = false;
@@ -227,6 +255,8 @@
 
         MocuGame.resolution = resolution;
         MocuGame.gameBounds = gameBounds;
+        MocuGame.gameWidth = gameBounds.x;
+        MocuGame.gameHeight = gameBounds.y;
         MocuGame.uniscale = (MocuGame.resolution.x / MocuGame.targetResolutionWidth);
     }
 
@@ -333,7 +363,7 @@
         MocuGame.currentState = state;
         MocuGame.currentState.fadeRect = MocuGame.fadeRect;
 
-        if ((autoInit == true) || (typeof autoInit == "undefined")) {
+        if ((autoInit == true) || (typeof autoInit === "undefined")) {
             MocuGame.currentState.init();
         }
     }
@@ -468,7 +498,7 @@
         var found = 0;
         for (var i = 0; i < MocuGame.pointers.length; i += 1) {
             if (MocuGame.pointers[i].ID == e.pointerId) {
-                MocuGame.pointers[i].updatePos(e, down);
+                MocuGame.pointers[i].updatePosition(e, down);
                 found = i;
             }
         }
@@ -481,15 +511,15 @@
         else {
             pointer = MocuGame.pointers[found];
         }
-        switch(pointer.pointerType)
+        switch(e.pointerType)
         {
-            case MSPOINTER_TYPE_TOUCH:
+            case e.MSPOINTER_TYPE_TOUCH:
                 MocuGame.currentState.onTouch(pointer);
                 break;
-            case MSPOINTER_TYPE_PEN:
+            case e.MSPOINTER_TYPE_PEN:
                 MocuGame.currentState.onPen(pointer);
                 break;
-            case MSPOINTERTYPE_MOUSE:
+            case e.MSPOINTERTYPE_MOUSE:
                 MocuGame.currentState.onMouse(pointer);
                 break;
         }

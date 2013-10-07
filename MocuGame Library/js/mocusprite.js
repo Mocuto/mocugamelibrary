@@ -127,8 +127,6 @@
 
     MocuGame.MocuSprite.prototype.update = function (deltaT) {
         MocuGame.MocuObject.prototype.update.call(this, deltaT);
-        if (this.animates);
-            this.animate(deltaT);
     }
 
     /*
@@ -187,6 +185,10 @@
     */
 
     MocuGame.MocuSprite.prototype.draw = function (context, displacement) {
+
+        if (this.animates) {
+            this.animate(deltaT);
+        }
 
         if (typeof displacement == null || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);

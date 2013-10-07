@@ -21,7 +21,7 @@
         this.src = location;
         this.volume = volume;
         this.audio = AudioFX(location, { formats: ['mp3'], pool: 1, volumeume: volume});
-    }
+    };
     /*
         play is a function which plays the MocuSound's audio data
     */
@@ -32,5 +32,5 @@
             this.audio.audio.currentTime = 0;
             this.audio.audio.play();
         }
-    }
+    };
 })();
