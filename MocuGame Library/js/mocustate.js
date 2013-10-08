@@ -68,9 +68,7 @@
         	MocuGame.MocuGroup.prototype.update.call(this, 1);
 	        this.fadeRect.update(1);
         	this.timeAccumulator -= (1000 / this.intendedFps);
-        			this.obj.collidesWith(this.obj2);
-			if(Math.abs(this.obj.velocity.y) < 0.5)
-				console.log(this.obj.velocity.y);
+			this.obj.collidesWith(this.obj2);
         }
        
         fixedDeltaT = deltaT / (1000 / this.intendedFps);
