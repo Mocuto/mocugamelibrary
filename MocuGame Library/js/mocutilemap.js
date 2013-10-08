@@ -52,7 +52,7 @@
                 this.add(tile);
             }
         }
-    }
+    };
     MocuGame.MocuTilemap.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuTilemap.constructor = MocuGame.MocuTilemap;
 
