@@ -70,18 +70,18 @@
         if (typeof deltaT == 'undefined')
             deltaT = 0;
         if (this.isMovementPolar == true) {
-            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
-            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
-
             this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
             this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+            
+            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
+            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
         }
         else {
-            this.x += this.velocity.x * deltaT;
-            this.y += this.velocity.y * deltaT;
-
             this.velocity.x += this.acceleration.x * deltaT;
             this.velocity.y += this.acceleration.y * deltaT;
+        	
+            this.x += this.velocity.x * deltaT;
+            this.y += this.velocity.y * deltaT;
         }
 
         this.angle += this.angularvelocity * deltaT;
@@ -240,7 +240,11 @@
             }
             if (collisionTypes.indexOf("BOTTOM") != -1) {
                 this.y = object.y - this.height;
-                this.velocity.y = 0;
+                this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                //if(Math.abs(this.velocity.y) <= 1)
+                {
+                	//this.velocity.y = 0;
+                }
             }
             return collisionTypes;
         }
@@ -293,8 +297,8 @@
         }
         //Chceck for floor side
         if (object.containsLine(bottomLeft, bottomRight)) {
-        	var newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - this.acceleration.y);
-            var newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - this.acceleration.y);
+        	var newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - 1);
+            var newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - 1);
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
