@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MocuGame_Library</title>
+
+    <script src="js/Dependencies/audio-fx.min.js"></script>
+    <script src="js/Dependencies/keyLib.js"></script>
+    <script src="js/Dependencies/preloadjs.min.js"></script>
+
+    <script src="js/mocu.js"></script>
+    <script src="js/point.js"></script>
+    <script src="js/pointer.js"></script>
+    <script src="js/event.js"></script>
+    <script src="js/action.js"></script>
+    <script src="js/timeslot.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/rgba.js"></script>
+    <script src="js/mocuobject.js"></script>
+    <script src="js/mocuanimation.js"></script>
+    <script src="js/mocusprite.js"></script>
+    <script src="js/mocubackground.js"></script>
+    <script src="js/mocutext.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/mocugroup.js"></script>
+    <script src="js/mocustate.js"></script>
+    <script src="js/mocuemitter.js"></script>
+    <script src="js/mocusound.js"></script>
+    <script src="js/mocumusic.js"></script>
+    <script src="js/mocugame.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/default.css" />
+
+</head>
+<body>
+    <canvas id="myCanvas"> </canvas>
+    <script>
+        MocuGame.targetResolutionWidth = 640;
+        MocuGame.prepareCanvas("myCanvas", new MocuGame.Point(640, 480), new MocuGame.Point(640, 480));
+        
+        var state = new MocuGame.MocuState(60);
+        //state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+
+        MocuGame.init(state);
+
+    </script>
+</body>
+</html>
