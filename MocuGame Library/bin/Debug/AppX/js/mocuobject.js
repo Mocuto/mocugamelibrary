@@ -54,6 +54,8 @@
         this.usesFade = false;
         this.fade = new MocuGame.RGBA(1, 0, 0, 0);
         
+        this.restitution = 0.0;
+        
     };
 
     /*
@@ -68,18 +70,18 @@
         if (typeof deltaT == 'undefined')
             deltaT = 0;
         if (this.isMovementPolar == true) {
-            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
-            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
-
             this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
             this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+            
+            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
+            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
         }
         else {
-            this.x += this.velocity.x * deltaT;
-            this.y += this.velocity.y * deltaT;
-
             this.velocity.x += this.acceleration.x * deltaT;
             this.velocity.y += this.acceleration.y * deltaT;
+        	
+            this.x += this.velocity.x * deltaT;
+            this.y += this.velocity.y * deltaT;
         }
 
         this.angle += this.angularvelocity * deltaT;
@@ -161,8 +163,9 @@
     MocuGame.MocuObject.prototype.getOverlapsInGroup = function (group) {
         var returnGroup = new Array();
         returnGroup.setParent = false;
-        if (!MObj.exists)
+        if (!MObj.exists) {
             return returnGroup;
+        }
         //console.log(" X is " + MocuGame.MocuGroup.prototype.isPrototypeOf(MObj));
         if (MocuGame.MocuGroup.prototype.isPrototypeOf(MObj)) {
             for (var i = 0; i < group.objects.length; ++i) {
@@ -193,7 +196,7 @@
     MocuGame.MocuObject.prototype.overlapsWith = function (object) {
         var pos1 = this.getWorldPoint();
         var pos2 = object.getWorldPoint();
-        if ((object.exists == false) || (object.density == false)) {
+        if (object.exists == false) {
             return false;
         }
         if ((pos2.x > pos1.x + this.width - 1) ||  
@@ -204,9 +207,9 @@
             // no collision
             return false;
         }
-        if (object.exists) {
-            return true;
-        }
+
+        return true;
+        
     };
 
     /*
@@ -222,48 +225,95 @@
     */
 
     MocuGame.MocuObject.prototype.collidesWith = function (object) {
-        if (this.overlapsWith(object) == true) {
+        if (this.overlapsWith(object) == true && object.density && this.density) {
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf("RIGHT") != -1) {
-                this.x = object.x - this.width - 1;
+                this.x = object.x - this.width;
+                this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
             }
             if (collisionTypes.indexOf("LEFT") != -1) {
-                this.x = object.x + object.width + 1;
+                this.x = object.getWorldPoint().x + object.width;
+                this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
             }
             if (collisionTypes.indexOf("TOP") != -1) {
-                this.y = object.y + object.height + 1;
+                this.y = object.getWorldPoint().y + object.height;
+                this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
             }
             if (collisionTypes.indexOf("BOTTOM") != -1) {
-                this.y = object.y - this.height - 1;
+                this.y = object.getWorldPoint().y - this.height;
+                this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
             }
             return collisionTypes;
         }
         return false;
     };
 
+    MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
+        if (this.overlapsWith(tilemap)) {
+            var tiles = tilemap.getDenseTilesInRange(this.getWorldPoint(), new MocuGame.Point(this.width + 1, this.height + 1));
+            for (var i = 0; i < tiles.length; i++) {
+                this.collidesWith(tiles[i]);
+            }
+
+        }
+    }
+
     MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
         //Check for right side, relative to caller
 
         var pos = this.getWorldPoint();
         var collisionTypes = new Array();
-        if (object.containsLine(new MocuGame.Point((pos.x + this.width), pos.y),
-            new MocuGame.Point((pos.x + this.width), (pos.y + this.height)))) {
-            collisionTypes.push("RIGHT");
+        
+        var topRight = new MocuGame.Point((pos.x + this.width), pos.y);
+        var bottomRight = new MocuGame.Point((pos.x + this.width), (pos.y + this.height));
+        var topLeft = new MocuGame.Point(pos.x , pos.y);
+        var bottomLeft = new MocuGame.Point(pos.x, (pos.y + this.height));
+        
+        if (object.containsLine(topRight, bottomRight)) {
+            //If there is a rightward collision, see if there would be a collision if it had not been for the velocity
+            //If so, then the collision is not caused by horizontal movement
+            
+            //This logic is applied in all following collision checks
+            var newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - 1, topRight.y);
+            var newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - 1, bottomRight.y);
+            
+            if(!object.containsLine(newStartPoint, newEndPoint))
+            {
+	            collisionTypes.push("RIGHT");
+            }
         }
         //Chceck for left side
-        else if (object.containsLine(new MocuGame.Point(pos.x , pos.y),
-            new MocuGame.Point(pos.x, (pos.y + this.height)))) {
-            collisionTypes.push("LEFT");
+        if (object.containsLine(topLeft, bottomLeft)) {
+        	var newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + 1, topLeft.y);
+            var newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + 1, bottomLeft.y);
+        	
+        	if(!object.containsLine(newStartPoint, newEndPoint))
+            {
+            	collisionTypes.push("LEFT");
+            }
         }
         //Chceck for ceiling side
-        else if (object.containsLine(new MocuGame.Point(pos.x, pos.y),
-            new MocuGame.Point((pos.x + this.width), pos.y))) {
-            collisionTypes.push("TOP");
+        if (object.containsLine(topLeft, topRight)) {
+        	var newStartPoint = new MocuGame.Point(topLeft.x, topLeft.y - this.velocity.y + 1);
+            var newEndPoint = new MocuGame.Point(topRight.x, topRight.y - this.velocity.y + 1);
+            
+        	if(!object.containsLine(newStartPoint, newEndPoint))
+            {
+            	collisionTypes.push("TOP");
+            }
         }
         //Chceck for floor side
-        else if (object.containsLine(new MocuGame.Point(pos.x, (pos.y + this.height)),
-            new MocuGame.Point((pos.x + this.width), (pos.y + this.height)))) {
-            collisionTypes.push("BOTTOM");
+        if (object.containsLine(bottomLeft, bottomRight)) {
+        	var newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - 1);
+            var newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - 1);
+            
+        	if(!object.containsLine(newStartPoint, newEndPoint))
+            {
+            	collisionTypes.push("BOTTOM");
+            }
+            else {
+            	console.log("new start point " + newStartPoint.x + " " + newStartPoint.y);
+            }
         }
         return collisionTypes;
     };

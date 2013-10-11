@@ -29,11 +29,13 @@
         
         this.obj = new MocuGame.MocuObject(new MocuGame.Point(0,0), new MocuGame.Point(32, 32));
         this.obj.visible = true;
-        this.obj.acceleration.y = 0.5;
+        this.obj.acceleration.y = 1;
         this.obj.restitution = 0.5;
         this.add(this.obj);
         
-        this.obj2 = new MocuGame.MocuObject(new MocuGame.Point(0, 100), new MocuGame.Point(96, 32));
+        this.obj2 = new MocuGame.MocuTilemap(new MocuGame.Point(0, 240), new MocuGame.Point(64, 64), new MocuGame.Point(32, 32),
+    "_,_,(5 2 3 0 1),(5 3 0 1 2)", "images/sampletile.png", new MocuGame.Point(64, 64));
+        this.obj2.collisionStartingIndex = 2;
         this.obj2.visible = true;
         this.add(this.obj2);
     };
@@ -68,7 +70,7 @@
         	MocuGame.MocuGroup.prototype.update.call(this, 1);
 	        this.fadeRect.update(1);
         	this.timeAccumulator -= (1000 / this.intendedFps);
-			this.obj.collidesWith(this.obj2);
+			this.obj.collidesWithTilemap(this.obj2);
         }
        
         fixedDeltaT = deltaT / (1000 / this.intendedFps);

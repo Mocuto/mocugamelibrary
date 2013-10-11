@@ -163,8 +163,9 @@
     MocuGame.MocuObject.prototype.getOverlapsInGroup = function (group) {
         var returnGroup = new Array();
         returnGroup.setParent = false;
-        if (!MObj.exists)
+        if (!MObj.exists) {
             return returnGroup;
+        }
         //console.log(" X is " + MocuGame.MocuGroup.prototype.isPrototypeOf(MObj));
         if (MocuGame.MocuGroup.prototype.isPrototypeOf(MObj)) {
             for (var i = 0; i < group.objects.length; ++i) {
@@ -195,7 +196,7 @@
     MocuGame.MocuObject.prototype.overlapsWith = function (object) {
         var pos1 = this.getWorldPoint();
         var pos2 = object.getWorldPoint();
-        if ((object.exists == false) || (object.density == false)) {
+        if (object.exists == false) {
             return false;
         }
         if ((pos2.x > pos1.x + this.width - 1) ||  
@@ -206,9 +207,9 @@
             // no collision
             return false;
         }
-        if (object.exists) {
-            return true;
-        }
+
+        return true;
+        
     };
 
     /*
@@ -224,32 +225,38 @@
     */
 
     MocuGame.MocuObject.prototype.collidesWith = function (object) {
-        if (this.overlapsWith(object) == true) {
+        if (this.overlapsWith(object) == true && object.density && this.density) {
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf("RIGHT") != -1) {
-                this.x = object.x - this.width - 1;
+                this.x = object.x - this.width;
                 this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
             }
             if (collisionTypes.indexOf("LEFT") != -1) {
-                this.x = object.x + object.width + 1;
+                this.x = object.getWorldPoint().x + object.width;
                 this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
             }
             if (collisionTypes.indexOf("TOP") != -1) {
-                this.y = object.y + object.height + 1;
+                this.y = object.getWorldPoint().y + object.height;
                 this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
             }
             if (collisionTypes.indexOf("BOTTOM") != -1) {
-                this.y = object.y - this.height;
+                this.y = object.getWorldPoint().y - this.height;
                 this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
-                //if(Math.abs(this.velocity.y) <= 1)
-                {
-                	//this.velocity.y = 0;
-                }
             }
             return collisionTypes;
         }
         return false;
     };
+
+    MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
+        if (this.overlapsWith(tilemap)) {
+            var tiles = tilemap.getDenseTilesInRange(this.getWorldPoint(), new MocuGame.Point(this.width + 1, this.height + 1));
+            for (var i = 0; i < tiles.length; i++) {
+                this.collidesWith(tiles[i]);
+            }
+
+        }
+    }
 
     MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
         //Check for right side, relative to caller
