@@ -21,8 +21,7 @@
 
     MocuGame.Key = Key;
 
-    MocuGame.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
-    MocuGame.fadeRect.usesFade = true;
+    MocuGame.camera = null;
 
     MocuGame.MainTimeline = new MocuGame.Timeline();
 
@@ -213,7 +212,9 @@
         MocuGame.gameBounds = gameBounds;
         MocuGame.gameWidth = gameBounds.x;
         MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = MocuGame.resolution.x /  MocuGame.targetResolutionWidth;
+        MocuGame.uniscale = MocuGame.resolution.x / MocuGame.targetResolutionWidth;
+
+        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
 
         MocuGame.touchenabled = false;
         MocuGame.isWindows8 = true;
@@ -223,7 +224,7 @@
             body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
             body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
         }
-    }
+    };
 
     /*
         prepareCanvas is a function which applies settings to the game canvas pre-initialization.
@@ -258,7 +259,9 @@
         MocuGame.gameWidth = gameBounds.x;
         MocuGame.gameHeight = gameBounds.y;
         MocuGame.uniscale = (MocuGame.resolution.x / MocuGame.targetResolutionWidth);
-    }
+
+        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+    };
 
     /*
         onLoaded is a callback which is called when the manifests loaded in init
@@ -361,7 +364,7 @@
         }
         MocuGame.add(state);
         MocuGame.currentState = state;
-        MocuGame.currentState.fadeRect = MocuGame.fadeRect;
+        MocuGame.currentState.fadeRect = MocuGame.camera.fadeRect;
 
         if ((autoInit == true) || (typeof autoInit === "undefined")) {
             MocuGame.currentState.init();
@@ -384,27 +387,27 @@
     */
 
     MocuGame.fadeTo = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(MocuGame.fadeRect.fade, "a", 0, rgba.a, time));
+        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
+        slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", 0, rgba.a, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time);
+        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
         slot2.addEvent(new MocuGame.Action(callback, caller));
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time + 1);
-        slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "active", true, false, 1));
+        var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
+        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
 
-        MocuGame.fadeRect.timeline.addSlot(slot);
-        MocuGame.fadeRect.timeline.addSlot(slot2);
-        MocuGame.fadeRect.timeline.addSlot(slot3);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
-        MocuGame.fadeRect.fade.r = rgba.r;
-        MocuGame.fadeRect.fade.g = rgba.g;
-        MocuGame.fadeRect.fade.b = rgba.b;
+        MocuGame.camera.fadeRect.fade.r = rgba.r;
+        MocuGame.camera.fadeRect.fade.g = rgba.g;
+        MocuGame.camera.fadeRect.fade.b = rgba.b;
 
-        MocuGame.fadeRect.width = MocuGame.gameBounds.x;
-        MocuGame.fadeRect.height = MocuGame.gameBounds.y;
-        MocuGame.fadeRect.visible = true;
-        MocuGame.fadeRect.active = true;
+        MocuGame.camera.fadeRect.width = MocuGame.gameBounds.x;
+        MocuGame.camera.fadeRect.height = MocuGame.gameBounds.y;
+        MocuGame.camera.fadeRect.visible = true;
+        MocuGame.camera.fadeRect.active = true;
     }
 
     /*
@@ -423,28 +426,28 @@
     */
 
     MocuGame.fadeFrom = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(MocuGame.fadeRect.fade, "a", rgba.a, 0, time));
+        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
+        slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", rgba.a, 0, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time);
+        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
         slot2.addEvent(new MocuGame.Action(callback, caller));
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.fadeRect.timeline.currentTime + time + 1);
-        slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "active", true, false, 1));
-        slot3.addEvent(new MocuGame.Event(MocuGame.fadeRect, "visible", true, false, 1));
+        var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
+        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
+        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "visible", true, false, 1));
 
-        MocuGame.fadeRect.timeline.addSlot(slot);
-        MocuGame.fadeRect.timeline.addSlot(slot2);
-        MocuGame.fadeRect.timeline.addSlot(slot3);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
-        MocuGame.fadeRect.fade.r = rgba.r;
-        MocuGame.fadeRect.fade.g = rgba.g;
-        MocuGame.fadeRect.fade.b = rgba.b;
+        MocuGame.camera.fadeRect.fade.r = rgba.r;
+        MocuGame.camera.fadeRect.fade.g = rgba.g;
+        MocuGame.camera.fadeRect.fade.b = rgba.b;
 
-        MocuGame.fadeRect.width = MocuGame.gameWidth;
-        MocuGame.fadeRect.height = MocuGame.gameHeight;
-        MocuGame.fadeRect.visible = true;
-        MocuGame.fadeRect.active = true;
+        MocuGame.camera.fadeRect.width = MocuGame.gameWidth;
+        MocuGame.camera.fadeRect.height = MocuGame.gameHeight;
+        MocuGame.camera.fadeRect.visible = true;
+        MocuGame.camera.fadeRect.active = true;
     }
 
     /*
@@ -462,13 +465,27 @@
         blankContext.clearRect(0, 0, MocuGame.blankCanvas.width, MocuGame.blankCanvas.height);
         for (var i = 0; i < MocuGame.objects.length; i++) {
             if (MocuGame.objects[i].exists) {
-                if (MocuGame.objects[i].active)
+                if (MocuGame.objects[i].active) {
                     MocuGame.objects[i].update();
-                if(MocuGame.objects[i].visible)
-                    MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
+                }
             }
         }
-        if (MocuGame.currentMusic != null) MocuGame.currentMusic.checkLoop();
+        MocuGame.camera.update(MocuGame.currentState.lastDeltaT);
+
+
+        for (var i = 0; i < MocuGame.objects.length; i++) {
+            if (MocuGame.objects[i].exists) {
+                if (MocuGame.objects[i].visible) {
+                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+                    MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
+                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+                }
+            }
+        }
+
+        if (MocuGame.currentMusic != null) {
+            MocuGame.currentMusic.checkLoop();
+        }
 
         // request new frame
         requestAnimFrame(function () {

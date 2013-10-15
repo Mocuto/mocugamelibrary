@@ -56,6 +56,7 @@
         
         this.restitution = 0.0;
         
+        this.cameraTraits = new MocuGame.MocuCameraTraits(new MocuGame.Point(1, 1), true, true);
     };
 
     /*
@@ -229,19 +230,35 @@
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf("RIGHT") != -1) {
                 this.x = object.x - this.width;
-                this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
+                if (this.isMovementPolar) {
+                }
+                else {
+                    this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
+                }
             }
             if (collisionTypes.indexOf("LEFT") != -1) {
                 this.x = object.getWorldPoint().x + object.width;
-                this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
+                if (this.isMovementPolar) {
+                }
+                else {
+                    this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
+                }
             }
             if (collisionTypes.indexOf("TOP") != -1) {
                 this.y = object.getWorldPoint().y + object.height;
-                this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
+                if (this.isMovementPolar) {
+                }
+                else {
+                    this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
+                }
             }
             if (collisionTypes.indexOf("BOTTOM") != -1) {
                 this.y = object.getWorldPoint().y - this.height;
-                this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                if (this.isMovementPolar) {
+                }
+                else {
+                    this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                }
             }
             return collisionTypes;
         }
@@ -274,8 +291,14 @@
             //If so, then the collision is not caused by horizontal movement
             
             //This logic is applied in all following collision checks
-            var newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - 1, topRight.y);
-            var newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - 1, bottomRight.y);
+            var newStartPoint = null;
+            var newEndPoint = null;
+            if (this.isMovementPolar) {
+            }
+            else {
+                newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - 1, topRight.y);
+                newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - 1, bottomRight.y);
+            }
             
             if(!object.containsLine(newStartPoint, newEndPoint))
             {
@@ -284,8 +307,14 @@
         }
         //Chceck for left side
         if (object.containsLine(topLeft, bottomLeft)) {
-        	var newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + 1, topLeft.y);
-            var newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + 1, bottomLeft.y);
+            var newStartPoint = null;
+            var newEndPoint = null;
+            if (this.isMovementPolar) {
+            }
+            else {
+                newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + 1, topLeft.y);
+                newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + 1, bottomLeft.y);
+            }
         	
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
@@ -294,8 +323,14 @@
         }
         //Chceck for ceiling side
         if (object.containsLine(topLeft, topRight)) {
-        	var newStartPoint = new MocuGame.Point(topLeft.x, topLeft.y - this.velocity.y + 1);
-            var newEndPoint = new MocuGame.Point(topRight.x, topRight.y - this.velocity.y + 1);
+            var newStartPoint = null;
+            var newEndPoint = null;
+            if (this.isMovementPolar) {
+            }
+            else {
+                newStartPoint = new MocuGame.Point(topLeft.x, topLeft.y - this.velocity.y + 1);
+                newEndPoint = new MocuGame.Point(topRight.x, topRight.y - this.velocity.y + 1);
+            }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
@@ -304,8 +339,14 @@
         }
         //Chceck for floor side
         if (object.containsLine(bottomLeft, bottomRight)) {
-        	var newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - 1);
-            var newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - 1);
+            var newStartPoint = null;
+            var newEndPoint = null;
+            if (this.isMovementPolar) {
+            }
+            else {
+                newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - 1);
+                newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - 1);
+            }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {

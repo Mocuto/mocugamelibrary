@@ -15,7 +15,7 @@
                 //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
 
                 MocuGame.targetResolutionWidth = window.innerWidth;
-                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(640, 480),
+                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
                     new MocuGame.Point(window.innerWidth, window.innerHeight));
 
     //            var tilemap = new MocuGame.MocuTilemap(new MocuGame.Point(0, 240), new MocuGame.Point(64, 64), new MocuGame.Point(32, 32),

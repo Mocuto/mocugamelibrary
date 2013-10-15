@@ -27,11 +27,15 @@
         
         this.timeAccumulator = 0;
         
-        this.obj = new MocuGame.MocuObject(new MocuGame.Point(0,0), new MocuGame.Point(32, 32));
+        this.obj = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32));
         this.obj.visible = true;
-        this.obj.acceleration.y = 1;
-        this.obj.restitution = 0.5;
+        //this.obj.velocity.x = 1;
+        //this.obj.cameraTraits.scrollRate.x = 0;
+        //this.obj.cameraTraits.scrollRate.y = 0;
+        //this.obj.acceleration.y = 1;
+        //this.obj.restitution = 0.5;
         this.add(this.obj);
+        MocuGame.camera.trackingObject = this.obj;
         
         this.obj2 = new MocuGame.MocuTilemap(new MocuGame.Point(0, 240), new MocuGame.Point(64, 64), new MocuGame.Point(32, 32),
     "_,_,(5 2 3 0 1),(5 3 0 1 2)", "images/sampletile.png", new MocuGame.Point(64, 64));

@@ -17,6 +17,7 @@ js\mocu.js
 js\mocuanimation.js
 js\mocubackground.js
 js\mocucamera.js
+js\mocucameratraits.js
 js\mocuemitter.js
 js\mocugame.js
 js\mocugroup.js

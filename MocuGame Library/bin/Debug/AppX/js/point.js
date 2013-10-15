@@ -35,7 +35,7 @@
         mag (Number)
         - Magnitude of the vector.
         direction (Number)
-        - Direction of the vector.
+        - Direction of the vector in degrees.
     */
 
     MocuGame.Point.prototype.setPolar = function (mag, dir) {
