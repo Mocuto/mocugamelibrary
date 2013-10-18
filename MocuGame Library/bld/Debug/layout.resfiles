@@ -18,6 +18,7 @@ js\mocuanimation.js
 js\mocubackground.js
 js\mocucamera.js
 js\mocucameratraits.js
+js\mocucamerazone.js
 js\mocuemitter.js
 js\mocugame.js
 js\mocugroup.js
@@ -31,6 +32,7 @@ js\mocustate.js
 js\mocutext.js
 js\mocutile.js
 js\mocutilemap.js
+js\mocuzone.js
 js\notification.js
 js\point.js
 js\pointer.js

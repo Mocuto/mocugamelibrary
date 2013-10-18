@@ -29,7 +29,7 @@
         
         this.obj = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32));
         this.obj.visible = true;
-        //this.obj.velocity.x = 1;
+        this.obj.velocity.x = 1;
         //this.obj.cameraTraits.scrollRate.x = 0;
         //this.obj.cameraTraits.scrollRate.y = 0;
         //this.obj.acceleration.y = 1;
@@ -42,6 +42,12 @@
         this.obj2.collisionStartingIndex = 2;
         this.obj2.visible = true;
         this.add(this.obj2);
+
+        this.obj3 = new MocuGame.MocuCameraZone(new MocuGame.Point(100, 0), new MocuGame.Point(300, 300), false, false,
+            new MocuGame.Point(250, 150));
+        this.obj3.alpha = 0.5;
+        this.obj3.visible = true;
+        this.add(this.obj3);
     };
     MocuGame.MocuState.prototype = new MocuGame.MocuGroup;
     MocuGame.MocuState.constructor = MocuGame.MocuState;

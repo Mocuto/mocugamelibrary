@@ -1,4 +1,20 @@
-﻿(function () {
+﻿/*
+    mocucamera.js
+    Camera object. Acts as a singleton to control the viewpoint of the game.
+
+    TODO: Put license here
+
+    Written by Olutobi Akomolede AKA Mocuto Oshi.
+*/
+
+(function () {
+
+    /*
+        MocuCamera constructor. Initializes the object with its position.
+
+        Parameters:
+        position (Point) - The position the camera starts at.
+    */
     MocuGame.MocuCamera = function (position) {
         MocuGame.MocuGroup.call(this, position, new MocuGame.Point(1, 1));
         this.centerMarker = new MocuGame.MocuObject(new MocuGame.Point(MocuGame.resolution.x / 2, MocuGame.resolution.y / 2),
@@ -15,24 +31,27 @@
         this.fadeRect.usesFade = true;
 
         this.trackingObject = null;
-        this.maxTrackingSpeed = 3.0;
-        this.currentTrackingSpeed = 0.0;
-        this.trackingAcceleration = 1.0;
         this.trackingMargins = 0.1;
         this.trackingOffset = new MocuGame.Point(0, 0);
-        this.chasingTracker = false;
+        this.tracksVertical = true;
+        this.tracksHorizontal = true;
 
-        
-        //this.flip.x = -1;
-        //this.x = 1371 / 2;
-        //this.y = 771 / 2;
+        this.lastDistance = 0;
     };
     MocuGame.MocuCamera.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuCamera.constructor = MocuGame.MocuCamera;
 
+    /*
+        preDraw is a function which does the predrawing translation for each object based off its cameraTraits
+
+        Parameters:
+        context (Context) - The context that the objects will be drawn on
+        displacement (Point) - The displacement that the camera is drawn off
+        cameraTraits (MocuCameraTrait) - The traits that should be applied to the camera's transformations
+    */
     MocuGame.MocuCamera.prototype.preDraw = function (context, displacement, cameraTraits) {
-        context.translate((/*(MocuGame.resolution.x / 2)*/ +(-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
-            (/*(MocuGame.resolution.y / 2)*/ +(-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
+        context.translate(((-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
+            ((-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x * this.zoom, this.flip.y * this.zoom);
         }
@@ -41,6 +60,15 @@
         }
     };
 
+    /*
+        postDraw is a function which resets the transformation of the context back to it's original state, based off the cameraTraits of
+        the object
+
+        Parameters:
+        context (Context) - The context that the object has been drawn on
+        displacement (Point) - the displacement that teh camera is drawn off
+        cameraTraits (MocuCameraTrait) - The trait that has been applied to the camera's transformations
+    */
     MocuGame.MocuCamera.prototype.postDraw = function (context, displacement, cameraTraits) {
         if (cameraTraits.doesRotate) {
             context.rotate(-((this.angle * 3.14159265359) / 180));
@@ -48,52 +76,49 @@
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x / this.zoom, this.flip.y / this.zoom);
         }
-        context.translate(-(/*(MocuGame.resolution.x / 2)*/ +(-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
-    -(/*(MocuGame.resolution.y / 2)*/ +(-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
+        context.translate(-((-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
+    -((-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
 
     };
 
-    MocuGame.MocuCamera.prototype.checkTracker = function (deltaT) {
-        var pos = this.centerMarker.getWorldPoint();
-        var trackerPos = this.trackingObject.getWorldPoint();
-        //trackerPos.x -= this.trackingObject.width / 2;
-        //trackerPos.y -= this.trackingObject.height / 2;
+    /*
+        chaseTacker is a function which sets the camera to view the object it's tracking, based on which directions in scrolls in.
 
-        var trackingPoint = new MocuGame.Point((this.trackingObject.x + (this.trackingObject.width / 2)) + this.trackingOffset.x,
-            (this.trackingObject.y + (this.trackingObject.height / 2)) + this.trackingOffset.y);
-        var distance = Math.sqrt(Math.pow(trackerPos.y - pos.y, 2) + Math.pow(trackerPos.x - pos.x, 2));
-
-        this.chasingTracker = (distance > (this.trackingMargins + this.maxTrackingSpeed));
-        console.log("pos: " + pos.x + ", " + pos.y + " this: " + this.x + ", " + this.y + "distance: " + distance);
-    };
-
+        deltaT (Number) - The amount of time since the last run
+    */
     MocuGame.MocuCamera.prototype.chaseTracker = function (deltaT) {
-        var pos = this.centerMarker.getWorldPoint();
-        var trackerPos = this.trackingObject.getWorldPoint();
-        //trackerPos.x -= this.trackingObject.width / 2;
-        //trackerPos.y -= this.trackingObject.height / 2;
-
-        this.currentTrackingSpeed = Math.min(this.currentTrackingSpeed + this.trackingAcceleration, this.maxTrackingSpeed);
-        this.velocity.setPolar(this.currentTrackingSpeed);
-        var angleTo = MocuGame.rad2deg(Math.atan2(trackerPos.y - pos.y, trackerPos.x - pos.x));
-
-        this.velocity.setPolar(this.currentTrackingSpeed, angleTo);
-
-        console.log("pos: " + pos.x + ", " + pos.y + " this: " + this.x + ", " + this.y);
+        if (this.tracksHorizontal) {
+            this.x = (this.trackingObject.getWorldPoint().x + (this.trackingObject.width / 2) + this.trackingOffset.x) - this.centerMarker.x;
+        }
+        if (this.tracksVertical) {
+            this.y = (this.trackingObject.getWorldPoint().y + (this.trackingObject.height/2) + this.trackingOffset.y) - this.centerMarker.y;
+        }
     };
 
-    MocuGame.MocuCamera.prototype.update = function (deltaT) {
-        if (this.trackingObject != null) {
-            this.checkTracker(deltaT);
+    /*
+        update is a function which updates the MocuCamera's properties based off its current state.
 
-            if (this.chasingTracker) {
-                this.chaseTracker(deltaT);
-            }
-            else {
-                this.velocity.setPolar(0, 0);
-            }
-        }
+        Parameters:
+        deltaT (Number) - The amount of time since the last update call.
+    */
+    MocuGame.MocuCamera.prototype.update = function (deltaT) {
         MocuGame.MocuGroup.prototype.update.call(this, deltaT);
+        if (this.trackingObject != null) {
+            this.chaseTracker(deltaT);
+        }
+        
+    };
+
+    /*
+        viewPoint is a function which sets the MocuCamera object to position itself such that the center of the viewpoint is on the point
+        specified
+
+        Parameters:
+        point (Point) - the point specified
+    */
+    MocuGame.MocuCamera.prototype.viewPoint = function (point) {
+        this.x = point.x - this.centerMarker.x;
+        this.y = point.y - this.centerMarker.y;
     };
 
 })();
