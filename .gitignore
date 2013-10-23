@@ -1,3 +1,5 @@
-bin/
-bld/
-obj/
+MocuGame Library/bin/
+MocuGame Library/bld/
+MocuGame Library/obj/
+MocuGame Library.sln
+MocuGame Library/MocuGame Library_TemporaryKey.pfx
