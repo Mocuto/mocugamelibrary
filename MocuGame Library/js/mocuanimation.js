@@ -131,7 +131,7 @@
 
     MocuGame.MocuAnimation.prototype.stop = function () {
         window.clearTimeout(this.timer);
-    }
+    };
 
     MocuGame.MocuAnimation.prototype.update = function () {
         this.frame += 1;

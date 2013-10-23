@@ -51,7 +51,7 @@
         this.button = e.button;
         this.lastpos = null;
         this.isDown = down;
-    }
+    };
 
     /*
         updatePosition is a function which updates the position of the Pointer.
@@ -67,5 +67,5 @@
         this.lastPosition = new MocuGame.Point(this.position.x, this.position.y);
         this.position = new MocuGame.Point(e.clientX / MocuGame.uniscale, e.clientY / MocuGame.uniscale);
         this.isDown = down;
-    }
+    };
 })();

@@ -65,7 +65,7 @@
             }
         }
         return finished;
-    }
+    };
 
     /*
         update is a function which updates all of the events in the slot.
@@ -90,8 +90,7 @@
                 this.events[i].currentTime = 0;
             }
         }
-       
-    }
+    };
 
     /*
         restart is a function which restarts all of the events in the slot.
@@ -104,7 +103,7 @@
             this.events[i].started = false;
             this.events[i].currentTime = 0;
         }
-    }
+    };
 
     /*
         addEvent is a function which adds an event object to the slot.
@@ -116,7 +115,7 @@
 
     MocuGame.TimeSlot.prototype.addEvent = function (event) {
         this.events.push(event);
-    }
+    };
 
     /*
         getEvent is a function which gets an event with the given variableName and object.
@@ -134,5 +133,5 @@
                 return this.events[i];
         }
         return null;
-    }
+    };
 })();

@@ -55,7 +55,7 @@
         this.showtext = "";
         this.delay = this.max_delay;
         this.charloc = 0;
-    }
+    };
     MocuGame.Notification.prototype = new MocuGame.MocuText(new MocuGame.Point, new MocuGame.Point);
     MocuGame.Notification.constructor = MocuGame.Notification;
 
@@ -78,7 +78,7 @@
             }
         }
         this.text = this.showtext;
-    }
+    };
 
     /*
         restart is a function which restarts the notification with the given text.
@@ -93,5 +93,5 @@
         this.fulltext = text;
         this.showtext = "";
         this.text = "";
-    }
+    };
 })();

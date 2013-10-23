@@ -48,7 +48,7 @@
         if (typeof b === 'undefined')
             b = a;
         this.y = b;
-    }
+    };
 
     /*
         setPolar is a function which sets the x and y coordinates of the Point based off a given
@@ -64,7 +64,7 @@
     MocuGame.Point.prototype.setPolar = function (mag, dir) {
         this.x = Math.cos((dir*Math.PI)/180) * mag;
         this.y = Math.sin((dir*Math.PI)/180) * mag;
-    }
+    };
 
     /*
         getPolar is a function which returns an array containing the magnitude and direction of
@@ -76,5 +76,5 @@
 
     MocuGame.Point.prototype.getPolar = function () {
         return new Array(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), (Math.atan(this.y / this.x) )*Math.PI/180);
-    }
+    };
 })();

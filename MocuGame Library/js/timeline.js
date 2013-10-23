@@ -41,7 +41,7 @@
     MocuGame.Timeline = function () {
         this.slots = new Array();
         this.currentTime = 0;
-    }
+    };
 
     /*
         update is a function which updates the Timeline's slots.
@@ -57,7 +57,7 @@
         {
             this.slots[i].update(this.currentTime, deltaT);
         }
-    }
+    };
 
     /*
         addSlot is a function which adds a TimeSlot to the Timeline.
@@ -87,7 +87,7 @@
             }
             this.slots.push(newslot);
         }
-    }
+    };
 
     /*
         restart is a function which restarts the Timeline and its respective slots.
@@ -98,5 +98,5 @@
             this.slots[i].restart();
         }
         this.currentTime = 0;
-    }
+    };
 })();

@@ -70,7 +70,7 @@
 
         this.isPlaying = false;
         this.canFade = false;
-    }
+    };
     MocuGame.MocuMusic.DEFAULT_VOLUME = 0.8;
 
     /*
@@ -92,7 +92,7 @@
             this.canFade = true;
         }
         this.isPlaying = true;
-    }
+    };
 
     /*
         stop is a function which stops the MocuMusic object's audio.
@@ -101,7 +101,7 @@
     MocuGame.MocuMusic.prototype.stop = function () {
         this.audio.pause();
         this.audio.currentTime = 0;
-    }
+    };
 
     /*
         pause is a function which pauses the MocuMusic object's audio.
@@ -109,7 +109,7 @@
 
     MocuGame.MocuMusic.prototype.pause = function () {
         this.audio.pause();
-    }
+    };
 
     /*
         checkLoop is a function called by MocuGame which enforces the object's loop, based off
@@ -117,11 +117,13 @@
     */
 
     MocuGame.MocuMusic.prototype.checkLoop = function () {
-        if (!this.loop)
-            return;
-        if (this.audio.currentTime >= this.loopEnd)
+        if (!this.loop) {
+        	return;
+    	}
+        if (this.audio.currentTime >= this.loopEnd) {
             this.audio.currentTime = this.loopStart;
-    }
+       }
+    };
 
     /*
         fadeOut is a function which fades out the MocuMusic object
@@ -153,7 +155,7 @@
 
         MocuGame.currentState.timeline.addSlot(slot);
         MocuGame.currentState.timeline.addSlot(slot2);
-    }
+    };
 
     /*
         fadeIn is a function which fades in the MocuMusic object
@@ -186,5 +188,5 @@
 
         MocuGame.currentState.timeline.addSlot(slot);
         MocuGame.currentState.timeline.addSlot(slot2);
-    }
+    };
 })();

@@ -54,7 +54,7 @@
         this.keysDown = true;
         this.isTouching = true;
         this.parentState = state;
-    }
+    };
     MocuGame.MocuMenu.prototype = new MocuGame.MocuGroup;
     MocuGame.MocuMenu.constructor = MocuGame.MocuMenu;
 
@@ -79,7 +79,7 @@
             }
         }
         this.keysDown = false;
-    }
+    };
 
     /*
         add is a function which is inherited from MocuGroup. Adds obj. If the obj is a MocuMenuItem and the MocuMenu has no selectedItem, it
@@ -90,12 +90,12 @@
         - The object to add and/or select.
     */
 
-    MocuGame.MocuMenu.prototype.add = function (obj) {
-        MocuGame.MocuGroup.prototype.add.call(this, obj);
-        if (this.selectedItem == null && MocuGame.MocuMenuItem.prototype.isPrototypeOf(obj)) {
-            this.changeFocus(obj);
+    MocuGame.MocuMenu.prototype.add = function (object) {
+        MocuGame.MocuGroup.prototype.add.call(this, object);
+        if (this.selectedItem == null && MocuGame.MocuMenuItem.prototype.isPrototypeOf(object)) {
+            this.changeFocus(object);
         }
-    }
+    };
 
     /*
         select is a function which selects the given obj.
@@ -105,9 +105,9 @@
         - The MocuMenuItem to select.
     */
 
-    MocuGame.MocuMenu.prototype.select = function (obj) {
-        obj.onSelected();
-    }
+    MocuGame.MocuMenu.prototype.select = function (object) {
+        object.onSelected();
+    };
 
     /*
         changeFocus is a function which changes the focused MocuMenuItem to the given obj.
@@ -117,15 +117,14 @@
         - the MocuMenuItem to focus on.
     */
 
-    MocuGame.MocuMenu.prototype.changeFocus = function (obj) {
+    MocuGame.MocuMenu.prototype.changeFocus = function (object) {
         if (this.selectedItem != null) {
             this.selectedItem.onUnfocused();
         }
-        this.selectedItem = obj;
+        this.selectedItem = object;
         this.selectedItem.onFocused();
-        this.onFocusChanged(obj);
- 
-    }
+        this.onFocusChanged(object);
+    };
 
     /*
         onFocusChange is callbck which is called when the focus of an object has been changed.
@@ -137,7 +136,7 @@
 
     MocuGame.MocuMenu.prototype.onFocusChanged = function (obj) {
         //Nothing for now
-    }
+    };
 
     /*
 
@@ -164,20 +163,19 @@
 
         var point = new MocuGame.Point(pointer.position.x, pointer.position.y);
         for (var i = 0; i < this.objects.length; ++i) {
-            var obj = this.objects[i];
-            if (!MocuGame.MocuMenuItem.prototype.isPrototypeOf(obj)) {
+            var object = this.objects[i];
+            if (!MocuGame.MocuMenuItem.prototype.isPrototypeOf(object)) {
                 continue;
             }
-            else if (obj.containsPoint(point)) {
-                if (this.selectedItem == obj) {
+            else if (object.containsPoint(point)) {
+                if (this.selectedItem == object) {
                     this.selectedItem.advance("select");
                 }
                 else {
-                    this.changeFocus(obj);
+                    this.changeFocus(object);
                 }
                 break;
             }
         }
-
-    }
-})()
+    };
+})();

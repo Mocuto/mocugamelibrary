@@ -137,4 +137,4 @@
     MocuGame.MocuText.prototype.animate = function () {
         //Do nothing
     };
-})()
+})();

@@ -299,7 +299,7 @@
             }
 
         }
-    }
+    };
 
     MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
         //Check for right side, relative to caller

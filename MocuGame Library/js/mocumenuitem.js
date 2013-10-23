@@ -59,7 +59,7 @@
         MocuGame.MocuGroup.call(this, pos, size);
         this.adjacentItems = { "left": leftItem, "right": rightItem, "top": topItem, "bottom": bottomItem };
         this.parentMenu = menu;
-    }
+    };
     MocuGame.MocuMenuItem.prototype = new MocuGame.MocuGroup();
     MocuGame.MocuMenuItem.constructor = MocuGame.MocuMenuItem;
     
@@ -80,7 +80,7 @@
         else if (this.adjacentItems[direction] != undefined) {
             this.parentMenu.changeFocus(this.adjacentItems[direction]);
         }
-    }
+    };
 
     /*
         onSelected is a callback which is called when the menu item is selected.
@@ -88,7 +88,7 @@
 
     MocuGame.MocuMenuItem.prototype.onSelected = function () {
 
-    }
+    };
 
     /*
         onFocused is a callback which is called when the menu item is focused.
@@ -96,7 +96,7 @@
 
     MocuGame.MocuMenuItem.prototype.onFocused = function () {
 
-    }
+    };
 
     /*
         onUnFocused is a callback which is called when the menu item is unfocused.
@@ -104,5 +104,5 @@
 
     MocuGame.MocuMenuItem.prototype.onUnFocused = function () {
 
-    }
+    };
 })();

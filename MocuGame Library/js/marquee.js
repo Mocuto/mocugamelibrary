@@ -50,7 +50,7 @@
         this.scrollStops = new Array(this.width, this.scrollWidth);
         this.autoResetStops = true;
         this.ended = false;
-    }
+    };
     MocuGame.Marquee.prototype = new MocuGame.MocuText(new MocuGame.Point, new MocuGame.Point);
     MocuGame.Marquee.constructor = MocuGame.Marquee;
 
@@ -73,7 +73,7 @@
             else if(!this.doesRestart)
                 this.onEnd();
         }
-    }
+    };
 
     /*
         onEnd is a callback which is called when the marquee has reached an endPoint, but only if
@@ -82,7 +82,7 @@
 
     MocuGame.Marquee.prototype.onEnd = function () {
         this.ended = true;
-    }
+    };
 
     /*
         restart is a function which resets the scrollPosition to either the very left or very right.
@@ -106,7 +106,7 @@
         }
         this.timeline.addSlot(slot);
         this.restarting = true;
-    }
+    };
     /*
         preDraw is a function that prerenders the text onto the blankCanvas.
     */
@@ -130,7 +130,7 @@
         if (this.autoResetStops)
             this.scrollStops = [this.width, this.scrollWidth];
         return blankCanvas;
-    }
+    };
     /*
         draw is a function which is inherited from MocuText. Draws the Marquee onto the canvas.
 
@@ -181,5 +181,5 @@
         if (this.align == "center" || this.align == "start")
             context.translate(-(this.width / 2) * MocuGame.uniscale, 0);
         context.globalCompositeOperation = "source-over";
-    }
+    };
 })();

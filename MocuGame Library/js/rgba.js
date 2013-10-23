@@ -53,7 +53,7 @@
         this.g = g;
         this.b = b;
         this.a = a;
-    }
+    };
 
     /*
         getBrightness is a function which gets the brightness of the RGBA object.
@@ -65,5 +65,5 @@
     MocuGame.RGBA.prototype.getBrightness = function()
     {
         return (0.2126 * this.r) + (0.7152 * this.g) + (0.0722 * this.b);
-    }
-})()
+    };
+})();

@@ -74,7 +74,7 @@
             this.onObjectExited(this.lastCamera);
         }
         MocuGame.MocuObject.prototype.kill.call(this);
-    }
+    };
 
     MocuGame.MocuCameraZone.prototype.update = function (deltaT) {
         if (!this.isZoningCamera && MocuGame.camera.trackingObject != null) {
@@ -82,5 +82,5 @@
             this.zoneObject(MocuGame.camera.trackingObject);
         }
         MocuGame.MocuZone.prototype.update.call(this, deltaT);
-    }
+    };
 })();

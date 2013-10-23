@@ -98,14 +98,14 @@
 
         this.lastValue = null;
         this.isStarted = false;
-    }
+    };
     /*
         start is a function with assignsthe startValue based off of whether actualStartValue is equal to
         "current" or a variable.
     */
     MocuGame.Event.prototype.start = function () {
         this.startValue = (this.actualStartValue == "current") ? this.object[this.variableName] : this.actualStartValue;
-    }
+    };
 
     /*
         update is a function which updates the variable's value based on the currentTime. If the
@@ -155,5 +155,5 @@
         else {
             
         }
-    }
+    };
 })();
