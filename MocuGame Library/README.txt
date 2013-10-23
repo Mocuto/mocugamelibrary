@@ -1,10 +1,31 @@
-﻿/*
-    mocucameratraits.js
+Welcome to the MocuGame Library 0.9.1, by me, Mocuto.
 
-    Struct that stores common traits to be enacted on the MocuCamera singleton.
+0.0	ReadMe
+-----------------------------------------------------------
+	The MocuGame Library is a set of JavaScript classes made for handling every part of making a game, from audio, to graphics, to input.
+	It falls back on the HTML5 canvas, makes use of the HTML5 Audio objects for music and sound effects, and uses a variety of time tested
+	dependencies. The MocuGame Library has support for sprites, particle effects, graphic rotations, graphical scaling, collision detection,
+	tilemaps, sound effects and looping music, a timeline-based animation system and much more. The main goal of the MocuGame Library is for quick,
+	modern production of HTML5 games that are on par with Flash/Action Script 3 offerings. As the web matures, the MocuGame Library will be
+	brought closer to this goal.
 
-    The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
+0.1 Author
+-----------------------------------------------------------
+	The author of this JavaScript game library is the Great Lord Mocuto.
+	
+	Follow me on Twitter: @GreatLordMocuto
+	Follow me on Instagram: @Mocuto
 
+0.1 Dependencies
+-----------------------------------------------------------
+	audio-fix - a JavaScript sound effect library. To learn more, visit: https://github.com/jakesgordon/javascript-audio-fx
+	preloadJS - a part of the CreateJS Suite, PreloadJS assists with the preloading of visual and audio resources. To learn more, visit: http://www.createjs.com/#!/PreloadJS
+	keyLib - A JavaScript keyboard library by n-son. To learn more, visit: http://www.n-son.com/scripts/keyLib/
+
+1.0 Copyright and License
+-----------------------------------------------------------
+	The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
+	
     Eclipse Public License, Version 1.0 (EPL-1.0) (plain text) THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
 	1. DEFINITIONS
 	"Contribution" means:
@@ -31,23 +52,170 @@
 	Everyone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. The Eclipse Foundation is the initial Agreement Steward. The Eclipse Foundation may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to distribute the Program (including its Contributions) under the new version. Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved.
 	This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
 
-    Written by Olutobi Akomolede AKA Mocuto Oshi.
-*/
+2.0	Getting Started With The MocuGame Library
+-----------------------------------------------------------
+	Getting started with the MocuGame Library is rather straight forward. In the MocuGame Library directory, you will find a folder named js.
+	Add this folder to your project. In all of your html files that make use of the MocuGame Library, make these changes:
+		
+		If you are using the minimized MGL, simply add this to your <head></head> of the html file:
+		
+			<script src="/js/mocugame-min-0.9.1.js"></script>
+		
+		If you are using the unminimized MGL, add the following to the <head></head> of the html file:
+		
+		    <script src="js/Dependencies/audio-fx.min.js"></script>
+		    <script src="js/Dependencies/keyLib.js"></script>
+		    <script src="js/Dependencies/preloadjs.min.js"></script>
 
-(function () {
+		    <script src="js/mocu.js"></script>
+		    <script src="js/point.js"></script>
+		    <script src="js/pointer.js"></script>
+		    <script src="js/event.js"></script>
+		    <script src="js/action.js"></script>
+		    <script src="js/timeslot.js"></script>
+		    <script src="js/timeline.js"></script>
+		    <script src="js/rgba.js"></script>
+		    <script src="js/mocucameratraits.js"></script>
+		    <script src="js/mocuobject.js"></script>
+		    <script src="js/mocuanimation.js"></script>
+		    <script src="js/mocusprite.js"></script>
+		    <script src="js/mocubackground.js"></script>
+		    <script src="js/mocutext.js"></script>
+		    <script src="js/notification.js"></script>
+		    <script src="js/mocugroup.js"></script>
+		    <script src="js/mocutile.js"></script>
+		    <script src="js/mocutilemap.js"></script>
+		    <script src="js/mocustate.js"></script>
+		    <script src="js/mocuzone.js"></script>
+		    <script src="js/mocucamera.js"></script>
+		    <script src="js/mocucamerazone.js"></script>
+		    <script src="js/mocuemitter.js"></script>
+		    <script src="/js/mocumenu.js"></script>
+		    <script src="/js/mocumenuitem.js"></script>
+		    <script src="js/mocusound.js"></script>
+		    <script src="js/mocumusic.js"></script>
+		    <script src="js/mocugame.js"></script>
+			
+		In the html files, add the following to the <body>:
+		
+		    <canvas id="myCanvas"></canvas>
+		    <script>
+		        MocuGame.targetResolutionWidth = 640;
+		        MocuGame.prepareCanvas("myCanvas", new MocuGame.Point(640, 480), new MocuGame.Point(640, 480));
+		        
+		        var state = new MocuGame.MocuState(60);
+		        state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
 
-    /*
-        MocuCameraTraits constructor. Initializes the instance with its scroll rate, whether it zooms, and whether it rotates.
+		        MocuGame.init(state);
 
-        Paramaters:
-        scrollRate (Point) - The rate at which the camera should translate based off its position.
-        doesZoom (Boolean) - Whether the camera should apply scaling based off its zoom.
-        doesRotate (Boolean) - Whether the camera should apply rotation based off its angle.
-    */
+		    </script>
+			
+		The "myCanvas" string can be changed to whatever you like.
 
-    MocuGame.MocuCameraTraits = function (scrollRate, doesZoom, doesRotate) {
-        this.scrollRate = scrollRate;
-        this.doesZoom = doesZoom;
-        this.doesRotate = doesRotate;
-    };
-})();
+
+2.1	Getting Started With The MocuGame Library for Windows 8
+-----------------------------------------------------------
+	Getting started with the MocuGame Library for Windows 8 is a relatively straight forward process, not much unlike the process for
+	normal web pages. 
+	
+	- First, in Visual Studio, create a blank JavaScript Windows Store App.
+	
+	- Now in your File Explorer, navigate to your extracted MocuGame Library directory. In the MocuGame Library directory, 
+	you will find a folder named js.
+	
+	- In Visual Studio, add a folder named js to your project if it is not already there. If you are using the unminized version of the MGL, add
+	a folder named Dependencies to the js folder.
+	
+	- In Visual Studio, right click your js folder, then navigate to Add -> Add Existing. In the File Explorer dialog, navigate to the js folder of
+	the extracted MocuGame Library folder, and select all of the javascript files (but not Dependencies folder). Then click the drop down arrow
+	next to "Add" and select "Add as Link"
+	
+	- If you are using the unminimized version of the MocuGame Library, repeat these steps for the Dependencies folder in your Visual Studio 
+	Project and the corresponding Dependencies folder in the extracted MocuGame Library folder.
+	
+	In all of your html files that make use of the MocuGame Library, make these changes:
+	
+		If you are using the minimized MGL, simply add this to your <head></head> of the html file:
+		
+			<script src="/js/mocugame-min-0.9.1.js"></script>
+		
+		If you are using the unminimized MGL, add the following to the <head></head> of the html file:
+		
+		    <script src="js/Dependencies/audio-fx.min.js"></script>
+		    <script src="js/Dependencies/keyLib.js"></script>
+		    <script src="js/Dependencies/preloadjs.min.js"></script>
+
+		    <script src="js/mocu.js"></script>
+		    <script src="js/point.js"></script>
+		    <script src="js/pointer.js"></script>
+		    <script src="js/event.js"></script>
+		    <script src="js/action.js"></script>
+		    <script src="js/timeslot.js"></script>
+		    <script src="js/timeline.js"></script>
+		    <script src="js/rgba.js"></script>
+		    <script src="js/mocucameratraits.js"></script>
+		    <script src="js/mocuobject.js"></script>
+		    <script src="js/mocuanimation.js"></script>
+		    <script src="js/mocusprite.js"></script>
+		    <script src="js/mocubackground.js"></script>
+		    <script src="js/mocutext.js"></script>
+		    <script src="js/notification.js"></script>
+		    <script src="js/mocugroup.js"></script>
+		    <script src="js/mocutile.js"></script>
+		    <script src="js/mocutilemap.js"></script>
+		    <script src="js/mocustate.js"></script>
+		    <script src="js/mocuzone.js"></script>
+		    <script src="js/mocucamera.js"></script>
+		    <script src="js/mocucamerazone.js"></script>
+		    <script src="js/mocuemitter.js"></script>
+		    <script src="/js/mocumenu.js"></script>
+		    <script src="/js/mocumenuitem.js"></script>
+		    <script src="js/mocusound.js"></script>
+		    <script src="js/mocumusic.js"></script>
+		    <script src="js/mocugame.js"></script>
+	
+	If you are using the minimized version of the MGL, the following changes will need to be made to your default.js file:
+		
+		Replace the existing app.onactivated function with:
+		
+		app.onactivated = function (args) {
+	        if (args.detail.kind === activation.ActivationKind.launch) {
+	            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
+	                //Call MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution) here
+
+	                //Overload MocuGame.onLoaded here
+
+	                //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
+
+	                MocuGame.targetResolutionWidth = window.innerWidth;
+	                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
+	                    new MocuGame.Point(window.innerWidth, window.innerHeight));
+
+	                var state = new MocuGame.MocuState(60);
+	                state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+
+	                MocuGame.init(state);
+
+	            } else {
+	                // TODO: This application has been reactivated from suspension.
+	            }
+	            args.setPromise(WinJS.UI.processAll());
+	        }
+    	};
+
+2.2	Documentation
+-----------------------------------------------------------
+	Documentation of the MocuGame Library is available at https://mocugamelibrary.codeplex.com/documentation
+
+
+3.0	Contact Information
+-----------------------------------------------------------
+	For any questions, concerns, feedback, or ideas, please email me at mocuto@outlook.com
+
+4.0	Credits
+-----------------------------------------------------------
+	Credits to Flixel, the ActionScript 3 game library that inspired a lot of the design choices I made with the MocuGame Library
+
+5.0 Change Log
+-----------------------------------------------------------
+	No changes yet!

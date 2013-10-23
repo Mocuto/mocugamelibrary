@@ -4,6 +4,8 @@
     MocuZone, derived from MocuObject, zones against an object, and allows for the execution of functions when an object leaves the bounds,
     declared by a MocuZone. Useful for special event zones and such.
 
+    The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
+
     Eclipse Public License, Version 1.0 (EPL-1.0) (plain text) THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
 	1. DEFINITIONS
 	"Contribution" means:
