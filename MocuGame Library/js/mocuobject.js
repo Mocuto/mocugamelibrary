@@ -50,6 +50,8 @@
         this.dying = false;
         this.life = 0;
         this.fillStyle = 'blue';
+        this.strokeStyle = 'black';
+        this.lineWidth = 4;
         this.alpha = 1;
         this.usesFade = false;
         this.fade = new MocuGame.RGBA(1, 0, 0, 0);
@@ -128,8 +130,8 @@
         else
             context.fillStyle = this.fillStyle;
         context.fill();
-        context.lineWidth = 4;
-        context.strokeStyle = 'black';
+        context.lineWidth = this.lineWidth;
+        context.strokeStyle = this.strokeStyle;
         context.stroke();
         context.closePath();
         context.globalCompositeOperation = "source-over";
@@ -262,7 +264,7 @@
             }
             return collisionTypes;
         }
-        return false;
+        return new Array();
     };
 
     MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {

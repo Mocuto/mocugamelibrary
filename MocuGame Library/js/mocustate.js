@@ -25,39 +25,17 @@
         this.fadeRect = null;
         this.currentMusic = null;
         
-        this.timeAccumulator = 0;
-        
-        this.obj = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32));
-        this.obj.visible = true;
-        this.obj.velocity.x = 1;
-        //this.obj.cameraTraits.scrollRate.x = 0;
-        //this.obj.cameraTraits.scrollRate.y = 0;
-        //this.obj.acceleration.y = 1;
-        //this.obj.restitution = 0.5;
-        this.add(this.obj);
-        MocuGame.camera.trackingObject = this.obj;
-        
-        this.obj2 = new MocuGame.MocuTilemap(new MocuGame.Point(0, 240), new MocuGame.Point(64, 64), new MocuGame.Point(32, 32),
-    "_,_,(5 2 3 0 1),(5 3 0 1 2)", "images/sampletile.png", new MocuGame.Point(64, 64));
-        this.obj2.collisionStartingIndex = 2;
-        this.obj2.visible = true;
-        this.add(this.obj2);
-
-        this.obj3 = new MocuGame.MocuCameraZone(new MocuGame.Point(100, 0), new MocuGame.Point(300, 300), false, false,
-            new MocuGame.Point(250, 150));
-        this.obj3.alpha = 0.5;
-        this.obj3.visible = true;
-        this.add(this.obj3);
+        this.timeAccumulator = 0;        
     };
     MocuGame.MocuState.prototype = new MocuGame.MocuGroup;
     MocuGame.MocuState.constructor = MocuGame.MocuState;
 
     /*
-        init is a function which makes the state as initialized;
+        init is a function which marks the state as initialized;
     */
 
     MocuGame.MocuState.prototype.init = function () {
-
+        
         this.initialized = true;
     };
 
@@ -67,7 +45,6 @@
 
     */
     MocuGame.MocuState.prototype.update = function () {
-    	//TODO: Experiment with semi-fixed timesteps here, which will be fun
         if (!this.initialized)
             return;
         this.d = new Date();
@@ -80,18 +57,11 @@
         	MocuGame.MocuGroup.prototype.update.call(this, 1);
 	        this.fadeRect.update(1);
         	this.timeAccumulator -= (1000 / this.intendedFps);
-			this.obj.collidesWithTilemap(this.obj2);
         }
        
         fixedDeltaT = deltaT / (1000 / this.intendedFps);
         this.lastDeltaT = fixedDeltaT;
-        //console.log("Time diff is " + deltaT + " " + fixedDeltaT);
         this.lastRun = currentRun;
-        //if(fixedDeltaT < 20)
-            //MocuGame.MocuGroup.prototype.update.call(this, 1);
-        //this.fadeRect.update(fixedDeltaT);
-		
-
     };
 
     /*
@@ -119,7 +89,7 @@
         - The pointer corresponding to the touch event.
     */
 
-    MocuGame.MocuState.prototype.touch = function (pointer) {
+    MocuGame.MocuState.prototype.onTouch = function (pointer) {
         //Nothing for now
     };
 

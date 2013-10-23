@@ -47,9 +47,12 @@
     */
 
     MocuGame.MocuText.prototype.draw = function (context, displacement) {
-        //MocuGame.MocuObject.prototype.draw.call(this, context, displacement);
-        if (typeof displacement == null || typeof displacement == 'undefined')
+        if (typeof this.text == "undefined") {
+            return;
+        }
+        if (typeof displacement == null || typeof displacement == 'undefined') {
             displacement = new MocuGame.Point(0, 0);
+        }
 
         
         context.translate(((this.x + displacement.x)) * MocuGame.uniscale, ((this.y + this.height/2) + displacement.y) * MocuGame.uniscale);
@@ -65,7 +68,7 @@
         //Set the font and color and alignment
         context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
         context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
-        context.strokeWidth = this.strokeWidth;
+        context.lineWidth = this.strokeWidth;
         context.font = this.font;
         context.textAlign = this.align;
 
@@ -78,8 +81,9 @@
             testLine = currentLine + ' ' + words[i] + ' ';
             if (context.measureText(testLine).width > this.width) {
                 context.fillText(currentLine, 0, height);
-                if (this.doesStroke && this.strokeColor != null)
+                if (this.doesStroke && this.strokeColor != null) {
                     context.strokeText(currentLine, 0, height);
+                }
                 currentLine = words[i] + ' ';
                 height += this.height;
             }
@@ -88,8 +92,9 @@
             }
         }
         context.fillText(currentLine, 0, height);
-        if (this.doesStroke && this.strokeColor != null)
+        if (this.doesStroke && this.strokeColor != null) {
             context.strokeText(currentLine, 0, height);
+        }
  
 
         context.rotate(-(this.angle * 3.14159265359) / 180);

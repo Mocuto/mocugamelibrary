@@ -119,7 +119,7 @@
         - The pointer corresponding to the touch event.
     */
 
-    MocuGame.MocuState.prototype.touch = function (pointer) {
+    MocuGame.MocuState.prototype.onTouch = function (pointer) {
         //Nothing for now
     };
 

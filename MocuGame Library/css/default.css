@@ -13,7 +13,3 @@
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
 }
-
-canvas {
-    border: 2px solid black;
-}
