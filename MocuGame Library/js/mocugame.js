@@ -417,14 +417,16 @@
         var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
         slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", 0, rgba.a, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-        slot2.addEvent(new MocuGame.Action(callback, caller));
+        if (callback != null) {
+            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new MocuGame.Action(callback, caller));
+            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        }
 
         var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
 
         MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
         MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
         MocuGame.camera.fadeRect.fade.r = rgba.r;
@@ -453,18 +455,20 @@
     */
 
     MocuGame.fadeFrom = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
+        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime);
         slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", rgba.a, 0, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-        slot2.addEvent(new MocuGame.Action(callback, caller));
+        if (callback != null) {
+            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new MocuGame.Action(callback, caller));
+            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        }
 
         var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "visible", true, false, 1));
 
         MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
         MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
         MocuGame.camera.fadeRect.fade.r = rgba.r;

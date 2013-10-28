@@ -58,6 +58,9 @@
     */
 
     MocuGame.Action.prototype.start = function () {
+        if (typeof this.callback == "undefined" || this.callback == null) {
+            return;
+        }
         this.callback.call(this.obj);
         this.started = true;
     }
