@@ -357,6 +357,7 @@
     */
 
     MocuGame.init = function (state, imageManifest, musicManifest, soundManifest) {
+
         MocuGame.switchState(state);
         MocuGame.pointers = new Array();
         if (typeof imageManifest != "undefined") {
@@ -543,6 +544,9 @@
 
     MocuGame.updatePointers = function(e, down)
     {
+        if (MocuGame.currentState == null) {
+            return;
+        }
         var found = 0;
         for (var i = 0; i < MocuGame.pointers.length; i += 1) {
             if (MocuGame.pointers[i].ID == e.pointerId) {

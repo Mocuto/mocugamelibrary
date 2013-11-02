@@ -309,6 +309,8 @@
 
         var pos = this.getWorldPoint();
         var collisionTypes = new Array();
+
+        var margin = 5;
         
         var topRight = new MocuGame.Point((pos.x + this.width), pos.y);
         var bottomRight = new MocuGame.Point((pos.x + this.width), (pos.y + this.height));
@@ -325,8 +327,8 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - 1, topRight.y);
-                newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - 1, bottomRight.y);
+                newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - margin, topRight.y - margin);
+                newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - margin, bottomRight.y + margin);
             }
             
             if(!object.containsLine(newStartPoint, newEndPoint))
@@ -341,8 +343,8 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + 1, topLeft.y);
-                newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + 1, bottomLeft.y);
+                newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + margin, topLeft.y - margin);
+                newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + margin, bottomLeft.y + margin);
             }
         	
         	if(!object.containsLine(newStartPoint, newEndPoint))
@@ -357,8 +359,8 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topLeft.x, topLeft.y - this.velocity.y + 1);
-                newEndPoint = new MocuGame.Point(topRight.x, topRight.y - this.velocity.y + 1);
+                newStartPoint = new MocuGame.Point(topLeft.x - margin, topLeft.y - this.velocity.y + margin);
+                newEndPoint = new MocuGame.Point(topRight.x + margin, topRight.y - this.velocity.y + margin);
             }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
@@ -373,8 +375,8 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(bottomLeft.x, bottomLeft.y - this.velocity.y - 1);
-                newEndPoint = new MocuGame.Point(bottomRight.x, bottomRight.y - this.velocity.y - 1);
+                newStartPoint = new MocuGame.Point(bottomLeft.x - margin, bottomLeft.y - this.velocity.y - margin);
+                newEndPoint = new MocuGame.Point(bottomRight.x + margin, bottomRight.y - this.velocity.y - margin);
             }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
