@@ -166,6 +166,28 @@
     MocuGame.MocuGroup.prototype.removeAt = function (index) {
         this.objects.splice(index, 1);
     };
+    
+    /*
+    */
+    
+    MocuGame.MocuGroup.prototype.getObjectWithName = function (name) {
+        //alert("getObjectWithName");
+        for (var i = 0; i < this.objects.length; i++) {
+            var obj = this.objects[i];
+            if (obj.name == name) {
+                return obj;
+                //alert("Found");
+            }
+            else if (MocuGame.MocuGroup.prototype.isPrototypeOf(obj)) {
+                var result = obj.getObjectWithName(name);
+                if (result != null) {
+                    return result;
+                }
+            }
+            //alert(obj);
+        }
+        return null;
+    }
 
     /*
         copyContentsTo is a function which adds all of a MocuGroup objects contents to another MocuGroup object.

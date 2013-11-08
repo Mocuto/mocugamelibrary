@@ -145,6 +145,10 @@
     */
 
     MocuGame.MocuObject.prototype.draw = function (context, displacement) {
+        if (this.isOnScreen() == false) //Object is off screen
+        {
+            return;
+        }
         context.globalAlpha = this.alpha;
         if (typeof displacement  == 'null' || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
@@ -178,6 +182,34 @@
     };
 
     /*
+        
+    */
+
+    MocuGame.MocuObject.prototype.collidesWithGroup = function (group) {
+        var result = new Array();
+        for (var i = 0; i < group.objects.length; i++) {
+            var object = group.objects[i];
+
+            if (MocuGame.MocuTilemap.prototype.isPrototypeOf(object)) {
+                var val = this.collidesWithTilemap(object);
+                val.push.apply(val, result);
+            }
+
+            else if(MocuGame.MocuGroup.prototype.isPrototypeOf(object))
+            {
+                var val = this.collidesWithGroup(object);
+                val.push.apply(val, result);
+            }
+
+            else {
+                var val = this.collidesWith(object);
+                val.push.apply(val, result);
+            }
+        }
+        return result;
+    }
+
+    /*
         getOverlapsInGroup is a function which returns all objects in a given MocuGroup that overlap 
         with the caller.
 
@@ -197,12 +229,13 @@
             return returnGroup;
         }
         //console.log(" X is " + MocuGame.MocuGroup.prototype.isPrototypeOf(MObj));
-        if (MocuGame.MocuGroup.prototype.isPrototypeOf(MObj)) {
+        if (MocuGame.MocuGroup.prototype.isPrototypeOf(group)) {
             for (var i = 0; i < group.objects.length; ++i) {
                 var obj = group.objects[i];
                 if (obj.exists) {
-                    if (this.isColliding(obj)) //If it is a single object
+                    if (this.overlapsWith(obj)) { //If it is a single object
                         returnGroup.push(obj);
+                    }
                 }
             }
         }
@@ -255,14 +288,15 @@
     */
 
     MocuGame.MocuObject.prototype.collidesWith = function (object) {
-        if (this.overlapsWith(object) == true && object.density && this.density) {
+        if (this.overlapsWith(object) == true && object.density == true && this.density == true) {
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf(MocuGame.RIGHT) != -1) {
-                this.x = object.x - this.width;
+                this.x = object.getWorldPoint().x - this.width;
                 if (this.isMovementPolar) {
                 }
                 else {
                     this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
+                    return collisionTypes;
                 }
             }
             if (collisionTypes.indexOf(MocuGame.LEFT) != -1) {
@@ -271,6 +305,7 @@
                 }
                 else {
                     this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
+                    return collisionTypes;
                 }
             }
             if (collisionTypes.indexOf(MocuGame.TOP) != -1) {
@@ -279,6 +314,7 @@
                 }
                 else {
                     this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
+                    return collisionTypes;
                 }
             }
             if (collisionTypes.indexOf(MocuGame.BOTTOM) != -1) {
@@ -287,6 +323,7 @@
                 }
                 else {
                     this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                    return collisionTypes;
                 }
             }
             return collisionTypes;
@@ -295,13 +332,16 @@
     };
 
     MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
+        var result = new Array();
         if (this.overlapsWith(tilemap)) {
             var tiles = tilemap.getDenseTilesInRange(this.getWorldPoint(), new MocuGame.Point(this.width + 1, this.height + 1));
             for (var i = 0; i < tiles.length; i++) {
-                this.collidesWith(tiles[i]);
+
+                result.push(this.collidesWith(tiles[i]));
             }
 
         }
+        return result;
     };
 
     MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
@@ -310,7 +350,7 @@
         var pos = this.getWorldPoint();
         var collisionTypes = new Array();
 
-        var margin = 5;
+        var margin = 10;
         
         var topRight = new MocuGame.Point((pos.x + this.width), pos.y);
         var bottomRight = new MocuGame.Point((pos.x + this.width), (pos.y + this.height));
@@ -438,6 +478,28 @@
             return true;
         }
     };
+
+    /*
+    */
+
+    MocuGame.MocuObject.prototype.isOnScreen = function () {
+        if (MocuGame.camera == null) {
+            return false;
+        }
+        var displacement = new MocuGame.Point(0, 0);
+        if (this.parent != null) {
+            displacement = this.parent.getWorldPoint();
+        }
+        var drawnX = -(MocuGame.camera.x * this.cameraTraits.scrollRate.x) + (this.x + displacement.x);
+        var drawnY = -(MocuGame.camera.y * this.cameraTraits.scrollRate.y) + (this.y + displacement.y);
+
+       if (drawnX > MocuGame.resolution.x || drawnY > + MocuGame.resolution.y ||
+            drawnX + this.width  < 0 || drawnY + this.height < 0) //Object is off screen
+        {
+            return false;
+        }
+        return true;
+    }
 
     /*
         kill is a function which sets the MocuObject to no longer exist

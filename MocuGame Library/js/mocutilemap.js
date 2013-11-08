@@ -182,14 +182,17 @@
         var tilemapPoint = new MocuGame.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
             Math.floor(positionInTilemap.y / this.tileSize.y));
 
-        var tilemapSize = new MocuGame.Point(Math.ceil(size.x / this.tileSize.x),
-            Math.ceil(size.y / this.tileSize.y));
+        var tilemapPoint2 = new MocuGame.Point(Math.ceil((positionInTilemap.x + size.x) / this.tileSize.x),
+            Math.ceil((positionInTilemap.y + size.y) / this.tileSize.y));
+
+        var tilemapSize = new MocuGame.Point(tilemapPoint2.x - tilemapPoint.x, tilemapPoint2.y - tilemapPoint.y);
 
         var returnTiles = new Array();
 
         for (var x = 0; x < tilemapSize.x; x++) {
             for (var y = 0; y < tilemapSize.y; y++) {
-                if (typeof this.tileArray[tilemapPoint.x + x][tilemapPoint.y + y] !== "undefined") {
+                if ((tilemapPoint.x + x) >= 0 && (tilemapPoint.x + x) < this.widthInTiles
+                    && (tilemapPoint.y + y) >= 0 && (tilemapPoint.y + y) < this.heightInTiles) {
                     if (this.tileArray[tilemapPoint.x + x][tilemapPoint.y + y].tileID >= this.collisionStartingIndex) {
                         returnTiles.push(this.tileArray[tilemapPoint.x + x][tilemapPoint.y + y]);
                     }

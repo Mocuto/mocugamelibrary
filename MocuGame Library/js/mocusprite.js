@@ -219,9 +219,10 @@
 
         if (typeof displacement == null || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
-        if (this.x + displacement.x > MocuGame.gameWidth || this.y + displacement.y > MocuGame.gameHeight ||
-            this.x + displacement.x + this.width < 0 || this.y + displacement.y + this.height < 0) //Object is off screen
+
+        if (this.isOnScreen() == false) {
             return;
+        }
         
         context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
         context.scale(this.flip.x, this.flip.y);

@@ -45,6 +45,7 @@
         MocuGame.MocuObject.call(this, position, size);
         this.objectsToCheckAgainst = new Array();
         this.objectsInZone = new Array();
+        this.visible = false;
     };
     MocuGame.MocuZone.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuZone.constructor = MocuGame.MocuZone;
@@ -110,7 +111,7 @@
             }
             else { //If the zone thinks the object's in it
                 if (!this.overlapsWith(object)) {
-                    this.objectsInZone.slice(index, 1);
+                    this.objectsInZone.splice(index, 1);
                     var direction = null;
                     var objPos = object.getWorldPoint();
                     var pos = this.getWorldPoint();
