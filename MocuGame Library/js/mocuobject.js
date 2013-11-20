@@ -275,6 +275,27 @@
         
     };
 
+    MocuGame.MocuObject.prototype.willOverlapWith = function (object) {
+        var pos1 = this.getWorldPoint();
+        pos1.x += this.velocity.x;
+        pos1.y += this.velocity.y;
+        var pos2 = object.getWorldPoint();
+
+        if (object.exists == false) {
+            return false;
+        }
+        if ((pos2.x > pos1.x + this.width - 1) ||
+                           (pos2.y > pos1.y + this.height - 1) ||
+                           (pos1.x > pos2.x + object.width - 1) ||
+                           (pos1.y > pos2.y + object.height - 1)) {
+            // no collision
+            return false;
+        }
+
+        return true;
+
+    };
+
     /*
         collidesWith is a function which applies position readjusting to the caller if it overlaps
         with a given object.
@@ -291,11 +312,14 @@
         if (this.overlapsWith(object) == true && object.density == true && this.density == true) {
             var collisionTypes = this.getCollionTypes(object);
             if (collisionTypes.indexOf(MocuGame.RIGHT) != -1) {
-                this.x = object.getWorldPoint().x - this.width;
+                this.x = object.getWorldPoint().x - this.width - 1;
                 if (this.isMovementPolar) {
                 }
                 else {
-                    this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
+                    if (this.restitution != 0)
+                    {
+                        this.velocity.x = Math.abs(this.velocity.x) * -this.restitution;
+                    }
                     return collisionTypes;
                 }
             }
@@ -304,7 +328,9 @@
                 if (this.isMovementPolar) {
                 }
                 else {
-                    this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
+                    if (this.restitution != 0) {
+                        this.velocity.x = Math.abs(this.velocity.x) * this.restitution;
+                    }
                     return collisionTypes;
                 }
             }
@@ -313,7 +339,9 @@
                 if (this.isMovementPolar) {
                 }
                 else {
-                    this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
+                    if (this.restitution != 0) {
+                        this.velocity.y = Math.abs(this.velocity.y) * this.restitution;
+                    }
                     return collisionTypes;
                 }
             }
@@ -322,7 +350,9 @@
                 if (this.isMovementPolar) {
                 }
                 else {
-                    this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                    if (this.restitution != 0) {
+                        this.velocity.y = Math.abs(this.velocity.y) * -this.restitution;
+                    }
                     return collisionTypes;
                 }
             }
@@ -334,7 +364,23 @@
     MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
         var result = new Array();
         if (this.overlapsWith(tilemap)) {
-            var tiles = tilemap.getDenseTilesInRange(this.getWorldPoint(), new MocuGame.Point(this.width + 1, this.height + 1));
+            var start = new MocuGame.Point(this.getWorldPoint().x - 1, this.getWorldPoint().y - 1);
+            var size = new MocuGame.Point(this.width + 1, this.height + 1);
+            if (this.velocity.x > 0)
+            {
+                size.x += this.velocity.x;
+            }
+            else {
+                start.x += this.velocity.x;
+            }
+            if (this.velocity.y > 0)
+            {
+                size.y += this.velocity.y;
+            }
+            else {
+                start.y += this.velocity.x;
+            }
+            var tiles = tilemap.getDenseTilesInRange(start, size);
             for (var i = 0; i < tiles.length; i++) {
 
                 result.push(this.collidesWith(tiles[i]));
@@ -490,8 +536,21 @@
         if (this.parent != null) {
             displacement = this.parent.getWorldPoint();
         }
-        var drawnX = -(MocuGame.camera.x * this.cameraTraits.scrollRate.x) + (this.x + displacement.x);
-        var drawnY = -(MocuGame.camera.y * this.cameraTraits.scrollRate.y) + (this.y + displacement.y);
+        var cameraTraits = this.cameraTraits;
+        var obj = this;
+        while (cameraTraits == null)
+        {
+            if(obj.parent == null)
+            {
+                break;
+            }
+            obj = obj.parent;
+            cameraTraits = obj.cameraTraits;
+        }
+        var scrollX = (cameraTraits == null) ? 1 : cameraTraits.scrollRate.x;
+        var scrollY = (cameraTraits == null) ? 1 : cameraTraits.scrollRate.y;
+        var drawnX = -(MocuGame.camera.x * scrollX) + (this.x + displacement.x);
+        var drawnY = -(MocuGame.camera.y * scrollY) + (this.y + displacement.y);
 
        if (drawnX > MocuGame.resolution.x || drawnY > + MocuGame.resolution.y ||
             drawnX + this.width  < 0 || drawnY + this.height < 0) //Object is off screen

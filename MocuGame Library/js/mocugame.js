@@ -225,6 +225,7 @@
         var context = canvas.getContext('2d');
         context.canvas.width = resolution.x;
         context.canvas.height = resolution.y;
+        context.imageSmoothingEnabled = false;
         MocuGame.canvas = canvas;
         MocuGame.context = context;
 
@@ -239,7 +240,7 @@
         MocuGame.gameBounds = gameBounds;
         MocuGame.gameWidth = gameBounds.x;
         MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = MocuGame.resolution.x / MocuGame.targetResolutionWidth;
+        MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
 
         MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
 
@@ -251,6 +252,12 @@
             body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
             body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
         }
+    };
+
+    MocuGame.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
+        MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution);
+        MocuGame.isWindows81 = true;
+
     };
 
     /*
@@ -563,17 +570,33 @@
         else {
             pointer = MocuGame.pointers[found];
         }
-        switch(e.pointerType)
+        if (MocuGame.isWindows81)
         {
-            case e.MSPOINTER_TYPE_TOUCH:
-                MocuGame.currentState.onTouch(pointer);
-                break;
-            case e.MSPOINTER_TYPE_PEN:
-                MocuGame.currentState.onPen(pointer);
-                break;
-            case e.MSPOINTERTYPE_MOUSE:
-                MocuGame.currentState.onMouse(pointer);
-                break;
+            switch(e.pointerType)
+            {
+                case "touch":
+                    MocuGame.currentState.onTouch(pointer);
+                    break;
+                case "pen":
+                    MocuGame.currentState.onPen(pointer);
+                    break;
+                case "mouse":
+                    MocuGame.currentState.onMouse(pointer);
+                    break;
+            }
+        }
+        else {
+            switch (e.pointerType) {
+                case e.MSPOINTER_TYPE_TOUCH:
+                    MocuGame.currentState.onTouch(pointer);
+                    break;
+                case e.MSPOINTER_TYPE_PEN:
+                    MocuGame.currentState.onPen(pointer);
+                    break;
+                case e.MSPOINTERTYPE_MOUSE:
+                    MocuGame.currentState.onMouse(pointer);
+                    break;
+            }
         }
     };
 

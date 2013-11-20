@@ -110,7 +110,7 @@
     };
 
     /*
-        touch is a function which is called by MocuGame when the screen receives a touch event.
+        onTouch is a function which is called by MocuGame when the screen receives a touch event.
 
         Paramaters:
         pointer (Pointer)
@@ -118,6 +118,30 @@
     */
 
     MocuGame.MocuState.prototype.onTouch = function (pointer) {
+        //Nothing for now
+    };
+
+    /*
+        onMouse is a function which is called by MocuGame when the screen receives a mouse event.
+
+        Paramaters:
+        pointer (Pointer)
+        - The pointer corresponding to the mouse event.
+    */
+
+    MocuGame.MocuState.prototype.onMouse = function (pointer) {
+        //Nothing for now
+    };
+
+    /*
+        onPen is a function which is called by MocuGame when the screen receives a mouse event.
+
+        Paramaters:
+        pointer (Pointer)
+        - The pointer corresponding to the pen event.
+    */
+
+    MocuGame.MocuState.prototype.onPen = function (pointer) {
         //Nothing for now
     };
 

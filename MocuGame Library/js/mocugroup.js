@@ -85,6 +85,11 @@
             point = new MocuGame.Point(0, 0);
         for (var i = 0; i < this.objects.length; i += 1) {
 
+            if (this.fillStyle == "red")
+            {
+                console.log("break");
+            }
+
             if (this.objects[i].visible && this.objects[i].exists) {
                 //Pre drawing operations
                 if (this.objects[i].cameraTraits != null) {

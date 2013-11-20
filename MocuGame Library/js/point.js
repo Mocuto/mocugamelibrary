@@ -77,6 +77,6 @@
     */
 
     MocuGame.Point.prototype.getPolar = function () {
-        return new Array(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), (Math.atan(this.y / this.x) )*Math.PI/180);
+        return new Array(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), MocuGame.rad2deg(Math.atan(this.y / this.x) ));
     };
 })();

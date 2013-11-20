@@ -77,7 +77,13 @@
         if (typeof this.text == "undefined") {
             return;
         }
-        if (typeof displacement == null || typeof displacement == 'undefined') {
+
+        if (typeof this.text.length == "undefined")
+        {
+            return;
+        }
+
+        if (typeof displacement == null || typeof displacement == 'undefined' ) {
             displacement = new MocuGame.Point(0, 0);
         }
 
@@ -105,8 +111,8 @@
         var testLine = '';
         var height = 0;
         for (var i = 0; i < words.length; i += 1) {
-            testLine = currentLine + ' ' + words[i] + ' ';
-            if (context.measureText(testLine).width > this.width) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (context.measureText(testLine).width >= this.width/2) {
                 context.fillText(currentLine, 0, height);
                 if (this.doesStroke && this.strokeColor != null) {
                     context.strokeText(currentLine, 0, height);
