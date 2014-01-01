@@ -127,7 +127,7 @@
         this.timeline.update(deltaT);
         if (this.life > 0) {
             this.life -= deltaT;
-            if (this.life == 0) {
+            if (this.life <= 0) {
                 this.killAndRemove();
             }
         }
@@ -192,18 +192,18 @@
 
             if (MocuGame.MocuTilemap.prototype.isPrototypeOf(object)) {
                 var val = this.collidesWithTilemap(object);
-                val.push.apply(val, result);
+                result.push.apply(result, val);
             }
 
             else if(MocuGame.MocuGroup.prototype.isPrototypeOf(object))
             {
                 var val = this.collidesWithGroup(object);
-                val.push.apply(val, result);
+                result.push.apply(result, val);
             }
 
             else {
                 var val = this.collidesWith(object);
-                val.push.apply(val, result);
+                result.push.apply(result, val);
             }
         }
         return result;
@@ -225,7 +225,7 @@
     MocuGame.MocuObject.prototype.getOverlapsInGroup = function (group) {
         var returnGroup = new Array();
         returnGroup.setParent = false;
-        if (!MObj.exists) {
+        if (!group.exists) {
             return returnGroup;
         }
         //console.log(" X is " + MocuGame.MocuGroup.prototype.isPrototypeOf(MObj));
@@ -382,8 +382,10 @@
             }
             var tiles = tilemap.getDenseTilesInRange(start, size);
             for (var i = 0; i < tiles.length; i++) {
-
-                result.push(this.collidesWith(tiles[i]));
+                var val = this.collidesWith(tiles[i]);
+                if (val.length > 0) {
+                    result.push(val);
+                }
             }
 
         }
@@ -573,7 +575,6 @@
 
     MocuGame.MocuObject.prototype.killAndRemove = function () {
         this.kill();
-        this.exists = false;
         if (this.parent != null) {
             this.parent.remove(this);
         }

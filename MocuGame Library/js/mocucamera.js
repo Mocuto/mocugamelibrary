@@ -57,7 +57,7 @@
         this.fadeRect.usesFade = true;
 
         this.trackingObject = null;
-        this.trackingMargins = 0.1;
+        this.trackingMargins = 0;
         this.trackingOffset = new MocuGame.Point(0, 0);
         this.tracksVertical = true;
         this.tracksHorizontal = true;

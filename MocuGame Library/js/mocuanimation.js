@@ -123,8 +123,13 @@
         start is a function which starts the animation update timer.
     */
     MocuGame.MocuAnimation.prototype.start = function () {
-        this.timer = window.setTimeout( MocuGame.MocuAnimation.prototype.update.bind(this)
-        , 1000 / this.speed, this);
+        if (!this.isPlaying) {
+            this.frame = 0;
+            this.isFinished = false;
+            this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this)
+            , 1000 / this.speed, this);
+            this.isPlaying = true;
+        }
     };
 
     /*
@@ -133,6 +138,7 @@
 
     MocuGame.MocuAnimation.prototype.stop = function () {
         window.clearTimeout(this.timer);
+        this.isPlaying = false;
     };
 
     MocuGame.MocuAnimation.prototype.update = function () {

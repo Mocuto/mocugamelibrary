@@ -79,6 +79,10 @@
 
         deltaT = (currentRun - this.lastRun);
         this.timeAccumulator += deltaT;
+        if (this.timeAccumulator > 5000)
+        {
+            this.timeAccumulator = 0;
+        }
         while(this.timeAccumulator > (1000 / this.intendedFps))
         {
         	MocuGame.MocuGroup.prototype.update.call(this, 1);
@@ -89,6 +93,7 @@
         fixedDeltaT = deltaT / (1000 / this.intendedFps);
         this.lastDeltaT = fixedDeltaT;
         this.lastRun = currentRun;
+
     };
 
     /*

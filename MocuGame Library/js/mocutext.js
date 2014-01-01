@@ -59,6 +59,7 @@
         this.doesStroke = false;
         this.strokeColor = new MocuGame.RGBA(0, 0, 0, 0);
         this.strokeWidth = 1;
+        this.numberOfLines = 1;
     };
     MocuGame.MocuText.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuText.constructor = MocuGame.MocuText;
@@ -110,6 +111,7 @@
         var words = this.text.split(' ');
         var testLine = '';
         var height = 0;
+        this.numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
             testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
             if (context.measureText(testLine).width >= this.width/2) {
@@ -119,6 +121,7 @@
                 }
                 currentLine = words[i] + ' ';
                 height += this.height;
+                this.numberOfLines++;
             }
             else {
                 currentLine = testLine;

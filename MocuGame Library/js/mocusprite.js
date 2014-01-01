@@ -115,14 +115,22 @@
 
     */
 
-    MocuGame.MocuSprite.prototype.play = function (name) {
+    MocuGame.MocuSprite.prototype.play = function (name, forceRestart) {
+        forceRestart = (typeof forceRestart == "undefined") ? false : forceRestart;
         if (typeof this.anim != "undefined") {
-            this.anim.stop();
+            if (this.anim.name === name && forceRestart || this.anim.name !== name)
+            {
+                this.anim.stop();
+            }
+            else 
+            {
+                return;
+            }
+
         }
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].name == name) {
                 this.anim = this.animations[i];
-                this.anim.frame = 0;
                 this.anim.start();
                 break;
             }
