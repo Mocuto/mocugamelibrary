@@ -51,7 +51,7 @@
     MocuGame.MocuText = function (point, size, text) {
         MocuGame.MocuSprite.call(this, point, size);
         this.text = text;
-        this.font = "14px Helvetica";
+        this.font = "12px Helvetica";
         this.fade.r = 0;
         this.fade.g = 0;
         this.fade.b = 0;
@@ -73,6 +73,32 @@
         displacement (Point)
         - The offset of which the text is drawn.
     */
+
+    MocuGame.MocuText.prototype.getNumberOfLines = function () {
+
+        //Set the font and color and alignment
+        MocuGame.context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        MocuGame.context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        MocuGame.context.lineWidth = this.strokeWidth;
+        MocuGame.context.font = this.font;
+        MocuGame.context.textAlign = this.align;
+
+        var currentLine = '';
+        var words = this.text.split(' ');
+        var testLine = '';
+        var numberOfLines = 1;
+        for (var i = 0; i < words.length; i += 1) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (MocuGame.context.measureText(testLine).width >= this.width / 2) {
+                currentLine = words[i] + ' ';
+                numberOfLines++;
+            }
+            else {
+                currentLine = testLine;
+            }
+        }
+        return numberOfLines
+    }
 
     MocuGame.MocuText.prototype.draw = function (context, displacement) {
         if (typeof this.text == "undefined") {
@@ -106,7 +132,7 @@
         context.font = this.font;
         context.textAlign = this.align;
 
-        //Draw that text
+        //Draw text
         var currentLine = '';
         var words = this.text.split(' ');
         var testLine = '';
