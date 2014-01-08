@@ -86,6 +86,8 @@
         this.restitution = 0.0;
         
         this.cameraTraits = new MocuGame.MocuCameraTraits(new MocuGame.Point(1, 1), true, true);
+
+        this.isWorldPointRight = false;
     };
 
     /*
@@ -124,6 +126,7 @@
             this.worldPoint.x = this.x;
             this.worldPoint.y = this.y;
         }
+        this.isWorldPointRight = true;
         this.timeline.update(deltaT);
         if (this.life > 0) {
             this.life -= deltaT;
@@ -178,6 +181,20 @@
     */
 
     MocuGame.MocuObject.prototype.getWorldPoint = function () {
+        if (!this.isWorldPointRight)
+        {
+
+            if (this.parent != null) {
+                this.parent.getWorldPoint();
+                this.worldPoint.x = this.parent.worldPoint.x + this.x;
+                this.worldPoint.y = this.parent.worldPoint.y + this.y;
+            }
+            else {
+                this.worldPoint.x = this.x;
+                this.worldPoint.y = this.y;
+            }
+            this.isWorldPointRight = true;
+        }
         return this.worldPoint;
     };
 
@@ -530,9 +547,9 @@
     /*
     */
 
-    MocuGame.MocuObject.prototype.isOnScreen = function () {
+    MocuGame.MocuObject.prototype.getScreenPoint = function () {
         if (MocuGame.camera == null) {
-            return false;
+            return this.getWorldPoint();
         }
         var displacement = new MocuGame.Point(0, 0);
         if (this.parent != null) {
@@ -540,10 +557,8 @@
         }
         var cameraTraits = this.cameraTraits;
         var obj = this;
-        while (cameraTraits == null)
-        {
-            if(obj.parent == null)
-            {
+        while (cameraTraits == null) {
+            if (obj.parent == null) {
                 break;
             }
             obj = obj.parent;
@@ -553,9 +568,16 @@
         var scrollY = (cameraTraits == null) ? 1 : cameraTraits.scrollRate.y;
         var drawnX = -(MocuGame.camera.x * scrollX) + (this.x + displacement.x);
         var drawnY = -(MocuGame.camera.y * scrollY) + (this.y + displacement.y);
+        return new MocuGame.Point(drawnX, drawnY);
+    }
+    /*
+    */
 
-       if (drawnX > MocuGame.resolution.x || drawnY > + MocuGame.resolution.y ||
-            drawnX + this.width  < 0 || drawnY + this.height < 0) //Object is off screen
+    MocuGame.MocuObject.prototype.isOnScreen = function () {
+        var drawnPoint = this.getScreenPoint();
+
+       if (drawnPoint.x > MocuGame.resolution.x || drawnPoint.y > + MocuGame.resolution.y ||
+            drawnPoint.x + this.width  < 0 || drawnPoint.y + this.height < 0) //Object is off screen
         {
             return false;
         }

@@ -175,8 +175,8 @@
     /*
     */
     
-    MocuGame.MocuGroup.prototype.getObjectWithName = function (name) {
-        //alert("getObjectWithName");
+    MocuGame.MocuGroup.prototype.getObjectNamed = function (name) {
+        //alert("getObjectNamed");
         for (var i = 0; i < this.objects.length; i++) {
             var obj = this.objects[i];
             if (obj.name == name) {
@@ -184,7 +184,7 @@
                 //alert("Found");
             }
             else if (MocuGame.MocuGroup.prototype.isPrototypeOf(obj)) {
-                var result = obj.getObjectWithName(name);
+                var result = obj.getObjectNamed(name);
                 if (result != null) {
                     return result;
                 }
