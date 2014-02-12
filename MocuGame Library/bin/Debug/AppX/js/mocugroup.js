@@ -85,6 +85,11 @@
             point = new MocuGame.Point(0, 0);
         for (var i = 0; i < this.objects.length; i += 1) {
 
+            if (this.fillStyle == "red")
+            {
+                console.log("break");
+            }
+
             if (this.objects[i].visible && this.objects[i].exists) {
                 //Pre drawing operations
                 if (this.objects[i].cameraTraits != null) {
@@ -166,6 +171,28 @@
     MocuGame.MocuGroup.prototype.removeAt = function (index) {
         this.objects.splice(index, 1);
     };
+    
+    /*
+    */
+    
+    MocuGame.MocuGroup.prototype.getObjectNamed = function (name) {
+        //alert("getObjectNamed");
+        for (var i = 0; i < this.objects.length; i++) {
+            var obj = this.objects[i];
+            if (obj.name == name) {
+                return obj;
+                //alert("Found");
+            }
+            else if (MocuGame.MocuGroup.prototype.isPrototypeOf(obj)) {
+                var result = obj.getObjectNamed(name);
+                if (result != null) {
+                    return result;
+                }
+            }
+            //alert(obj);
+        }
+        return null;
+    }
 
     /*
         copyContentsTo is a function which adds all of a MocuGroup objects contents to another MocuGroup object.

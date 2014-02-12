@@ -96,4 +96,29 @@
         this.showtext = "";
         this.text = "";
     };
+
+    MocuGame.Notification.prototype.getNumberOfLinesForFullText = function () {
+        //Set the font and color and alignment
+        MocuGame.context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        MocuGame.context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        MocuGame.context.lineWidth = this.strokeWidth;
+        MocuGame.context.font = this.font;
+        MocuGame.context.textAlign = this.align;
+
+        var currentLine = '';
+        var words = this.fulltext.split(' ');
+        var testLine = '';
+        var numberOfLines = 1;
+        for (var i = 0; i < words.length; i += 1) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (MocuGame.context.measureText(testLine).width >= this.width / 2) {
+                currentLine = words[i] + ' ';
+                numberOfLines++;
+            }
+            else {
+                currentLine = testLine;
+            }
+        }
+        return numberOfLines
+    }
 })();

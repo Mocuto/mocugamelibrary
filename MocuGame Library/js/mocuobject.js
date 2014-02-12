@@ -165,15 +165,19 @@
             context.fillStyle = this.fillStyle;
         context.fill();
         context.lineWidth = this.lineWidth;
-        context.strokeStyle = this.strokeStyle;
-        context.stroke();
+        if (this.lineWidth > 0)
+        {
+            context.strokeStyle = this.strokeStyle;
+            context.stroke();
+        }
+
         context.closePath();
         context.globalCompositeOperation = "source-over";
 
     };
 
     /*
-        getWorldPoint is a function which returns the objects position on the canvas.
+        getWorldPoint is a function which returns the objects position in the state.
 
         Returns:
         Point
@@ -181,20 +185,9 @@
     */
 
     MocuGame.MocuObject.prototype.getWorldPoint = function () {
-        if (!this.isWorldPointRight)
-        {
-
-            if (this.parent != null) {
-                this.parent.getWorldPoint();
-                this.worldPoint.x = this.parent.worldPoint.x + this.x;
-                this.worldPoint.y = this.parent.worldPoint.y + this.y;
-            }
-            else {
-                this.worldPoint.x = this.x;
-                this.worldPoint.y = this.y;
-            }
-            this.isWorldPointRight = true;
-        }
+        this.parent.getWorldPoint();
+        this.worldPoint.x = this.parent.worldPoint.x + this.x;
+        this.worldPoint.y = this.parent.worldPoint.y + this.y;
         return this.worldPoint;
     };
 
@@ -564,8 +557,8 @@
             obj = obj.parent;
             cameraTraits = obj.cameraTraits;
         }
-        var scrollX = (cameraTraits == null) ? 1 : cameraTraits.scrollRate.x;
-        var scrollY = (cameraTraits == null) ? 1 : cameraTraits.scrollRate.y;
+        var scrollX = (cameraTraits == null) ? 0 : cameraTraits.scrollRate.x;
+        var scrollY = (cameraTraits == null) ? 0 : cameraTraits.scrollRate.y;
         var drawnX = -(MocuGame.camera.x * scrollX) + (this.x + displacement.x);
         var drawnY = -(MocuGame.camera.y * scrollY) + (this.y + displacement.y);
         return new MocuGame.Point(drawnX, drawnY);

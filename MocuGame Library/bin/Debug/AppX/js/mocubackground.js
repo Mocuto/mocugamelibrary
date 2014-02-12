@@ -42,6 +42,8 @@
         to the sprites location on the server.
 
         Parameters:
+        point (Point)
+        - The location of the background on the screen
         spriteSize (Point)
         - the dimensions of the sprite.
         actualSize (Point)
@@ -50,8 +52,8 @@
         - Location of the sprite image on the server.
     */
 
-    MocuGame.MocuBackground = function (spriteSize, actualSize, spritePath) {
-        MocuGame.MocuSprite.call(this, new MocuGame.Point(0, 0), actualSize, spritePath);
+    MocuGame.MocuBackground = function (point, spriteSize, actualSize, spritePath) {
+        MocuGame.MocuSprite.call(this, point, actualSize, spritePath);
         this.spriteSize = spriteSize;
         this.scrollVelocity = new MocuGame.Point(0, 0);
         this.scrollPosition = new MocuGame.Point(0, 0);

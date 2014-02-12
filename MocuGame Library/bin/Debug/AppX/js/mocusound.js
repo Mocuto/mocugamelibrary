@@ -45,9 +45,15 @@
     */
     MocuGame.MocuSound = function (location, volume) {
         volume = (typeof volume == 'undefined' || typeof volume == null) ? 1 : volume;
+
         this.src = location;
+        if (this.src.lastIndexOf(".") != -1)
+        {
+            this.src = this.src.substr(0, this.src.lastIndexOf("."));
+        }
+
         this.volume = volume;
-        this.audio = AudioFX(location, { formats: ['mp3'], pool: 1, volumeume: volume});
+        this.audio = AudioFX(this.src, { formats: ['mp3', 'wav'], pool: 1, volume: volume});
     };
     /*
         play is a function which plays the MocuSound's audio data

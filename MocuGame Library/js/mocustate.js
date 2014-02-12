@@ -95,6 +95,13 @@
         this.lastRun = currentRun;
 
     };
+    /*
+        getWorldPoint is a function inherited from MocuObject which gives the objects position relative to the state.
+    */
+
+    MocuGame.MocuState.prototype.getWorldPoint = function () {
+        return new MocuGame.Point(this.x, this.y);
+    }
 
     /*
         draw is a function inherited from MocuGroup which renders all of its contained objects

@@ -5,6 +5,7 @@
     <WindowsUser>Mocuto</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
+    <PackageIdentityName>0a9ea545-8362-47d0-ac9d-a4aade2e9a80</PackageIdentityName>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\AppxManifest.xml">
@@ -37,6 +38,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\sampletile.png">
       <PackagePath>images\sampletile.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\signpatch.png">
+      <PackagePath>images\signpatch.png</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\smalllogo.png">
       <PackagePath>images\smalllogo.png</PackagePath>
@@ -73,6 +77,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocu.js">
       <PackagePath>js\mocu.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocupatch.js">
+      <PackagePath>js\mocupatch.js</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuanimation.js">
       <PackagePath>js\mocuanimation.js</PackagePath>
@@ -166,6 +173,7 @@
       <Architecture>Neutral</Architecture>
       <FrameworkIdentity>Name=Microsoft.WinJS.1.0, MinVersion=1.0.9200.20789</FrameworkIdentity>
       <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\Microsoft.WinJS.1.0.appx</AppxLocation>
+      <MoreInfo></MoreInfo>
     </ResolvedSDKReference>
   </ItemGroup>
 </Project>

@@ -225,6 +225,7 @@
         var context = canvas.getContext('2d');
         context.canvas.width = resolution.x;
         context.canvas.height = resolution.y;
+        context.imageSmoothingEnabled = false;
         MocuGame.canvas = canvas;
         MocuGame.context = context;
 
@@ -239,7 +240,7 @@
         MocuGame.gameBounds = gameBounds;
         MocuGame.gameWidth = gameBounds.x;
         MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = MocuGame.resolution.x / MocuGame.targetResolutionWidth;
+        MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
 
         MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
 
@@ -251,6 +252,12 @@
             body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
             body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
         }
+    };
+
+    MocuGame.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
+        MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution);
+        MocuGame.isWindows81 = true;
+
     };
 
     /*
@@ -357,6 +364,7 @@
     */
 
     MocuGame.init = function (state, imageManifest, musicManifest, soundManifest) {
+
         MocuGame.switchState(state);
         MocuGame.pointers = new Array();
         if (typeof imageManifest != "undefined") {
@@ -417,14 +425,16 @@
         var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
         slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", 0, rgba.a, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-        slot2.addEvent(new MocuGame.Action(callback, caller));
+        if (callback != null) {
+            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new MocuGame.Action(callback, caller));
+            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        }
 
         var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
 
         MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
         MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
         MocuGame.camera.fadeRect.fade.r = rgba.r;
@@ -453,18 +463,20 @@
     */
 
     MocuGame.fadeFrom = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
+        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime);
         slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", rgba.a, 0, time));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-        slot2.addEvent(new MocuGame.Action(callback, caller));
+        if (callback != null) {
+            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new MocuGame.Action(callback, caller));
+            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+        }
 
         var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
         slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "visible", true, false, 1));
 
         MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot2);
         MocuGame.camera.fadeRect.timeline.addSlot(slot3);
 
         MocuGame.camera.fadeRect.fade.r = rgba.r;
@@ -539,6 +551,9 @@
 
     MocuGame.updatePointers = function(e, down)
     {
+        if (MocuGame.currentState == null) {
+            return;
+        }
         var found = 0;
         for (var i = 0; i < MocuGame.pointers.length; i += 1) {
             if (MocuGame.pointers[i].ID == e.pointerId) {
@@ -555,17 +570,33 @@
         else {
             pointer = MocuGame.pointers[found];
         }
-        switch(e.pointerType)
+        if (MocuGame.isWindows81)
         {
-            case e.MSPOINTER_TYPE_TOUCH:
-                MocuGame.currentState.onTouch(pointer);
-                break;
-            case e.MSPOINTER_TYPE_PEN:
-                MocuGame.currentState.onPen(pointer);
-                break;
-            case e.MSPOINTERTYPE_MOUSE:
-                MocuGame.currentState.onMouse(pointer);
-                break;
+            switch(e.pointerType)
+            {
+                case "touch":
+                    MocuGame.currentState.onTouch(pointer);
+                    break;
+                case "pen":
+                    MocuGame.currentState.onPen(pointer);
+                    break;
+                case "mouse":
+                    MocuGame.currentState.onMouse(pointer);
+                    break;
+            }
+        }
+        else {
+            switch (e.pointerType) {
+                case e.MSPOINTER_TYPE_TOUCH:
+                    MocuGame.currentState.onTouch(pointer);
+                    break;
+                case e.MSPOINTER_TYPE_PEN:
+                    MocuGame.currentState.onPen(pointer);
+                    break;
+                case e.MSPOINTERTYPE_MOUSE:
+                    MocuGame.currentState.onMouse(pointer);
+                    break;
+            }
         }
     };
 

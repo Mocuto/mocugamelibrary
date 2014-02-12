@@ -43,18 +43,16 @@
 
                 //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
 
-                MocuGame.targetResolutionWidth = 640;
-                MocuGame.prepareCanvas("myCanvas", new MocuGame.Point(640, 480), new MocuGame.Point(640, 480));
+                MocuGame.targetResolutionWidth = window.innerWidth;
+                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
+                    new MocuGame.Point(window.innerWidth, window.innerHeight));
 
                 var state = new MocuGame.MocuState(60);
                 state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+                state.add(new MocuGame.MocuPatch(new MocuGame.Point(0, 100), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38),
+                    new MocuGame.Point(6, 6), new MocuGame.Point(26, 26)));
 
                 MocuGame.init(state);
-
-                var music = new MocuGame.MocuMusic("music/testmusic.mp3", true, true);
-                music.fadeIn(240);
-
-                window.setTimeout(function () { MocuGame.currentMusic.fadeOut(240); }, 1000);
 
             } else {
                 // TODO: This application has been reactivated from suspension.

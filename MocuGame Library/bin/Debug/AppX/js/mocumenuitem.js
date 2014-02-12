@@ -104,7 +104,7 @@
         onUnFocused is a callback which is called when the menu item is unfocused.
     */
 
-    MocuGame.MocuMenuItem.prototype.onUnFocused = function () {
+    MocuGame.MocuMenuItem.prototype.onUnfocused = function () {
 
     };
 })();

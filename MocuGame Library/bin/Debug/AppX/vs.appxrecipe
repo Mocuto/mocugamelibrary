@@ -5,7 +5,8 @@
     <WindowsUser>Mocuto</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
-    <RegisteredManifestChecksum>12E4CEB0D85F9DD17BA4CC146C1F74E34DE44B6D459525CCCB9A880E995210A9</RegisteredManifestChecksum>
+    <PackageIdentityName>0a9ea545-8362-47d0-ac9d-a4aade2e9a80</PackageIdentityName>
+    <RegisteredManifestChecksum>6885ADF51764F37227109BDFF43D4126C5B234E4A27F17F1512528F91C2D739D</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>0a9ea545-8362-47d0-ac9d-a4aade2e9a80_0.9.1.0_neutral__ez01d60bmdgbt</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>0a9ea545-8362-47d0-ac9d-a4aade2e9a80_ez01d60bmdgbt!App</RegisteredUserModeAppID>
     <RegisteredPackageID>0a9ea545-8362-47d0-ac9d-a4aade2e9a80</RegisteredPackageID>
@@ -16,29 +17,29 @@
     <AppXManifest Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-10-23T18:39:35.538</Modified>
+      <Modified>2014-01-18T22:21:40.592</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\default.html">
       <PackagePath>default.html</PackagePath>
-      <Modified>2013-10-23T18:38:43.511</Modified>
+      <Modified>2014-01-18T22:15:26.190</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\musicexample.html">
       <PackagePath>musicexample.html</PackagePath>
-      <Modified>2013-10-23T18:38:11.864</Modified>
+      <Modified>2013-10-23T21:17:12.424</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\page.html">
       <PackagePath>page.html</PackagePath>
-      <Modified>2013-10-23T16:54:51.927</Modified>
+      <Modified>2013-10-23T21:17:12.426</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\particleexample.html">
       <PackagePath>particleexample.html</PackagePath>
-      <Modified>2013-10-23T16:54:51.933</Modified>
+      <Modified>2013-10-23T21:17:12.428</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\spriteexample.html">
       <PackagePath>spriteexample.html</PackagePath>
-      <Modified>2013-10-23T16:54:51.934</Modified>
+      <Modified>2013-10-23T21:17:12.438</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\logo.png">
       <PackagePath>images\logo.png</PackagePath>
@@ -52,6 +53,10 @@
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\sampletile.png">
       <PackagePath>images\sampletile.png</PackagePath>
       <Modified>2013-10-23T16:54:51.669</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\signpatch.png">
+      <PackagePath>images\signpatch.png</PackagePath>
+      <Modified>2014-01-14T05:57:44.524</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\images\smalllogo.png">
       <PackagePath>images\smalllogo.png</PackagePath>
@@ -70,11 +75,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\action.js">
       <PackagePath>js\action.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.692</Modified>
+      <Modified>2013-10-28T13:35:23.988</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\default.js">
       <PackagePath>js\default.js</PackagePath>
-      <Modified>2013-10-23T18:40:01.314</Modified>
+      <Modified>2014-01-19T21:54:00.023</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\Dependencies\audio-fx.min.js">
       <PackagePath>js\Dependencies\audio-fx.min.js</PackagePath>
@@ -98,19 +103,23 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocu.js">
       <PackagePath>js\mocu.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.716</Modified>
+      <Modified>2013-10-23T18:50:47.583</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocupatch.js">
+      <PackagePath>js\mocupatch.js</PackagePath>
+      <Modified>2014-01-19T22:06:49.089</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuanimation.js">
       <PackagePath>js\mocuanimation.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.722</Modified>
+      <Modified>2013-12-04T06:01:38.643</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocubackground.js">
       <PackagePath>js\mocubackground.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.727</Modified>
+      <Modified>2013-11-29T18:09:01.089</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocucamera.js">
       <PackagePath>js\mocucamera.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.733</Modified>
+      <Modified>2013-11-24T05:11:49.769</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocucameratraits.js">
       <PackagePath>js\mocucameratraits.js</PackagePath>
@@ -118,7 +127,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocucamerazone.js">
       <PackagePath>js\mocucamerazone.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.742</Modified>
+      <Modified>2013-11-05T12:15:41.229</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuemitter.js">
       <PackagePath>js\mocuemitter.js</PackagePath>
@@ -126,47 +135,47 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame.js">
       <PackagePath>js\mocugame.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.757</Modified>
+      <Modified>2013-11-24T19:58:27.361</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugroup.js">
       <PackagePath>js\mocugroup.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.766</Modified>
+      <Modified>2014-01-06T23:51:03.982</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocumenu.js">
       <PackagePath>js\mocumenu.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.772</Modified>
+      <Modified>2013-12-15T20:11:41.158</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocumenuitem.js">
       <PackagePath>js\mocumenuitem.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.777</Modified>
+      <Modified>2013-12-15T20:07:31.812</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocumusic.js">
       <PackagePath>js\mocumusic.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.784</Modified>
+      <Modified>2013-12-18T20:56:45.543</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuobject.js">
       <PackagePath>js\mocuobject.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.792</Modified>
+      <Modified>2014-01-18T22:28:58.065</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuzone.js">
       <PackagePath>js\mocuzone.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.836</Modified>
+      <Modified>2013-11-05T12:15:25.365</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocusound.js">
       <PackagePath>js\mocusound.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.797</Modified>
+      <Modified>2013-12-15T19:33:18.361</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocusprite.js">
       <PackagePath>js\mocusprite.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.804</Modified>
+      <Modified>2014-01-18T22:17:52.764</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocustate.js">
       <PackagePath>js\mocustate.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.811</Modified>
+      <Modified>2014-01-18T22:27:24.772</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocutext.js">
       <PackagePath>js\mocutext.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.819</Modified>
+      <Modified>2014-01-06T00:19:13.055</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocutile.js">
       <PackagePath>js\mocutile.js</PackagePath>
@@ -174,15 +183,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocutilemap.js">
       <PackagePath>js\mocutilemap.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.830</Modified>
+      <Modified>2013-11-04T05:41:27.317</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\notification.js">
       <PackagePath>js\notification.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.841</Modified>
+      <Modified>2014-01-06T00:00:51.600</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\point.js">
       <PackagePath>js\point.js</PackagePath>
-      <Modified>2013-10-23T16:54:51.847</Modified>
+      <Modified>2013-11-11T23:29:55.841</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\pointer.js">
       <PackagePath>js\pointer.js</PackagePath>
@@ -210,7 +219,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-10-23T18:39:35.352</Modified>
+      <Modified>2014-01-18T22:21:40.350</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +229,8 @@
       <Architecture>Neutral</Architecture>
       <FrameworkIdentity>Name=Microsoft.WinJS.1.0, MinVersion=1.0.9200.20789</FrameworkIdentity>
       <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\Microsoft.WinJS.1.0.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
     </ResolvedSDKReference>
   </ItemGroup>
 </Project>

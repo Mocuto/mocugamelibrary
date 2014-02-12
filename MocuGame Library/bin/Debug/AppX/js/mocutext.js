@@ -51,7 +51,7 @@
     MocuGame.MocuText = function (point, size, text) {
         MocuGame.MocuSprite.call(this, point, size);
         this.text = text;
-        this.font = "14px Helvetica";
+        this.font = "12px Helvetica";
         this.fade.r = 0;
         this.fade.g = 0;
         this.fade.b = 0;
@@ -59,6 +59,7 @@
         this.doesStroke = false;
         this.strokeColor = new MocuGame.RGBA(0, 0, 0, 0);
         this.strokeWidth = 1;
+        this.numberOfLines = 1;
     };
     MocuGame.MocuText.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuText.constructor = MocuGame.MocuText;
@@ -73,11 +74,43 @@
         - The offset of which the text is drawn.
     */
 
+    MocuGame.MocuText.prototype.getNumberOfLines = function () {
+
+        //Set the font and color and alignment
+        MocuGame.context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        MocuGame.context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        MocuGame.context.lineWidth = this.strokeWidth;
+        MocuGame.context.font = this.font;
+        MocuGame.context.textAlign = this.align;
+
+        var currentLine = '';
+        var words = this.text.split(' ');
+        var testLine = '';
+        var numberOfLines = 1;
+        for (var i = 0; i < words.length; i += 1) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (MocuGame.context.measureText(testLine).width >= this.width / 2) {
+                currentLine = words[i] + ' ';
+                numberOfLines++;
+            }
+            else {
+                currentLine = testLine;
+            }
+        }
+        return numberOfLines
+    }
+
     MocuGame.MocuText.prototype.draw = function (context, displacement) {
         if (typeof this.text == "undefined") {
             return;
         }
-        if (typeof displacement == null || typeof displacement == 'undefined') {
+
+        if (typeof this.text.length == "undefined")
+        {
+            return;
+        }
+
+        if (typeof displacement == null || typeof displacement == 'undefined' ) {
             displacement = new MocuGame.Point(0, 0);
         }
 
@@ -99,20 +132,22 @@
         context.font = this.font;
         context.textAlign = this.align;
 
-        //Draw that text
+        //Draw text
         var currentLine = '';
         var words = this.text.split(' ');
         var testLine = '';
         var height = 0;
+        this.numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
-            testLine = currentLine + ' ' + words[i] + ' ';
-            if (context.measureText(testLine).width > this.width) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (context.measureText(testLine).width >= this.width/2) {
                 context.fillText(currentLine, 0, height);
                 if (this.doesStroke && this.strokeColor != null) {
                     context.strokeText(currentLine, 0, height);
                 }
                 currentLine = words[i] + ' ';
                 height += this.height;
+                this.numberOfLines++;
             }
             else {
                 currentLine = testLine;

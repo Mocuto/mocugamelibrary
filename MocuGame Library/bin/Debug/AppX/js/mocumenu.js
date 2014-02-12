@@ -53,7 +53,7 @@
         this.selectedItem = null;
         this.locked = false;
         this.keyMap = {"left": Key.LEFT, "right": Key.RIGHT, "top": Key.UP, "bottom": Key.DOWN, "select": Key.ENTER };
-        this.keysDown = true;
+        this.keysDown = false;
         this.isTouching = true;
         this.parentState = state;
     };

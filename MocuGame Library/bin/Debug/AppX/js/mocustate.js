@@ -79,6 +79,10 @@
 
         deltaT = (currentRun - this.lastRun);
         this.timeAccumulator += deltaT;
+        if (this.timeAccumulator > 5000)
+        {
+            this.timeAccumulator = 0;
+        }
         while(this.timeAccumulator > (1000 / this.intendedFps))
         {
         	MocuGame.MocuGroup.prototype.update.call(this, 1);
@@ -89,7 +93,15 @@
         fixedDeltaT = deltaT / (1000 / this.intendedFps);
         this.lastDeltaT = fixedDeltaT;
         this.lastRun = currentRun;
+
     };
+    /*
+        getWorldPoint is a function inherited from MocuObject which gives the objects position relative to the state.
+    */
+
+    MocuGame.MocuState.prototype.getWorldPoint = function () {
+        return new MocuGame.Point(this.x, this.y);
+    }
 
     /*
         draw is a function inherited from MocuGroup which renders all of its contained objects
@@ -104,12 +116,13 @@
 
     MocuGame.MocuState.prototype.draw = function (context, point) {
         MocuGame.MocuGroup.prototype.draw.call(this, context, point);
-        if (typeof this.fadeRect != "undefined")
+        if (typeof this.fadeRect != "undefined") {
             this.fadeRect.draw(context, point);
+        }
     };
 
     /*
-        touch is a function which is called by MocuGame when the screen receives a touch event.
+        onTouch is a function which is called by MocuGame when the screen receives a touch event.
 
         Paramaters:
         pointer (Pointer)
@@ -117,6 +130,30 @@
     */
 
     MocuGame.MocuState.prototype.onTouch = function (pointer) {
+        //Nothing for now
+    };
+
+    /*
+        onMouse is a function which is called by MocuGame when the screen receives a mouse event.
+
+        Paramaters:
+        pointer (Pointer)
+        - The pointer corresponding to the mouse event.
+    */
+
+    MocuGame.MocuState.prototype.onMouse = function (pointer) {
+        //Nothing for now
+    };
+
+    /*
+        onPen is a function which is called by MocuGame when the screen receives a mouse event.
+
+        Paramaters:
+        pointer (Pointer)
+        - The pointer corresponding to the pen event.
+    */
+
+    MocuGame.MocuState.prototype.onPen = function (pointer) {
         //Nothing for now
     };
 

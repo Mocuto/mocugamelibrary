@@ -57,6 +57,7 @@
     <Content Include="images\logo.png" />
     <Content Include="images\Mocuto.png" />
     <Content Include="images\sampletile.png" />
+    <Content Include="images\signpatch.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
@@ -69,6 +70,7 @@
     <Content Include="js\event.js" />
     <Content Include="js\marquee.js" />
     <Content Include="js\mocu.js" />
+    <Content Include="js\mocupatch.js" />
     <Content Include="js\mocuanimation.js" />
     <Content Include="js\mocubackground.js" />
     <Content Include="js\mocucamera.js" />

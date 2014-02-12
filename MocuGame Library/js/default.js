@@ -49,6 +49,8 @@
 
                 var state = new MocuGame.MocuState(60);
                 state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+                state.add(new MocuGame.MocuPatch(new MocuGame.Point(0, 100), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38),
+                    new MocuGame.Point(6, 6), new MocuGame.Point(26, 26)));
 
                 MocuGame.init(state);
 

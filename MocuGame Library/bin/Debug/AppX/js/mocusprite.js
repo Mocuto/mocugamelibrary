@@ -115,14 +115,22 @@
 
     */
 
-    MocuGame.MocuSprite.prototype.play = function (name) {
+    MocuGame.MocuSprite.prototype.play = function (name, forceRestart) {
+        forceRestart = (typeof forceRestart == "undefined") ? false : forceRestart;
         if (typeof this.anim != "undefined") {
-            this.anim.stop();
+            if (this.anim.name === name && forceRestart || this.anim.name !== name)
+            {
+                this.anim.stop();
+            }
+            else 
+            {
+                return;
+            }
+
         }
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].name == name) {
                 this.anim = this.animations[i];
-                this.anim.frame = 0;
                 this.anim.start();
                 break;
             }
@@ -219,9 +227,10 @@
 
         if (typeof displacement == null || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
-        if (this.x + displacement.x > MocuGame.gameWidth || this.y + displacement.y > MocuGame.gameHeight ||
-            this.x + displacement.x + this.width < 0 || this.y + displacement.y + this.height < 0) //Object is off screen
+
+        if (this.isOnScreen() == false) {
             return;
+        }
         
         context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
         context.scale(this.flip.x, this.flip.y);
@@ -233,10 +242,10 @@
             this.colorEffect(context, displacement);
         else {
             context.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
-                (-(this.width / 2) * this.scale.x) * MocuGame.uniscale,
-                (-(this.height / 2) * this.scale.y) * MocuGame.uniscale,
-                ((this.width) * this.scale.x) * MocuGame.uniscale,
-                ((this.height) * this.scale.y) * MocuGame.uniscale);
+                Math.floor((-(this.width / 2) * this.scale.x) * MocuGame.uniscale),
+                Math.floor((-(this.height / 2) * this.scale.y) * MocuGame.uniscale),
+                Math.ceil(((this.width) * this.scale.x) * MocuGame.uniscale),
+                Math.ceil(((this.height) * this.scale.y) * MocuGame.uniscale));
         }
         context.rotate(-(this.angle * 3.14159265359) / 180);
         context.scale(this.flip.x, this.flip.y);

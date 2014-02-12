@@ -3,6 +3,7 @@ default.html
 images\logo.png
 images\Mocuto.png
 images\sampletile.png
+images\signpatch.png
 images\smalllogo.png
 images\splashscreen.png
 images\storelogo.png
@@ -26,6 +27,7 @@ js\mocumenu.js
 js\mocumenuitem.js
 js\mocumusic.js
 js\mocuobject.js
+js\mocupatch.js
 js\mocusound.js
 js\mocusprite.js
 js\mocustate.js
