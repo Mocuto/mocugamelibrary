@@ -232,7 +232,7 @@
             return;
         }
         
-        context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
+        context.translate(Math.round(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale), Math.round(((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale));
         context.scale(this.flip.x, this.flip.y);
         context.rotate((this.angle * 3.14159265359) / 180);
         
@@ -242,15 +242,15 @@
             this.colorEffect(context, displacement);
         else {
             context.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
-                Math.floor((-(this.width / 2) * this.scale.x) * MocuGame.uniscale),
-                Math.floor((-(this.height / 2) * this.scale.y) * MocuGame.uniscale),
-                Math.ceil(((this.width) * this.scale.x) * MocuGame.uniscale),
-                Math.ceil(((this.height) * this.scale.y) * MocuGame.uniscale));
+                Math.round((-(this.width / 2) * this.scale.x) * MocuGame.uniscale),
+                Math.round((-(this.height / 2) * this.scale.y) * MocuGame.uniscale),
+                Math.round(((this.width) * this.scale.x) * MocuGame.uniscale),
+                Math.round(((this.height) * this.scale.y) * MocuGame.uniscale));
         }
         context.rotate(-(this.angle * 3.14159265359) / 180);
         context.scale(this.flip.x, this.flip.y);
 
-        context.translate((-((this.x + this.width / 2) + displacement.x))*MocuGame.uniscale, (-((this.y + this.height / 2) + displacement.y))*MocuGame.uniscale);
+        context.translate(-Math.round((((this.x + this.width / 2) + displacement.x))*MocuGame.uniscale), -Math.round((((this.y + this.height / 2) + displacement.y))*MocuGame.uniscale));
         context.globalCompositeOperation = "source-over";
     }
 })();

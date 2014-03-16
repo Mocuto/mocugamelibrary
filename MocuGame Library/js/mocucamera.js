@@ -43,7 +43,8 @@
     */
     MocuGame.MocuCamera = function (position) {
         MocuGame.MocuGroup.call(this, position, new MocuGame.Point(1, 1));
-        this.centerMarker = new MocuGame.MocuObject(new MocuGame.Point(MocuGame.resolution.x / 2, MocuGame.resolution.y / 2),
+        var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16
+        this.centerMarker = new MocuGame.MocuObject(new MocuGame.Point(MocuGame.targetResolutionWidth / 2, targetHeight / 2),
             new MocuGame.Point(1, 1));
 
         this.add(this.centerMarker);
@@ -79,8 +80,8 @@
         cameraTraits (MocuCameraTrait) - The traits that should be applied to the camera's transformations
     */
     MocuGame.MocuCamera.prototype.preDraw = function (context, displacement, cameraTraits) {
-        context.translate(Math.round((-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
-            Math.round((-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
+        context.translate(Math.round((-(MocuGame.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
+            Math.round((-(MocuGame.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x * this.zoom, this.flip.y * this.zoom);
         }
@@ -105,8 +106,8 @@
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x / this.zoom, this.flip.y / this.zoom);
         }
-        context.translate(-Math.round((-(this.x * cameraTraits.scrollRate.x) + displacement.x)),
-    -Math.round((-(this.y * cameraTraits.scrollRate.y) + displacement.y)));
+        context.translate(-Math.round((-(MocuGame.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
+    -Math.round((-(MocuGame.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
 
     };
 
@@ -119,8 +120,7 @@
         if (this.tracksHorizontal) {
             var dist = Math.abs((this.trackingObject.getWorldPoint().x + (this.trackingObject.width / 2) + this.trackingOffset.x) -
                 (this.x + this.centerMarker.x));
-            if(dist > this.trackingMargins)
-            {
+            if (dist > this.trackingMargins) {
                 var pos = (this.trackingObject.getWorldPoint().x + (this.trackingObject.width / 2) + this.trackingOffset.x) - this.centerMarker.x;
                 this.x = (this.x + pos) / 2;
             }
@@ -149,8 +149,8 @@
         if (this.x < this.minimumPosition.x) {
             this.x = this.minimumPosition.x;
         }
-        if (this.x > this.maximumPosition.x - MocuGame.resolution.x) {
-            this.x = this.maximumPosition.x - MocuGame.resolution.x;
+        if (this.x > this.maximumPosition.x - MocuGame.targetResolutionWidth) {
+            this.x = this.maximumPosition.x - MocuGame.targetResolutionWidth;
             //alert(this.maximumPosition.x - MocuGame.resolution.x);
             //alert("Test");
             //this.angle = 90;
@@ -158,10 +158,11 @@
         if (this.y < this.minimumPosition.y) {
             this.y = this.minimumPosition.y;
         }
-        if (this.y > this.maximumPosition.y - MocuGame.resolution.y) {
-            this.y = this.maximumPosition.y - MocuGame.resolution.y;
+        var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16;
+        if (this.y > this.maximumPosition.y - targetHeight) {
+            this.y = this.maximumPosition.y - targetHeight;
         }
- 
+
 
     };
 
