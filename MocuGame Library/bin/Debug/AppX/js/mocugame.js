@@ -55,7 +55,6 @@
     MocuGame.targetResolutionWidth = 1920;
 
 
-
     /*
         requests a frame from the window. Please kindly ignore this.
     */
@@ -255,8 +254,44 @@
     };
 
     MocuGame.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
-        MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution);
+
+        var body = document.body;
+        var canvas = document.getElementById(canvasId);
+        var context = canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true, premultipliedAlpha: true});
+        context.canvas.width = resolution.x + 1;
+        context.canvas.height = resolution.y + 1;
+        MocuGame.canvas = canvas;
+        MocuGame.context = context;
+
+
+        var blankCanvas = document.createElement("canvas");
+        blankCanvas.id = "blankCanvas";
+        blankCanvas.width = context.canvas.width;
+        blankCanvas.height = context.canvas.height;
+        MocuGame.blankCanvas = blankCanvas;
+        MocuGame.blankContext = blankCanvas.getContext('2d');
+
+        MocuGame.resolution = resolution;
+        MocuGame.gameBounds = gameBounds;
+        MocuGame.gameWidth = gameBounds.x;
+        MocuGame.gameHeight = gameBounds.y;
+        MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
+
+        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+
+        MocuGame.renderer = new MocuGame.MocuRenderer(context)
+
+        MocuGame.touchenabled = false;
+        MocuGame.isWindows8 = true;
+        if (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1) {
+            MocuGame.touchenabled = true;
+            document.body.addEventListener("MSPointerDown", MocuGame.onPointerDown, false);
+            document.body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
+            document.body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
+        }
         MocuGame.isWindows81 = true;
+
+
 
     };
 
@@ -363,7 +398,7 @@
         - The list of sound files to load.
     */
 
-    MocuGame.init = function (state, imageManifest, musicManifest, soundManifest) {
+    MocuGame.init = function (state, imageManifest, musicManifest, soundManifest, shaderManifest) {
 
         MocuGame.switchState(state);
         MocuGame.pointers = new Array();
@@ -375,6 +410,10 @@
         }
         if (typeof soundManifest != "undefined") {
             MocuGame.preload.loadManifest(soundManifest, false);
+        }
+
+        if (typeof shaderManifest != "undefined") {
+            MocuGame.preload.loadManifest(shaderManifest, false);
         }
         MocuGame.preload.addEventListener("complete", MocuGame.onLoaded);
         MocuGame.preload.addEventListener("progress", function (event) { MocuGame.preloadPercent = Math.floor(event.loaded*100); });
@@ -466,7 +505,7 @@
         var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime);
         slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", rgba.a, 0, time));
 
-        if (callback != null) {
+        if (callback != null && typeof callback !=="undefined") {
             var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
             slot2.addEvent(new MocuGame.Action(callback, caller));
             MocuGame.camera.fadeRect.timeline.addSlot(slot2);
@@ -489,6 +528,18 @@
         MocuGame.camera.fadeRect.active = true;
     };
 
+    MocuGame.clearContext = function (context) {
+        if(MocuGame.isWindows81 == true)
+        {
+            context.clearColor(0.0, 0.0, 0.0, 0.0);
+            context.clear(context.COLOR_BUFFER_BIT);
+        }
+        else {
+            context.clearRect(0, 0, MocuGame.canvas.width, MocuGame.canvas.height);
+            MocuGame.blankContext.clearRect(0, 0, MocuGame.blankCanvas.width, MocuGame.blankCanvas.height);
+        }
+    }
+
     /*
         animate is a function which updates all objects and then draws them to the canvas. Then it
         requests another animation from (requestAnimFrame), doing it all over again.
@@ -500,8 +551,7 @@
         // clear
         var context = MocuGame.context;
         var blankContext = MocuGame.blankContext;
-        context.clearRect(0, 0, MocuGame.canvas.width, MocuGame.canvas.height);
-        blankContext.clearRect(0, 0, MocuGame.blankCanvas.width, MocuGame.blankCanvas.height);
+        MocuGame.clearContext(context);
         for (var i = 0; i < MocuGame.objects.length; i++) {
             if (MocuGame.objects[i].exists) {
                 if (MocuGame.objects[i].active) {
@@ -511,6 +561,7 @@
         }
         MocuGame.camera.update(MocuGame.currentState.lastDeltaT);
 
+        
 
         for (var i = 0; i < MocuGame.objects.length; i++) {
             if (MocuGame.objects[i].exists) {
@@ -518,6 +569,7 @@
                     //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
                     MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
                     //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+                    
                 }
             }
         }
@@ -734,5 +786,34 @@
             return unescape(val);
         }
     };
+
+    MocuGame.loadServerFile = function (url, data, callback, errorCallback) {
+        // Set up an asynchronous request
+        var request = new XMLHttpRequest();
+        request.open('GET', url, false);
+      
+        // Hook the event that gets called as the request progresses
+        request.onreadystatechange = function () {
+            // If the request is "DONE" (completed or failed)
+            if (request.readyState == 4) {
+                // If we got HTTP status 200 (OK)
+                if (request.status == 200) {
+                    //callback(request.responseText, data)
+                } else { // Failed
+                    //errorCallback(url);
+                }
+            }
+        };
+
+        request.send()
+        return request;
+    }
 }
 )();
+
+
+MocuGame.DEFAULT_VERTEX_SHADER = new MocuGame.MocuShader("js/mocugame-vertex.shader", MocuGame.SHADER_TYPE_VERTEX);
+MocuGame.DEFAULT_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);
+MocuGame.DEFAULT_SPRITE_VERTEX_SHADER = new MocuGame.MocuShader("js/mocugame-sprite-vertex.shader", MocuGame.SHADER_TYPE_VERTEX);
+MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-sprite-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);
+MocuGame.DEFAULT_BACKGROUND_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-background-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);

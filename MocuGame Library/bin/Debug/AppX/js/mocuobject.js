@@ -88,6 +88,11 @@
         this.cameraTraits = new MocuGame.MocuCameraTraits(new MocuGame.Point(1, 1), true, true);
 
         this.isWorldPointRight = false;
+
+        if (MocuGame.isWindows81) {
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER)
+            this.useParentProgramIfAvailable = false;
+        }
     };
 
     /*
@@ -136,6 +141,69 @@
         }
     };
 
+    MocuGame.MocuObject.prototype.getCoordinateArray = function () {
+        var absWidth = (this.width / 2) * MocuGame.uniscale;
+        var absHeight = (this.height / 2) * MocuGame.uniscale;
+
+        return new Float32Array([
+                                -absWidth, -absHeight,
+                                 absWidth, -absHeight,
+                                -absWidth, absHeight,
+                                -absWidth, absHeight,
+                                absWidth, -absHeight,
+                                absWidth, absHeight]);
+    };
+
+    MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
+        //Extend in child classes
+
+        var localProgram = this.program;
+        if (this.useParentProgramIfAvailable == true) {
+            if(this.parent != null)
+            {
+                if (this.parent.program != null) {
+                    localProgram = this.parent.program;
+                }
+            }
+        }
+
+        var program = (localProgram == null) ? MocuGame.renderer.defaultProgram : localProgram;
+        MocuGame.renderer.useProgram(program);
+
+        return program;
+    };
+
+    MocuGame.MocuObject.prototype.drawGl = function (gl, displacement) {
+        var program = this.preDrawGl(gl, displacement);
+
+        var colorLocation = gl.getUniformLocation(program, "u_color");
+        var colorArray = new Float32Array([this.fade.r, this.fade.g, this.fade.b, this.fade.a])
+        gl.uniform4fv(colorLocation, colorArray);
+
+        var translateLocation = gl.getUniformLocation(program, "u_translate");
+        var translate = new Float32Array([
+            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale
+        ]);
+        gl.uniform2fv(translateLocation, translate)
+
+        var textureCoordinateLocation = gl.getAttribLocation(program, "a_position");
+
+        // Provide texture coordinates for the rectangle
+        var textureCoordinateBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordinateBuffer);
+
+        //Create a buffer and set it to use the array buffer
+        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
+
+        //Activate the vertex attributes in the GPU program
+        gl.enableVertexAttribArray(textureCoordinateLocation);
+
+        //Set the format of the textureCoordinateLocation array
+        gl.vertexAttribPointer(textureCoordinateLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
     /*
         draw is a function which renders the bonding box of the MocuObject onto the canvas.
         Note: MocuObjects are invisible by defalt
@@ -152,6 +220,14 @@
         {
             return;
         }
+
+        if (MocuGame.isWindows81) {
+            this.drawGl(context, displacement);
+            this.draw = this.drawGl;
+            return;
+        }
+
+
         context.globalAlpha = this.alpha;
         if (typeof displacement  == 'null' || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
@@ -165,8 +241,12 @@
             context.fillStyle = this.fillStyle;
         context.fill();
         context.lineWidth = this.lineWidth;
-        context.strokeStyle = this.strokeStyle;
-        context.stroke();
+        if (this.lineWidth > 0)
+        {
+            context.strokeStyle = this.strokeStyle;
+            context.stroke();
+        }
+
         context.closePath();
         context.globalCompositeOperation = "source-over";
 

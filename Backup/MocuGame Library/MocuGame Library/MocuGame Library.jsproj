@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|AnyCPU">
       <Configuration>Debug</Configuration>
@@ -37,18 +37,17 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>0a9ea545-8362-47d0-ac9d-a4aade2e9a80</ProjectGuid>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0'">
-    <VisualStudioVersion>12.0</VisualStudioVersion>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0'">
+    <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).Default.props" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).props" />
   <PropertyGroup>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
-    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>MocuGame Library_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
@@ -71,15 +70,6 @@
     <Content Include="js\event.js" />
     <Content Include="js\marquee.js" />
     <Content Include="js\mocu.js" />
-    <Content Include="js\mocugame-background-fragment.shader" />
-    <Content Include="js\mocugame-fragment.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="js\mocugame-sprite-fragment.shader" />
-    <Content Include="js\mocugame-sprite-vertex.shader" />
-    <Content Include="js\mocugame-vertex.shader">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="js\mocupatch.js" />
     <Content Include="js\mocuanimation.js" />
     <Content Include="js\mocubackground.js" />
@@ -93,8 +83,6 @@
     <Content Include="js\mocumenuitem.js" />
     <Content Include="js\mocumusic.js" />
     <Content Include="js\mocuobject.js" />
-    <Content Include="js\mocurenderer.js" />
-    <Content Include="js\mocushader.js" />
     <Content Include="js\mocuzone.js" />
     <Content Include="js\mocusound.js" />
     <Content Include="js\mocusprite.js" />
@@ -116,7 +104,7 @@
     <None Include="MocuGame Library_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Microsoft.WinJS.2.0, Version=1.0" />
+    <SDKReference Include="Microsoft.WinJS.1.0, Version=1.0" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

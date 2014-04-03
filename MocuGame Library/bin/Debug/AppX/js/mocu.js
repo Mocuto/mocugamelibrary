@@ -34,3 +34,6 @@ MocuGame.LEFT = "LEFT";
 MocuGame.RIGHT = "RIGHT";
 MocuGame.TOP = "TOP";
 MocuGame.BOTTOM = "BOTTOM";
+
+MocuGame.SHADER_TYPE_FRAGMENT = "x-shader/x-fragment";
+MocuGame.SHADER_TYPE_VERTEX = "x-shader/x-vertex";

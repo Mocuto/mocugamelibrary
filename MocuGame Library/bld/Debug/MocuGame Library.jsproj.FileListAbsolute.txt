@@ -11,7 +11,6 @@ C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\
 C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\pri.resfiles
 C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\LanguageQualifiers.txt
 C:\Users\Mocuto\SkyDrive\Documents\Visual Studio 2012\Projects\MocuGame Library\MocuGame Library\bld\Debug\ProjectArchitectures.txt
-C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\resources.pri
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\AppxManifest.xml
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\MocuGame Library.build.appxrecipe
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bld\Debug\priconfig.xml
@@ -26,3 +25,6 @@ C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bld\Debug\pri.resfil
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bld\Debug\qualifiers.txt
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bld\Debug\qualifiers.txt.intermediate
 C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bld\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\ReverseMap\resources.pri
+C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\js\mocugame-fragment.shader
+C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\bin\Debug\js\mocugame-vertex.shader

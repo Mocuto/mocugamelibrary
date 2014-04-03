@@ -50,6 +50,10 @@
         this.objects = new Array();
         this.setParent = true;
         this.cameraTraits = null;
+
+        if (MocuGame.isWIndows81) {
+            this.program = null;
+        }
     };
     MocuGame.MocuGroup.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuGroup.constructor = MocuGame.MocuGroup;
@@ -93,10 +97,10 @@
             if (this.objects[i].visible && this.objects[i].exists) {
                 //Pre drawing operations
                 if (this.objects[i].cameraTraits != null) {
-                    MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
+                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
                 }
                 else if (this.cameraTraits != null) {
-                    MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
                 }
 
                 //Draw the object
@@ -104,10 +108,10 @@
 
                 //Post Drawing operations
                 if (this.objects[i].cameraTraits != null) {
-                    MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
+                   // MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
                 }
                 else if (this.cameraTraits != null) {
-                    MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
                 }
             }
             if (this.cameraTraits != null) {

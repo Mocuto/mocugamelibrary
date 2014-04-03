@@ -57,6 +57,10 @@
         this.spriteSize = spriteSize;
         this.scrollVelocity = new MocuGame.Point(0, 0);
         this.scrollPosition = new MocuGame.Point(0, 0);
+
+        if (MocuGame.isWindows81) {
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_BACKGROUND_FRAGMENT_SHADER);
+        }
     }
     MocuGame.MocuBackground.prototype = new MocuGame.MocuSprite(new MocuGame.Point, MocuGame.Point);
     MocuGame.MocuBackground.constructor = MocuGame.MocuBackground;
@@ -84,6 +88,81 @@
             this.scrollPosition.y += this.spriteSize.y;
     }
 
+    MocuGame.MocuBackground.prototype.preDrawGl = function(gl, displacement) {
+        var program = MocuGame.MocuSprite.prototype.preDrawGl.call(this,gl ,displacement);
+
+        var scrollPositionLocation = gl.getUniformLocation(program, "u_scrollPosition");
+        
+        var absScrollPosition = new MocuGame.Point(this.scrollPosition.x / this.spriteSize.x, this.scrollPosition.y / this.spriteSize.y);
+        gl.uniform2fv(scrollPositionLocation, new Float32Array([absScrollPosition.x, absScrollPosition.y]));
+
+        return program;
+    }
+
+    MocuGame.MocuBackground.prototype.drawGl = function (gl, displacement) {
+        var program = this.preDrawGl(gl, displacement);
+        
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+
+        // provide texture coordinates for the rectangle.
+        var texCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+
+        var texWidth = this.width  / this.spriteSize.x;
+        var texHeight = this.height / this.spriteSize.y;
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            0, 0,
+            texWidth, 0,
+            0, texHeight ,
+            0, texHeight,
+            texWidth, 0,
+            texWidth, texHeight]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        var texture = gl.createTexture();
+
+        var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
+
+        blankContext.globalCompositeOperation = "source-over";
+
+        blankCanvas.width = this.spriteSize.x;
+        blankCanvas.height = this.spriteSize.y;
+
+        blankContext.clearRect(0, 0, this.spriteSize.x, this.spriteSize.y);
+
+        blankContext.drawImage(this.img, 0, 0, this.spriteSize.x, this.spriteSize.y,
+           0,
+            0,
+            this.spriteSize.x,
+            this.spriteSize.y);
+
+        if (this.fade.a != 0) {
+            blankContext.globalCompositeOperation = "source-atop";
+            blankContext.globalAlpha = this.fade.a;
+            blankContext.beginPath();
+            blankContext.rect(0, 0, this.width, this.height);
+            blankContext.closePath();
+            blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")"
+            //console.log("FS is: " + "rgb( " + (this.fade.r * 255) + ", " + (this.fade.g * 255) + ", " + (this.fade.b * 255) + ")");
+            blankContext.fill();
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+
+        //Set the parameters so we can render any size image.
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
     /*
         draw is a function inherited from MocuSprite which draws the MocuBackground on to the game
         canvas, using a displacement based off its parent object.
@@ -96,6 +175,13 @@
     */
 
     MocuGame.MocuBackground.prototype.draw = function (context, displacement) {
+
+        if (MocuGame.isWindows81) {
+            this.drawGl(context, displacement);
+            this.draw = this.drawGl;
+            return;
+        }
+
         context.translate((this.x + displacement.x) * MocuGame.uniscale, (this.y + displacement.y) * MocuGame.uniscale);
         context.globalAlpha = 1;
         primBlitSize = new MocuGame.Point(this.spriteSize.x - this.scrollPosition.x,
