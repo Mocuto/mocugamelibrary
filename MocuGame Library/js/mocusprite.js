@@ -47,10 +47,12 @@
         - The path to the sprite file.
     */
 
-    MocuGame.MocuSprite = function (point, size, spriteLocation) {
+    MocuGame.MocuSprite = function (point, size, spriteLocation, dontPreload) {
         MocuGame.MocuObject.call(this, point, size);
-        if (typeof dontPreload == "undefined")
+
+        if (typeof dontPreload == "undefined") {
             dontPreload = false;
+        }
 
         this.animations = new Array();
 
@@ -82,6 +84,10 @@
         this.scale.y = 1;
 
         this.animates = true;
+
+        if (MocuGame.isWindows81) {
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+        }
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
@@ -135,6 +141,25 @@
                 break;
             }
         }
+    }
+
+
+    /*
+        hasAnimationName is a function which returns true if the MocuSprite contains an animation with the specified name
+
+        Parameters:
+        name (String)
+        - The animation name to search for
+    */
+
+    MocuGame.MocuSprite.prototype.hasAnimationNamed = function (name, forceRestart) {
+
+        for (var i = 0; i < this.animations.length; i++) {
+            if (this.animations[i].name == name) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*
@@ -209,6 +234,116 @@
         
     }
 
+    MocuGame.MocuSprite.prototype.preDrawGl = function (gl, displacement) {
+        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
+
+        //Provide location of the translate uniform
+        var translateLocation = gl.getUniformLocation(program, "u_translate");
+        var translate = new Float32Array([
+            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale
+        ]);
+        gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+
+        //Provide locaiton of the rotation uniform
+        var rotateLocation = gl.getUniformLocation(program, "u_rotate");
+        gl.uniform2fv(rotateLocation, new Float32Array([
+            Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
+        ]))
+
+        //Provide location of the scale uniform
+        var scaleLocation = gl.getUniformLocation(program, "u_scale");
+        gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
+
+        var positionLocation = gl.getAttribLocation(program, "a_position");
+
+        // Provide position coordinates for the rectangle
+        var positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        //Create a buffer and set it to use the array buffer
+        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
+
+        //Activate the vertex attributes in the GPU program
+        gl.enableVertexAttribArray(positionLocation);
+
+        //Set the format of the positionLocation array
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        return program;
+    }
+
+    MocuGame.MocuSprite.prototype.drawGl = function (gl, displacement) {
+
+        if (this.animates) {
+            this.animate(deltaT);
+        }
+        
+        var program = this.preDrawGl(gl, displacement);
+        
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+
+        // provide texture coordinates for the rectangle.
+        var texCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+        //var texWidth = this.width / this.img.width;
+        //var texHeight = this.height / this.img.height;
+
+        var texWidth = 1.0;
+        var texHeight = 1.0;
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            0, 0,
+            texWidth, 0,
+            0, texHeight ,
+            0, texHeight,
+            texWidth, 0,
+            texWidth, texHeight]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
+
+        blankContext.globalCompositeOperation = "source-over";
+
+        blankCanvas.width = this.width;
+        blankCanvas.height = this.height;
+
+        
+
+        blankContext.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
+           0,
+            0,
+            this.width,
+            this.height);
+
+        if (this.fade.a != 0) {
+            blankContext.globalCompositeOperation = "source-atop";
+            blankContext.globalAlpha = this.fade.a;
+            blankContext.beginPath();
+            blankContext.rect(0, 0, this.width, this.height);
+            blankContext.closePath();
+            blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")"
+            //console.log("FS is: " + "rgb( " + (this.fade.r * 255) + ", " + (this.fade.g * 255) + ", " + (this.fade.b * 255) + ")");
+            blankContext.fill();
+        }
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+
+        blankContext.clearRect(0, 0, this.width, this.height);
+
+        //Set the parameters so we can render any size image.
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+
     /*
         draw is a function derived from MocuObject which renders the object on to the given canvas.
 
@@ -223,6 +358,12 @@
 
         if (this.animates) {
             this.animate(deltaT);
+        }
+
+        if (MocuGame.isWindows81) {
+            this.drawGl(context, displacement);
+            this.draw = this.drawGl;
+            return;
         }
 
         if (typeof displacement == null || typeof displacement == 'undefined')

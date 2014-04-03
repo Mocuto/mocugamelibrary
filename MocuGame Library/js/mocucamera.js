@@ -56,6 +56,7 @@
 
         this.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
         this.fadeRect.usesFade = true;
+        this.fadeRect.cameraTraits = null;
 
         this.trackingObject = null;
         this.trackingMargins = 0;

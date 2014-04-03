@@ -94,30 +94,6 @@
         this.timer = null;
         this.isPlaying = false;
     };
-
-    /*
-        update is a function which updates the animations frame based off of the elapsed time.
-
-        Parameters:
-        deltaT (Number)
-        - the duration of time in frames since the last update call.
-    */
-
-    MocuGame.MocuAnimation.prototype.update = function (deltaT) {
-        this.frameJuice -= this.speed * deltaT;
-        if (this.frameJuice <= 0) {
-            this.frame += 1;
-            if (this.frame >= this.length) {
-                if (this.doesLoop)
-                    this.frame = 0;
-                else {
-                    this.isFinished = true;
-                    this.frame -= 1;
-                }
-            }
-            this.frameJuice = this.maxFrameJuice;
-        }
-    };
     
     /*
         start is a function which starts the animation update timer.
@@ -140,6 +116,15 @@
         window.clearTimeout(this.timer);
         this.isPlaying = false;
     };
+
+    /*
+    update is a function which updates the animations frame based off of the elapsed time.
+
+    Parameters:
+    deltaT (Number)
+    - the duration of time in frames since the last update call.
+    */
+
 
     MocuGame.MocuAnimation.prototype.update = function () {
         this.frame += 1;

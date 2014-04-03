@@ -117,6 +117,7 @@
     MocuGame.MocuState.prototype.draw = function (context, point) {
         MocuGame.MocuGroup.prototype.draw.call(this, context, point);
         if (typeof this.fadeRect != "undefined") {
+            this.fadeRect.visible = true;
             this.fadeRect.draw(context, point);
         }
     };
