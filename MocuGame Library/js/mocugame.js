@@ -39,7 +39,7 @@
 
 (function () {
 
-    MocuGame.objects = new Array();
+    MocuGame.objects = [];
 
     MocuGame.worldPoint = new MocuGame.Point(0, 0);
 
@@ -78,7 +78,7 @@
     */
 
     MocuGame.add = function (object) {
-        MocuGame.objects.push(object)
+        MocuGame.objects.push(object);
         object.parent = this;
     };
 
@@ -263,7 +263,6 @@
         MocuGame.canvas = canvas;
         MocuGame.context = context;
 
-
         var blankCanvas = document.createElement("canvas");
         blankCanvas.id = "blankCanvas";
         blankCanvas.width = context.canvas.width;
@@ -290,9 +289,6 @@
             document.body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
         }
         MocuGame.isWindows81 = true;
-
-
-
     };
 
     /*
@@ -416,7 +412,7 @@
             MocuGame.preload.loadManifest(shaderManifest, false);
         }
         MocuGame.preload.addEventListener("complete", MocuGame.onLoaded);
-        MocuGame.preload.addEventListener("progress", function (event) { MocuGame.preloadPercent = Math.floor(event.loaded*100); });
+        MocuGame.preload.addEventListener("progress", function (event) { MocuGame.preloadPercent = Math.floor(event.loaded * 100); });
         MocuGame.preload.load();
         MocuGame.animate();
     };
@@ -782,7 +778,9 @@
                 return null;
 
             var val = data.substring(start, end);
-            if(typeof callback != "undefined") callback.call(caller, val);
+            if (typeof callback != "undefined") {
+                callback.call(caller, val);
+            }
             return unescape(val);
         }
     };
@@ -798,9 +796,13 @@
             if (request.readyState == 4) {
                 // If we got HTTP status 200 (OK)
                 if (request.status == 200) {
-                    //callback(request.responseText, data)
+                    if (typeof callback != "undefined") {
+                        callback(request.responseText, data);
+                    }
                 } else { // Failed
-                    //errorCallback(url);
+                    if (typeof errorCallback != undefined) {
+                        errorCallback(url);
+                    }
                 }
             }
         };

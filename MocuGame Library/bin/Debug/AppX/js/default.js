@@ -49,23 +49,32 @@
 
                 var state = new MocuGame.MocuState(60);
                 //state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
-                var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100));
-
-                var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32), new MocuGame.Point(MocuGame.resolution.x, MocuGame.resolution.y), "images/sampletile.png");
+                var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50));
+                obj.fade.a = 1;
+                //var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32), new MocuGame.Point(MocuGame.resolution.x, MocuGame.resolution.y), "images/sampletile.png");
                 //state.add(background);
+
+                var patch = new MocuGame.MocuPatch(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
+                state.add(patch);
+                patch.angularvelocity = 1;
 
                 //background.velocity.y = -1;
 
-                var sprite = new MocuGame.MocuSprite(new MocuGame.Point(10, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
-                sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
-                sprite.play("Idle");
-                obj.velocity.x = 1;
+                //var sprite = new MocuGame.MocuSprite(new MocuGame.Point(10, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                //sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
+               // sprite.play("Idle");
+                //sprite.alpha = 1.0;
+                //obj.velocity.x = 1;
                 obj.visible = true;
                 //sprite.scale.x = 1;
                 //sprite.scale.y = 1;
                 //sprite.angularvelocity = 1;
-                //state.add(obj);
-                state.add(sprite);
+                state.add(obj);
+                //state.add(sprite);
+
+                var text = new MocuGame.MocuText(new MocuGame.Point(0, 100), new MocuGame.Point(100, 50), "Test 123");
+                text.angularvelocity = 1;
+                state.add(text);
 
                 MocuGame.init(state);
 

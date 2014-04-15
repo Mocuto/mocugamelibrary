@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -37,6 +37,11 @@
     <script src="js/mocumusic.js"></script>
     <script src="js/mocugame.js"></script>
 
+    <!-- WebGL Specific classes-->
+    <script src="js/mocurenderer.js"></script>
+    <script src="js/mocushader.js"></script>
+    <script src="js/mocugame.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/default.css" />
 
 </head>
@@ -44,7 +49,7 @@
     <canvas id="myCanvas"></canvas>
     <script>
         MocuGame.targetResolutionWidth = 640;
-        MocuGame.prepareCanvas("myCanvas", new MocuGame.Point(640, 480), new MocuGame.Point(640, 480));
+        MocuGame.prepareCanvasForWindows81("myCanvas", new MocuGame.Point(640, 480), new MocuGame.Point(640, 480));
 
         var sprite = new MocuGame.MocuSprite(new MocuGame.Point(320, 240), new MocuGame.Point(32, 32), "images/Mocuto.png");
         sprite.addAnimation("Dance", "0,1 1,1 2,1 3,1 4,1", 10, true);

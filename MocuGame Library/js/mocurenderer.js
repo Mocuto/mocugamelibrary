@@ -14,6 +14,8 @@
 
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+        gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
+
     };
     MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
 
@@ -78,11 +80,12 @@
 
     MocuGame.MocuRenderer.prototype.compileShader = function (gl, mocuShader) {
 
-        if (mocuShader.isCompiled == true) {
+        if (mocuShader.isCompiled === true) {
             return mocuShader.compiledObject;
         }
 
         var shaderType = mocuShader.type;
+        var shader = null;
 
         if(shaderType == MocuGame.SHADER_TYPE_FRAGMENT) //Create approriate shader based off of type
         {

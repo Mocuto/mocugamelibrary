@@ -2,14 +2,14 @@
     background-color:white;
 }
 
-@media screen and (-ms-view-state: fullscreen-landscape) {
+@media screen and (max-width: fullscreen-landscape) {
 }
 
-@media screen and (-ms-view-state: filled) {
+@media screen and (max-width: filled) {
 }
 
-@media screen and (-ms-view-state: snapped) {
+@media screen and (min-width: snapped) {
 }
 
-@media screen and (-ms-view-state: fullscreen-portrait) {
+@media screen and (min-width: fullscreen-portrait) {
 }

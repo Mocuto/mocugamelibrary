@@ -254,6 +254,9 @@
         var scaleLocation = gl.getUniformLocation(program, "u_scale");
         gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
 
+        //var alphaLocation = gl.getUniformLocation(program, "u_alpha");
+        //gl.uniform1f(alphaLocation, this.alpha)
+
         var positionLocation = gl.getAttribLocation(program, "a_position");
 
         // Provide position coordinates for the rectangle
@@ -277,6 +280,7 @@
         if (this.animates) {
             this.animate(deltaT);
         }
+
         
         var program = this.preDrawGl(gl, displacement);
         
@@ -311,8 +315,6 @@
 
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
-
-        
 
         blankContext.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
            0,

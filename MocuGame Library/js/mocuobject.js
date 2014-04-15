@@ -142,7 +142,7 @@
     };
 
     MocuGame.MocuObject.prototype.getCoordinateArray = function () {
-        var absWidth = (this.width / 2) * MocuGame.uniscale;
+        var absWidth = (this.width  / 2) * MocuGame.uniscale;
         var absHeight = (this.height / 2) * MocuGame.uniscale;
 
         return new Float32Array([
