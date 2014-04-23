@@ -146,7 +146,6 @@
             blankContext.rect(0, 0, this.width, this.height);
             blankContext.closePath();
             blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")"
-            //console.log("FS is: " + "rgb( " + (this.fade.r * 255) + ", " + (this.fade.g * 255) + ", " + (this.fade.b * 255) + ")");
             blankContext.fill();
         }
 

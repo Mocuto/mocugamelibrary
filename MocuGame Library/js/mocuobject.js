@@ -142,7 +142,7 @@
     };
 
     MocuGame.MocuObject.prototype.getCoordinateArray = function () {
-        var absWidth = (this.width  / 2) * MocuGame.uniscale;
+        var absWidth = (this.width / 2) * MocuGame.uniscale;
         var absHeight = (this.height / 2) * MocuGame.uniscale;
 
         return new Float32Array([
@@ -153,6 +153,57 @@
                                 absWidth, -absHeight,
                                 absWidth, absHeight]);
     };
+
+    MocuGame.MocuObject.prototype.setPositionAttribute = function (gl, program) {
+        var positionLocation = gl.getAttribLocation(program, "a_position");
+
+        // Provide position coordinates for the rectangle
+        var positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+
+        //Create a buffer and set it to use the array buffer
+        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW)
+
+        //Activate the vertex attributes in the GPU program
+        gl.enableVertexAttribArray(positionLocation);
+
+        //Set the format of the positionLocation array
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    };
+
+    MocuGame.MocuObject.prototype.setResolutionUniform = function (gl, program, resolution) {
+        var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+        gl.uniform2fv(resolutionLocation, new Float32Array([resolution.x, resolution.y]));
+    }
+
+    MocuGame.MocuObject.prototype.setScaleUniform = function (gl, program) {
+        //Provide location of the scale uniform
+        var scaleLocation = gl.getUniformLocation(program, "u_scale");
+        gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
+    }
+
+    MocuGame.MocuObject.prototype.setRotationUniform = function (gl, program) {
+        //Provide locaiton of the rotation uniform
+        var rotateLocation = gl.getUniformLocation(program, "u_rotate");
+        gl.uniform2fv(rotateLocation, new Float32Array([
+            Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
+        ]))
+    }
+
+    MocuGame.MocuObject.prototype.setTranslationUniform = function (gl, program, displacement) {
+        //Provide location of the translate uniform
+        var translateLocation = gl.getUniformLocation(program, "u_translate");
+        var translate = new Float32Array([
+            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + displacement.y) + (this.height / 2)) * MocuGame.uniscale
+        ]);
+        gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+    };
+
+    MocuGmae.MocuObject.prototype.setAlphaUniform = function (gl, program) {
+        var alphaLocation = gl.getUniformLocation(program, "u_alpha");
+        gl.uniform1f(alphaLocation, this.alpha);
+    }
 
     MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
         //Extend in child classes
@@ -174,10 +225,15 @@
     };
 
     MocuGame.MocuObject.prototype.drawGl = function (gl, displacement) {
+
+        if (typeof displacement == null || typeof displacement == 'undefined') {
+            displacement = new MocuGame.Point(0, 0);
+        }
+
         var program = this.preDrawGl(gl, displacement);
 
         var colorLocation = gl.getUniformLocation(program, "u_color");
-        var colorArray = new Float32Array([this.fade.r, this.fade.g, this.fade.b, this.fade.a])
+        var colorArray = new Float32Array([this.fade.r, this.fade.g, this.fade.b, this.alpha])
         gl.uniform4fv(colorLocation, colorArray);
 
         var translateLocation = gl.getUniformLocation(program, "u_translate");

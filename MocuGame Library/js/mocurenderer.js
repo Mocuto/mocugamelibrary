@@ -16,6 +16,14 @@
 
         gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
 
+        this.framebuffers = [];
+        this.framebufferTextures = [];
+
+        this.setupFramebuffers(gl);
+
+        this.framebufferIndex = 0;
+        this.framebufferTextureIndex = 0;
+
     };
     MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
 
@@ -28,7 +36,7 @@
 
     MocuGame.MocuRenderer.prototype.loadProgram = function (gl, mocuVertexShader, mocuFragmentShader) {
         //Check to make sure teh program isn't already chached
-        if (this.isProgramCached(gl, mocuVertexShader, mocuFragmentShader)) {
+        if (this.isProgramCached(gl, mocuVertexShader, mocuFragmentShader) == true) {
             var program = this.programCache[[mocuVertexShader.src, mocuFragmentShader.src]];
             return program;
         }
@@ -119,34 +127,83 @@
     }
 
 
-    MocuGame.MocuRenderer.prototype.drawImage = function (gl, object) {
-        var displacement = new MocuGame.Point(0, 0);
-        var resolutionLocation = gl.getUniformLocation(this.program, "u_resolution");
-        gl.uniform2fv(resolutionLocation, new Float32Array([MocuGame.resolution.x, MocuGame.resolution.y]));
+    MocuGame.MocuRenderer.prototype.setupFramebuffers = function (gl) {
 
-        var translateLocation = gl.getUniformLocation(this.program, "u_translate");
-        var translate = new Float32Array([
-            ((object.x + displacement.x) + (object.width / 2)) * MocuGame.uniscale, ((object.y + object.height / 2) + displacement.y) * MocuGame.uniscale
-        ]);
+        for (var i = 0; i < 2; i++) {
 
-        gl.uniform2fv(translateLocation, translate);
+            var framebuffer = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
-        var textureCoordinateLocation = gl.getAttribLocation(this.program, "a_position");
+            //Create the texture and bind it
+            var texture = this.createAndSetupTexture(gl);
 
-        // Provide texture coordinates for the rectangle
-        var textureCoordinateBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordinateBuffer);
+            //Set the texture to a temporary with and height
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
-        //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArrayForObject(object), gl.STATIC_DRAW);
+            // Attach a texture to the frame buffer
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 
-        //Activate the vertex attributes in the GPU program
-        gl.enableVertexAttribArray(textureCoordinateLocation);
-
-        //Set the format of the textureCoordinateLocation array
-        gl.vertexAttribPointer(textureCoordinateLocation, 2, gl.FLOAT, false, 0, 0);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+            //Add the framebuffers and textures to a list for later reference
+            this.framebuffers.push(framebuffer);
+            this.framebufferTextures.push(texture);
+        }
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
 
+    MocuGame.MocuRenderer.prototype.createAndSetupTexture = function (gl) {
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        // Set up texture so we can render any size image and so we are
+        // working with pixels.
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+        return texture;
+    };
+
+    MocuGame.MocuRenderer.prototype.setFramebufferForObject = function(gl, oldTexture, width, height)
+    {
+        var framebuffer = this.framebuffers[this.framebufferIndex];
+        var texture = this.framebufferTextures[this.framebufferIndex];
+
+        // make this the framebuffer we are rendering to.
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        //Make the texture the same size as the object
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        // Attach a texture to the frame buffer
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+        // Tell webgl the viewport setting needed for framebuffer.
+        gl.viewport(0, 0, width, height);
+
+
+        this.framebufferIndex = (this.framebufferIndex + 1) % 2;
+
+        gl.bindTexture(gl.TEXTURE_2D, oldTexture);
+
+        return framebuffer;
+    }
+
+
+    MocuGame.MocuRenderer.prototype.advanceFramebufferTexture = function (gl) {
+        var textureIndex = this.framebufferIndex == 0 ? 1 : 0
+        var texture = this.framebufferTextures[textureIndex];
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        return texture;
+    };
+
+    MocuGame.MocuRenderer.prototype.finishFramebufferEffects = function (gl) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
+        this.framebufferIndex = 0;
+    }
 })()

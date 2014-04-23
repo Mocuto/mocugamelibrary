@@ -71,6 +71,7 @@
     <Content Include="js\event.js" />
     <Content Include="js\marquee.js" />
     <Content Include="js\mocu.js" />
+    <Content Include="js\mocueffect.js" />
     <Content Include="js\mocugame-background-fragment.shader" />
     <Content Include="js\mocugame-fragment.shader">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -106,6 +107,8 @@
     <Content Include="js\point.js" />
     <Content Include="js\pointer.js" />
     <Content Include="js\rgba.js" />
+    <Content Include="js\testfragment.shader" />
+    <Content Include="js\mocugame-sprite-slim-vertex.shader" />
     <Content Include="js\timeline.js" />
     <Content Include="js\timeslot.js" />
     <Content Include="musicexample.html" />

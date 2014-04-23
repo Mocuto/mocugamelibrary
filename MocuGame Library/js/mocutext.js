@@ -161,29 +161,11 @@
         }
 
         var program = this.preDrawGl(gl, displacement);
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-
-        // provide texture coordinates for the rectangle.
-        var texCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
 
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
 
-        var texWidth = 1.0;
-        var texHeight = 1.0;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            0, 0,
-            texWidth, 0,
-            0, texHeight,
-            0, texHeight,
-            texWidth, 0,
-            texWidth, texHeight]), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-        var texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        this.prepareTexture(gl, program);
 
         blankCanvas.width = this.width * MocuGame.uniscale;
         blankCanvas.height = this.height * MocuGame.uniscale * this.getNumberOfLines();
@@ -229,13 +211,10 @@
         blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
         blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
 
-
         //Set the parameters so we can render any size image.
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        this.setTextureParameters(gl);
 
+        //TODO: Use framebuffers and multiple shaders here
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 

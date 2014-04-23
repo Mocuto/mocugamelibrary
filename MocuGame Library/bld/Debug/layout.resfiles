@@ -20,11 +20,13 @@ js\mocubackground.js
 js\mocucamera.js
 js\mocucameratraits.js
 js\mocucamerazone.js
+js\mocueffect.js
 js\mocuemitter.js
 js\mocugame.js
 js\mocugame-background-fragment.shader
 js\mocugame-fragment.shader
 js\mocugame-sprite-fragment.shader
+js\mocugame-sprite-slim-vertex.shader
 js\mocugame-sprite-vertex.shader
 js\mocugame-vertex.shader
 js\mocugroup.js
@@ -46,6 +48,7 @@ js\notification.js
 js\point.js
 js\pointer.js
 js\rgba.js
+js\testfragment.shader
 js\timeline.js
 js\timeslot.js
 music\testmusic.mp3

@@ -87,7 +87,12 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+            this.texture = null;
+            var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
+            this.effects = [];
         }
+
+        this.addsom = 0;
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
@@ -238,41 +243,90 @@
         var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
         //Provide location of the translate uniform
-        var translateLocation = gl.getUniformLocation(program, "u_translate");
-        var translate = new Float32Array([
-            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale
-        ]);
-        gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+        this.setTranslationUniform(gl, program, displacement);
 
         //Provide locaiton of the rotation uniform
-        var rotateLocation = gl.getUniformLocation(program, "u_rotate");
-        gl.uniform2fv(rotateLocation, new Float32Array([
-            Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
-        ]))
+        //var rotateLocation = gl.getUniformLocation(program, "u_rotate");
+        //gl.uniform2fv(rotateLocation, new Float32Array([
+        //    Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
+        //]))
+        this.setRotationUniform(gl, program);
 
         //Provide location of the scale uniform
-        var scaleLocation = gl.getUniformLocation(program, "u_scale");
-        gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
+        this.setScaleUniform(gl, program)
 
         //var alphaLocation = gl.getUniformLocation(program, "u_alpha");
         //gl.uniform1f(alphaLocation, this.alpha)
 
-        var positionLocation = gl.getAttribLocation(program, "a_position");
-
-        // Provide position coordinates for the rectangle
-        var positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-        //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
-
-        //Activate the vertex attributes in the GPU program
-        gl.enableVertexAttribArray(positionLocation);
-
-        //Set the format of the positionLocation array
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        this.setPositionAttribute(gl, program);
 
         return program;
+    };
+
+    MocuGame.MocuSprite.prototype.prepareTexture = function (gl, texture, program) {
+        // provide texture coordinates for the rectangle.
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+        var texCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+        var texWidth = 1.0;
+        var texHeight = 1.0;
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            0, 0,
+            texWidth, 0,
+            0, texHeight,
+            0, texHeight,
+            texWidth, 0,
+            texWidth, texHeight]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        this.setTextureParameters(gl);
+        return texture;
+    };
+
+    MocuGame.MocuSprite.prototype.setTextureParameters = function (gl) {
+        //Set the parameters so we can render any size image.
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    };
+
+    MocuGame.MocuSprite.prototype.applyEffects = function (gl, texture) {
+        var effectedTexture = texture;
+        for(var i = 0; i < this.effects.length; i++)
+        {
+            var effect = this.effects[i];
+
+            //Have the MocuRenderer set and enable the next framebuffer and texture
+            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width, this.height);
+
+            //Here load the shaders and run the callback contained withiin the effect object
+            var program = MocuGame.renderer.loadProgram(gl, effect.vertexShader, effect.fragmentShader);
+            MocuGame.renderer.useProgram(program);
+
+            this.setResolutionUniform(gl, program, new MocuGame.Point(this.width, this.height));
+
+            this.prepareTexture(gl, texture, program);
+
+            this.setPositionAttribute(gl, program);
+
+            //Draw the triangles to the framebuffer
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
+        }
+
+        //If useParentProgramIfAvailable is set to true and the parent has a program/effets, apply those here
+
+        //Set the framebuffer to the default one
+        MocuGame.renderer.finishFramebufferEffects(gl);
+
+        //Return the texture
+        return effectedTexture;
     }
 
     MocuGame.MocuSprite.prototype.drawGl = function (gl, displacement) {
@@ -280,36 +334,15 @@
         if (this.animates) {
             this.animate(deltaT);
         }
-
         
         var program = this.preDrawGl(gl, displacement);
-        
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-
-        // provide texture coordinates for the rectangle.
-        var texCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-
-        //var texWidth = this.width / this.img.width;
-        //var texHeight = this.height / this.img.height;
-
-        var texWidth = 1.0;
-        var texHeight = 1.0;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            0, 0,
-            texWidth, 0,
-            0, texHeight ,
-            0, texHeight,
-            texWidth, 0,
-            texWidth, texHeight]), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
         var texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        this.prepareTexture(gl, texture, program);
 
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
+
 
         blankContext.globalCompositeOperation = "source-over";
 
@@ -317,7 +350,7 @@
         blankCanvas.height = this.height;
 
         blankContext.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
-           0,
+            0,
             0,
             this.width,
             this.height);
@@ -335,13 +368,13 @@
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
+
         blankContext.clearRect(0, 0, this.width, this.height);
 
-        //Set the parameters so we can render any size image.
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        //Use framebuffers and multiple shaders here
+        texture = this.applyEffects(gl, texture);
+
+        MocuGame.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };

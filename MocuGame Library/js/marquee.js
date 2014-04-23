@@ -49,7 +49,7 @@
         this.restarting = false;
         this.preDraw();
         this.scrollWidth = this.renderWidth * 2;
-        this.scrollStops = new Array(this.width, this.scrollWidth);
+        this.scrollStops = [this.width, this.scrollWidth];
         this.autoResetStops = true;
         this.ended = false;
     };
@@ -66,14 +66,17 @@
 
     MocuGame.Marquee.prototype.update = function (deltaT) {
         MocuGame.MocuText.prototype.update.call(this, deltaT);
-        if(!this.restarting && !this.ended)
+        if (!this.restarting && !this.ended) {
             this.scrollPosition += this.rate * deltaT;
+        }
         var longside = (this.width > this.renderWidth) ? 0 : 1;
-        if (this.scrollPosition > this.scrollStops[longside] || this.scrollPosition < -this.scrollStops[!longside * 1]) {
-            if(!this.restarting && this.doesRestart)
+        if (this.scrollPosition > this.scrollStops[longside] || this.scrollPosition < -this.scrollStops[!longside]) {
+            if (!this.restarting && this.doesRestart) {
                 this.restart(this.scrollPosition - this.renderWidth);
-            else if(!this.doesRestart)
+            }
+            else if (!this.doesRestart) {
                 this.onEnd();
+            }
         }
     };
 
@@ -109,12 +112,170 @@
         this.timeline.addSlot(slot);
         this.restarting = true;
     };
+
+    MocuGame.Marquee.prototype.getCoordinateArray = function () {
+        var firstWidth = ((this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) < this.width * MocuGame.uniscale) ? (this.scrollWidth * MocuGame.uniscale) : (this.width * MocuGame.uniscale) - (this.scrollPosition * MocuGame.uniscale);
+        if (this.scrollPosition < 0) {
+            firstWidth = (this.scrollWidth * MocuGame.uniscale) + (this.scrollPosition * MocuGame.uniscale);
+        }
+
+        var absWidth = firstWidth;
+        var absHeight = (this.height / 2) * MocuGame.uniscale;
+
+        return new Float32Array([
+                                -0, -absHeight,
+                                 absWidth, -absHeight,
+                                -0, absHeight,
+                                -0, absHeight,
+                                absWidth, -absHeight,
+                                absWidth, absHeight]);
+    };
+
+    MocuGame.Marquee.prototype.preDrawGl = function (gl, displacement) {
+        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
+
+        //Provide location of the translate uniform
+        var translateLocation = gl.getUniformLocation(program, "u_translate");
+        var translate = new Float32Array([
+            ((this.x + displacement.x)) * MocuGame.uniscale + (this.scrollPosition > 0) ? (this.scrollPosition * MocuGame.uniscale) : 0,
+            ((this.y + (this.height/2)) + displacement.y) * MocuGame.uniscale
+        ]);
+        gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+
+        //Provide locaiton of the rotation uniform
+        var rotateLocation = gl.getUniformLocation(program, "u_rotate");
+        gl.uniform2fv(rotateLocation, new Float32Array([
+            Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
+        ]))
+
+        //Provide location of the scale uniform
+        var scaleLocation = gl.getUniformLocation(program, "u_scale");
+        gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
+
+        //var alphaLocation = gl.getUniformLocation(program, "u_alpha");
+        //gl.uniform1f(alphaLocation, this.alpha)
+
+        var positionLocation = gl.getAttribLocation(program, "a_position");
+
+        // Provide position coordinates for the rectangle
+        var positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        //Create a buffer and set it to use the array buffer
+        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
+
+        //Activate the vertex attributes in the GPU program
+        gl.enableVertexAttribArray(positionLocation);
+
+        //Set the format of the positionLocation array
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        return program;
+    };
+
+    MocuGame.Marquee.prototype.prepareTexture = function (gl, program) {
+        // provide texture coordinates for the rectangle.
+        var firstWidth = ((this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) < this.width * MocuGame.uniscale) ? (this.scrollWidth * MocuGame.uniscale) : (this.width * MocuGame.uniscale) - (this.scrollPosition * MocuGame.uniscale);
+        if (this.scrollPosition < 0) {
+            firstWidth = (this.scrollWidth * MocuGame.uniscale) + (this.scrollPosition * MocuGame.uniscale);
+        }
+
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+        var texCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+        var texStartX = ((this.scrollPosition > 0) ? 0 : -this.scrollPosition) / this.width
+        var texStartY = 0;
+        var texWidth = firstWidth / this.width
+        var texHeight = 1.0;
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            texStartX, texStartY,
+            texStartX + texWidth, texStartY,
+            texStartX, texStartY + texHeight,
+            texStartX, texStartY + texHeight,
+            texStartX + texWidth, texStartY,
+            texStartX + texWidth, texStartY + texHeight]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        texture = gl.createTexture();
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        return texture;
+    };
+
+    MocuGame.Marquee.prototype.drawGl = function (gl, displacement) {
+        if (typeof displacement == null || typeof displacement == 'undefined') {
+            displacement = new MocuGame.Point(0, 0);
+        }
+
+        var program = this.preDrawGl(gl, displacement);
+
+        var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
+
+        this.prepareTexture(gl, program);
+
+        blankCanvas.width = this.width * MocuGame.uniscale;
+        blankCanvas.height = this.height * MocuGame.uniscale;
+
+        blankContext.scale(this.flip.x * (MocuGame.uniscale), this.flip.y * (MocuGame.uniscale));
+
+        //Set the font and color and alignment
+        blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        blankContext.lineWidth = this.strokeWidth;
+        blankContext.font = this.font;
+        blankContext.textAlign = this.align;
+        blankContext.textBaseline = "top"
+
+        //Draw text
+        var currentLine = '';
+        var words = this.text.split(' ');
+        var testLine = '';
+        var height = 0;
+        this.numberOfLines = 1;
+        for (var i = 0; i < words.length; i += 1) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (blankContext.measureText(testLine).width >= this.width / 2) {
+                blankContext.fillText(currentLine, 0, height);
+                if (this.doesStroke && this.strokeColor != null) {
+                    blankContext.strokeText(currentLine, 0, height);
+                }
+                currentLine = words[i] + ' ';
+                height += this.height;
+                this.numberOfLines++;
+            }
+            else {
+                currentLine = testLine;
+            }
+        }
+        blankContext.fillText(currentLine, 0, height);
+        if (this.doesStroke && this.strokeColor != null) {
+            blankContext.strokeText(currentLine, 0, height);
+        }
+
+        this.preDraw();
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+
+        blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
+        blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
+
+
+        //Set the parameters so we can render any size image.
+        this.setTextureParameters(gl);
+
+        //TODO: Use framebuffers and multiple shaders here
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+
     /*
         preDraw is a function that prerenders the text onto the blankCanvas.
     */
     MocuGame.Marquee.prototype.preDraw = function () {
         var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = blankCanvas.getContext('2d');
+        var blankContext = MocuGame.blankContext
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         //Set the font and color and alignment
@@ -145,6 +306,12 @@
     MocuGame.Marquee.prototype.draw = function (context, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined')
             displacement = new MocuGame.Point(0, 0);
+
+        if (MocuGame.isWindows81) {
+            this.drawGl(context, displacement);
+            this.draw = this.drawGl;
+            return;
+        }
 
 
         context.translate(((this.x + displacement.x)) * MocuGame.uniscale, ((this.y) + displacement.y) * MocuGame.uniscale);
