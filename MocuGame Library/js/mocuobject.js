@@ -200,7 +200,7 @@
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
     };
 
-    MocuGmae.MocuObject.prototype.setAlphaUniform = function (gl, program) {
+    MocuGame.MocuObject.prototype.setAlphaUniform = function (gl, program) {
         var alphaLocation = gl.getUniformLocation(program, "u_alpha");
         gl.uniform1f(alphaLocation, this.alpha);
     }

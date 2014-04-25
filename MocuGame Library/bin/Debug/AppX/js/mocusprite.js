@@ -89,7 +89,7 @@
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
             this.texture = null;
             var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
-            this.effects = [];
+            this.effects = [effect];
         }
 
         this.addsom = 0;
@@ -255,8 +255,8 @@
         //Provide location of the scale uniform
         this.setScaleUniform(gl, program)
 
-        //var alphaLocation = gl.getUniformLocation(program, "u_alpha");
-        //gl.uniform1f(alphaLocation, this.alpha)
+        //Provide location of the alpha uniform
+        this.setAlphaUniform(gl, program);
 
         this.setPositionAttribute(gl, program);
 
@@ -302,17 +302,14 @@
             var effect = this.effects[i];
 
             //Have the MocuRenderer set and enable the next framebuffer and texture
-            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width, this.height);
+            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width * effect.scale.x, this.height * effect.scale.y);
 
             //Here load the shaders and run the callback contained withiin the effect object
-            var program = MocuGame.renderer.loadProgram(gl, effect.vertexShader, effect.fragmentShader);
+            var program = effect.apply(gl, this);
             MocuGame.renderer.useProgram(program);
-
-            this.setResolutionUniform(gl, program, new MocuGame.Point(this.width, this.height));
 
             this.prepareTexture(gl, texture, program);
 
-            this.setPositionAttribute(gl, program);
 
             //Draw the triangles to the framebuffer
             gl.drawArrays(gl.TRIANGLES, 0, 6);

@@ -110,7 +110,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocueffect.js">
       <PackagePath>js\mocueffect.js</PackagePath>
-      <Modified>2014-04-22T07:01:32.343</Modified>
+      <Modified>2014-04-23T17:02:51.130</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocupatch.js">
       <PackagePath>js\mocupatch.js</PackagePath>
@@ -162,7 +162,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuobject.js">
       <PackagePath>js\mocuobject.js</PackagePath>
-      <Modified>2014-04-23T04:56:56.075</Modified>
+      <Modified>2014-04-23T16:58:20.459</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocurenderer.js">
       <PackagePath>js\mocurenderer.js</PackagePath>
@@ -182,7 +182,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocusprite.js">
       <PackagePath>js\mocusprite.js</PackagePath>
-      <Modified>2014-04-23T05:28:42.930</Modified>
+      <Modified>2014-04-23T16:58:40.200</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocustate.js">
       <PackagePath>js\mocustate.js</PackagePath>
@@ -230,7 +230,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-background-fragment.shader">
       <PackagePath>js\mocugame-background-fragment.shader</PackagePath>
-      <Modified>2014-04-10T23:51:29.433</Modified>
+      <Modified>2014-04-23T05:32:14.909</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-fragment.shader">
       <PackagePath>js\mocugame-fragment.shader</PackagePath>
@@ -238,7 +238,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-sprite-fragment.shader">
       <PackagePath>js\mocugame-sprite-fragment.shader</PackagePath>
-      <Modified>2014-04-23T05:27:49.065</Modified>
+      <Modified>2014-04-23T05:31:09.278</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-sprite-vertex.shader">
       <PackagePath>js\mocugame-sprite-vertex.shader</PackagePath>

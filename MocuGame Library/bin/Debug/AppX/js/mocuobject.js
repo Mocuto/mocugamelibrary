@@ -198,6 +198,11 @@
             ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + displacement.y) + (this.height / 2)) * MocuGame.uniscale
         ]);
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+    };
+
+    MocuGame.MocuObject.prototype.setAlphaUniform = function (gl, program) {
+        var alphaLocation = gl.getUniformLocation(program, "u_alpha");
+        gl.uniform1f(alphaLocation, this.alpha);
     }
 
     MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
