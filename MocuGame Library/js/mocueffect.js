@@ -32,14 +32,63 @@
             this.callback.call(effectedObject, this, this.callbackObject);
         }
 
-        for (var uniformName in Object.keys(this.uniformProperties))
+        for (var uniformName in this.uniformProperties)
         {
+            var uniformValue = this.uniformProperties[uniformName];
+            var uniformLocation = gl.getUniformLocation(program, uniformName);
 
+
+            if (typeof uniformValue === "number")
+            {
+                gl.uniform1f(uniformLocation, uniformValue)
+            }
+
+            else if (typeof uniformValue === "object")
+            {
+                switch(uniformValue.length)
+                {
+                    case 2:
+                        gl.uniform2fv(uniformLocation, uniformValue);
+                        break;
+                    case 3:
+                        gl.uniform3fv(uniformLocation, uniformValue);
+                        break;
+                    case 4:
+                        gl.uniformf4v(uniformLocation, uniformValue);
+                    case 1:
+                    default:
+                        gl.uniform1fv(uniformLocation, uniformValue);
+                        break;
+                }
+                if (uniformValue.length == 2)
+                {
+                    gl.uniform2fv(uniformLocation, uniformValue);
+                }
+                else if(uniformValue.length == 3)
+                {
+                    gl.uniform3fv(uniformLocation, uniformValue);
+                }
+
+
+            }
         }
 
-        for (var attributeName in Object.keys(this.attributeProperties))
+        for (var attributeName in this.attributeProperties)
         {
+            var attributeValue = this.attributeProperties[attributeName];
+            var attributeLocation = gl.getAttributeLocation(program, attributeName);
 
+            var buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY, attributeValue);
+
+            gl.enableVertexAttribArray(attributeLocation);
+
+            if (attributeValue.length > 1) {
+                gl.vertexAttribPointer(attributeLocation, attributeValue.length, gl.FLOAT, false, 0, 0);
+            }
+            else {
+                gl.vertexAttribPointer(attributeLocation, 1, gl.FLOAT, false, 0, 0);
+            }
         }
 
         return program;

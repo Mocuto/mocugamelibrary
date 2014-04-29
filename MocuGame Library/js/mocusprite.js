@@ -90,7 +90,13 @@
             this.texture = null;
             var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
             this.effects = [effect];
+            effect.uniformProperties["u_amount"] = 1.0;
+            var slot = new MocuGame.TimeSlot(this.timeline.currentTime + 1);
+            slot.addEvent(new MocuGame.Event(effect.uniformProperties, "u_amount", 1.0, 0.0, 120));
+            this.timeline.addSlot(slot);
         }
+
+
 
         this.addsom = 0;
     }

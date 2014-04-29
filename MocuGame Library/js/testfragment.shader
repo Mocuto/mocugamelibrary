@@ -1,16 +1,17 @@
 ﻿varying vec2 v_texCoord;
 uniform sampler2D u_image;
+uniform float u_amount;
 
 void main() {
 	vec4 color = texture2D(u_image, v_texCoord);
 	//gl_FragColor = vec4(color.r, color.g, color.b, 0.5);
-	if (color.b == 0.0)
-	{
-		gl_FragColor = vec4(v_texCoord, color.b, color.a);
-	}
-	else {
-		gl_FragColor = vec4(color.r, color.g, color.b, color.a);
-	}
+
+	float average = (color.r + color.g + color.b) / 3.0;
+
+	gl_FragColor = vec4( ((1.0-u_amount) * color.r) +  (u_amount * average),
+						 ((1.0-u_amount) * color.g) +  (u_amount * average),
+						 ((1.0-u_amount) * color.b) +  (u_amount * average), color.a);
+	
 	
 
 }

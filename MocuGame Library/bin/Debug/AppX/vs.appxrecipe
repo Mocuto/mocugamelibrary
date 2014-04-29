@@ -82,7 +82,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\default.js">
       <PackagePath>js\default.js</PackagePath>
-      <Modified>2014-04-22T06:45:12.585</Modified>
+      <Modified>2014-04-29T01:16:39.554</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\Dependencies\audio-fx.min.js">
       <PackagePath>js\Dependencies\audio-fx.min.js</PackagePath>
@@ -110,7 +110,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocueffect.js">
       <PackagePath>js\mocueffect.js</PackagePath>
-      <Modified>2014-04-23T17:02:51.130</Modified>
+      <Modified>2014-04-29T01:24:25.879</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocupatch.js">
       <PackagePath>js\mocupatch.js</PackagePath>
@@ -182,7 +182,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocusprite.js">
       <PackagePath>js\mocusprite.js</PackagePath>
-      <Modified>2014-04-23T16:58:40.200</Modified>
+      <Modified>2014-04-29T01:27:45.140</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocustate.js">
       <PackagePath>js\mocustate.js</PackagePath>
@@ -250,7 +250,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\testfragment.shader">
       <PackagePath>js\testfragment.shader</PackagePath>
-      <Modified>2014-04-22T07:09:26.663</Modified>
+      <Modified>2014-04-29T01:20:15.990</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-sprite-slim-vertex.shader">
       <PackagePath>js\mocugame-sprite-slim-vertex.shader</PackagePath>

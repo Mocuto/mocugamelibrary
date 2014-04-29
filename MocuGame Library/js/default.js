@@ -62,6 +62,7 @@
                 var sprite = new MocuGame.MocuSprite(new MocuGame.Point(10, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
                 sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
                 sprite.play("Idle");
+                sprite.scale = new MocuGame.Point(3, 3);
                 //sprite.alpha = 1.0;
                 //obj.velocity.x = 1;
                 obj.visible = true;
