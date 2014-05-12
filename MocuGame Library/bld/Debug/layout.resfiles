@@ -49,6 +49,7 @@ js\point.js
 js\pointer.js
 js\rgba.js
 js\testfragment.shader
+js\testfragment2.shader
 js\timeline.js
 js\timeslot.js
 music\testmusic.mp3

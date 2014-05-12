@@ -55,6 +55,8 @@
 
         this.velocity = new MocuGame.Point(0, 0);
         this.acceleration = new MocuGame.Point(0, 0);
+
+        this.angle = 0
         this.angularvelocity = 0;
 
         this.isMovementPolar = false;
@@ -82,7 +84,7 @@
         this.alpha = 1;
         this.usesFade = false;
         this.fade = new MocuGame.RGBA(1, 0, 0, 0);
-        
+
         this.restitution = 0.0;
         
         this.cameraTraits = new MocuGame.MocuCameraTraits(new MocuGame.Point(1, 1), true, true);
@@ -90,8 +92,9 @@
         this.isWorldPointRight = false;
 
         if (MocuGame.isWindows81) {
-            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER)
-            this.useParentProgramIfAvailable = false;
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER)
+            this.useParentEffects = true;
+            this.effects = [];
         }
     };
 
@@ -141,6 +144,10 @@
         }
     };
 
+    MocuGame.MocuObject.prototype.getRenderingSize = function () {
+        return new MocuGame.Point(this.width * this.scale.x * MocuGame.uniscale, this.height * this.scale.y * MocuGame.uniscale);
+    }
+
     MocuGame.MocuObject.prototype.getCoordinateArray = function () {
         var absWidth = (this.width / 2) * MocuGame.uniscale;
         var absHeight = (this.height / 2) * MocuGame.uniscale;
@@ -154,7 +161,11 @@
                                 absWidth, absHeight]);
     };
 
-    MocuGame.MocuObject.prototype.setPositionAttribute = function (gl, program) {
+    MocuGame.MocuObject.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
+        if (typeof coordinateArray === "undefined") {
+            coordinateArray = this.getCoordinateArray();
+        }
+
         var positionLocation = gl.getAttribLocation(program, "a_position");
 
         // Provide position coordinates for the rectangle
@@ -163,7 +174,7 @@
 
 
         //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, coordinateArray, gl.STATIC_DRAW)
 
         //Activate the vertex attributes in the GPU program
         gl.enableVertexAttribArray(positionLocation);
@@ -203,16 +214,96 @@
     MocuGame.MocuObject.prototype.setAlphaUniform = function (gl, program) {
         var alphaLocation = gl.getUniformLocation(program, "u_alpha");
         gl.uniform1f(alphaLocation, this.alpha);
+    };
+
+    MocuGame.MocuObject.prototype.getTextureCoordinateArray = function () {
+        var texWidth = 1.0;
+        var texHeight = 1.0;
+
+        return new Float32Array([
+            0, 0,
+            texWidth, 0,
+            0, texHeight,
+            0, texHeight,
+            texWidth, 0,
+            texWidth, texHeight
+        ]);
+    };
+
+    MocuGame.MocuObject.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
+        // provide texture coordinates for the rectangle.
+        if (typeof textureCoordinateArray === "undefined") {
+            textureCoordinateArray = this.getTextureCoordinateArray();
+        }
+
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+        var texCoordBuffer = gl.createBuffer();
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STATIC_DRAW);
+
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        this.setTextureParameters(gl);
+        return texture;
+    };
+
+    MocuGame.MocuObject.prototype.setTextureParameters = function (gl) {
+        //Set the parameters so we can render any size image.
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    };
+
+    MocuGame.MocuObject.prototype.applyEffects = function (gl, texture) {
+        var effectedTexture = texture;
+
+        //If useParentEffects is set to true and the parent has a program/effets, apply those here
+        if (this.useParentEffects == true) {
+            if (this.parent != null) {
+                if (typeof this.parent.program !== "undefined") {
+                    effectedTexture = this.parent.applyEffectsToObject(this, gl, effectedTexture);
+                }
+            }
+        }
+
+        for (var i = 0; i < this.effects.length; i++) {
+            var effect = this.effects[i];
+
+            //Have the MocuRenderer set and enable the next framebuffer and texture
+            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width * effect.scale.x, this.height * effect.scale.y);
+
+            //Here load the shaders and run the callback contained withiin the effect object
+            var program = effect.apply(gl, this);
+            MocuGame.renderer.useProgram(program);
+
+            this.prepareTexture(gl, texture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray(this));
+
+            //Draw the triangles to the framebuffer
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
+        }
+
+        //Set the framebuffer to the default one
+        MocuGame.renderer.finishFramebufferEffects(gl);
+
+        //Return the texture
+        return effectedTexture;
     }
 
     MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
         //Extend in child classes
 
         var localProgram = this.program;
-        if (this.useParentProgramIfAvailable == true) {
+        if (this.useParentEffects == true) {
             if(this.parent != null)
             {
-                if (this.parent.program != null) {
+                if (this.parent.program != null && typeof this.parent.program !== "undefined") {
                     localProgram = this.parent.program;
                 }
             }
@@ -220,6 +311,16 @@
 
         var program = (localProgram == null) ? MocuGame.renderer.defaultProgram : localProgram;
         MocuGame.renderer.useProgram(program);
+
+        this.setTranslationUniform(gl, program, displacement);
+
+        this.setRotationUniform(gl, program);
+
+        this.setScaleUniform(gl, program)
+
+        this.setAlphaUniform(gl, program);
+
+        this.setPositionAttribute(gl, program);
 
         return program;
     };
@@ -232,33 +333,19 @@
 
         var program = this.preDrawGl(gl, displacement);
 
+        var texture = gl.createTexture();
+        this.prepareTexture(gl, texture, program);
+
         var colorLocation = gl.getUniformLocation(program, "u_color");
         var colorArray = new Float32Array([this.fade.r, this.fade.g, this.fade.b, this.alpha])
         gl.uniform4fv(colorLocation, colorArray);
 
-        var translateLocation = gl.getUniformLocation(program, "u_translate");
-        var translate = new Float32Array([
-            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale
-        ]);
-        gl.uniform2fv(translateLocation, translate)
+        texture = this.applyEffects(gl, texture);
 
-        var textureCoordinateLocation = gl.getAttribLocation(program, "a_position");
-
-        // Provide texture coordinates for the rectangle
-        var textureCoordinateBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordinateBuffer);
-
-        //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
-
-        //Activate the vertex attributes in the GPU program
-        gl.enableVertexAttribArray(textureCoordinateLocation);
-
-        //Set the format of the textureCoordinateLocation array
-        gl.vertexAttribPointer(textureCoordinateLocation, 2, gl.FLOAT, false, 0, 0);
+        MocuGame.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-    }
+    };
 
     /*
         draw is a function which renders the bonding box of the MocuObject onto the canvas.

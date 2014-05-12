@@ -51,8 +51,14 @@
         this.setParent = true;
         this.cameraTraits = null;
 
-        if (MocuGame.isWIndows81) {
+        if (MocuGame.isWindows81) {
             this.program = null;
+            var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
+            this.effects = [effect];
+            effect.uniformProperties["u_amount"] = 1.0;
+            var slot = new MocuGame.TimeSlot(this.timeline.currentTime + 1);
+            slot.addEvent(new MocuGame.Event(effect.uniformProperties, "u_amount", 1.0, 0.0, 120));
+            //this.timeline.addSlot(slot);
         }
     };
     MocuGame.MocuGroup.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
@@ -74,6 +80,32 @@
         }
     };
 
+    MocuGame.MocuGroup.prototype.applyEffectsToObject = function (object, gl, texture)
+    {
+        var effectedTexture = texture;
+        for (var i = 0; i < this.effects.length; i++) {
+            var effect = this.effects[i];
+
+            //Have the MocuRenderer set and enable the next framebuffer and texture
+            var renderingSize = object.getRenderingSize();
+            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, renderingSize.x, renderingSize.y);
+            
+
+            //Here load the shaders and run the callback contained withiin the effect object
+            var program = effect.apply(gl, object);
+            MocuGame.renderer.useProgram(program);
+
+            this.prepareTexture(gl, effectedTexture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray.call(object));
+
+
+            //Draw the triangles to the framebuffer
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
+        }
+        return effectedTexture;
+    }
+
     /*
         draw is a function inherited from MocuObject. Draws all visible MocuObjects it contains.
 
@@ -85,14 +117,11 @@
     */
 
     MocuGame.MocuGroup.prototype.draw = function (context, point) {
-        if (typeof point == null || typeof point == 'undefined')
+        if (typeof point == null || typeof point == 'undefined') {
             point = new MocuGame.Point(0, 0);
-        for (var i = 0; i < this.objects.length; i += 1) {
+        }
 
-            if (this.fillStyle == "red")
-            {
-                console.log("break");
-            }
+        for (var i = 0; i < this.objects.length; i += 1) {
 
             if (this.objects[i].visible && this.objects[i].exists) {
                 //Pre drawing operations

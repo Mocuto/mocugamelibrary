@@ -107,6 +107,7 @@
     <Content Include="js\point.js" />
     <Content Include="js\pointer.js" />
     <Content Include="js\rgba.js" />
+    <Content Include="js\testfragment2.shader" />
     <Content Include="js\testfragment.shader" />
     <Content Include="js\mocugame-sprite-slim-vertex.shader" />
     <Content Include="js\timeline.js" />

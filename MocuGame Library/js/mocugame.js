@@ -243,10 +243,10 @@
 
         MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
 
-        MocuGame.touchenabled = false;
+        MocuGame.touchEnabled = false;
         MocuGame.isWindows8 = true;
         if (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1) {
-            MocuGame.touchenabled = true;
+            MocuGame.touchEnabled = true;
             body.addEventListener("MSPointerDown", MocuGame.onPointerDown, false);
             body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
             body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
@@ -254,6 +254,8 @@
     };
 
     MocuGame.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
+        MocuGame.isWindows8 = true;
+        MocuGame.isWindows81 = true;
 
         var body = document.body;
         var canvas = document.getElementById(canvasId);
@@ -276,19 +278,17 @@
         MocuGame.gameHeight = gameBounds.y;
         MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
 
-        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+        MocuGame.renderer = new MocuGame.MocuRenderer(context);
 
-        MocuGame.renderer = new MocuGame.MocuRenderer(context)
+        MocuGame.touchEnabled = false;
 
-        MocuGame.touchenabled = false;
-        MocuGame.isWindows8 = true;
         if (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1) {
-            MocuGame.touchenabled = true;
+            MocuGame.touchEnabled = true;
             document.body.addEventListener("MSPointerDown", MocuGame.onPointerDown, false);
             document.body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
             document.body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
         }
-        MocuGame.isWindows81 = true;
+        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
     };
 
     /*

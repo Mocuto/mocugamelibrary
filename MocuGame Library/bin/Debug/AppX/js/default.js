@@ -51,7 +51,7 @@
                 //state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
                 var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50));
                 obj.fade.a = 1;
-                //var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32), new MocuGame.Point(MocuGame.resolution.x, MocuGame.resolution.y), "images/sampletile.png");
+                var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(64, 64), new MocuGame.Point(MocuGame.resolution.x, MocuGame.resolution.y), "images/sampletile.png");
                 //state.add(background);
 
                 var patch = new MocuGame.MocuPatch(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
@@ -68,10 +68,17 @@
                 obj.visible = true;
                 //sprite.scale.x = 1;
                 //sprite.scale.y = 1;
-                state.add(sprite);
+                //state.add(sprite);
+                state.add(obj);
 
-                var text = new MocuGame.Marquee(new MocuGame.Point(0, 100), new MocuGame.Point(100, 50), "Test 123", 1);
+                var text = new MocuGame.Marquee(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50), "Test 123", 1);
+                text.fade = new MocuGame.RGBA(1, 1, 0, 1);
+                text.useParentEffects = false;
                 state.add(text);
+
+                var text2 = new MocuGame.Marquee(new MocuGame.Point(0, 150), new MocuGame.Point(100, 50), "Test 123", 1);
+                text2.fade = new MocuGame.RGBA(1, 1, 0, 1);
+                state.add(text2);
 
                 MocuGame.init(state);
 

@@ -24,9 +24,22 @@
         var program = MocuGame.renderer.loadProgram(gl, this.vertexShader, this.fragmentShader);
         MocuGame.renderer.useProgram(program);
 
-        effectedObject.setPositionAttribute(gl, program);
+        if (MocuGame.Marquee.prototype.isPrototypeOf(effectedObject)) {
+            effectedObject.setPositionAttribute(gl, program, MocuGame.MocuObject.prototype.getCoordinateArray.call(effectedObject))
+        }
+        else {
+            effectedObject.setPositionAttribute(gl, program);
+        }
 
-        effectedObject.setResolutionUniform(gl, program, new MocuGame.Point(effectedObject.width * this.scale.x, effectedObject.height * this.scale.y));
+        //if (MocuGame.MocuText.prototype.isPrototypeOf(effectedObject))
+        //{
+        //    effectedObject.setResolutionUniform(gl, program, new MocuGame.Point(effectedObject.width * this.scale.x, effectedObject.height * effectedObject.getNumberOfLines() * this.scale.y));
+        //}
+        //else {
+        //    effectedObject.setResolutionUniform(gl, program, new MocuGame.Point(effectedObject.width * this.scale.x, effectedObject.height * this.scale.y));
+        //}
+        var renderSize = effectedObject.getRenderingSize();
+        effectedObject.setResolutionUniform(gl, program, renderSize);
 
         if (typeof this.callback !== "undefined") {
             this.callback.call(effectedObject, this, this.callbackObject);
@@ -76,10 +89,11 @@
         for (var attributeName in this.attributeProperties)
         {
             var attributeValue = this.attributeProperties[attributeName];
-            var attributeLocation = gl.getAttributeLocation(program, attributeName);
+            var attributeLocation = gl.getAttribLocation(program, attributeName);
 
             var buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY, attributeValue);
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, attributeValue, gl.STATIC_DRAW);
 
             gl.enableVertexAttribArray(attributeLocation);
 

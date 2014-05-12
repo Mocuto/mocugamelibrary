@@ -185,6 +185,9 @@
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-vertex.shader">
       <PackagePath>js\mocugame-vertex.shader</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\testfragment2.shader">
+      <PackagePath>js\testfragment2.shader</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\testfragment.shader">
       <PackagePath>js\testfragment.shader</PackagePath>
     </AppxPackagedFile>

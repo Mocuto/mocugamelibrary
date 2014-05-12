@@ -69,8 +69,6 @@
         this.anim = new MocuGame.MocuAnimation("Default", "0,0", 20, true);
         this.animations.push(this.anim);
 
-        this.angle = 0.0;
-
         this.flip = new MocuGame.Point(1, 1);
 
         this.drawmode = "source-over";
@@ -88,15 +86,8 @@
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
             this.texture = null;
-            var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
-            this.effects = [effect];
-            effect.uniformProperties["u_amount"] = 1.0;
-            var slot = new MocuGame.TimeSlot(this.timeline.currentTime + 1);
-            slot.addEvent(new MocuGame.Event(effect.uniformProperties, "u_amount", 1.0, 0.0, 120));
-            this.timeline.addSlot(slot);
+            this.effects = [];
         }
-
-
 
         this.addsom = 0;
     }
@@ -248,89 +239,18 @@
     MocuGame.MocuSprite.prototype.preDrawGl = function (gl, displacement) {
         var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
-        //Provide location of the translate uniform
         this.setTranslationUniform(gl, program, displacement);
 
-        //Provide locaiton of the rotation uniform
-        //var rotateLocation = gl.getUniformLocation(program, "u_rotate");
-        //gl.uniform2fv(rotateLocation, new Float32Array([
-        //    Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
-        //]))
         this.setRotationUniform(gl, program);
 
-        //Provide location of the scale uniform
         this.setScaleUniform(gl, program)
 
-        //Provide location of the alpha uniform
         this.setAlphaUniform(gl, program);
 
         this.setPositionAttribute(gl, program);
 
         return program;
     };
-
-    MocuGame.MocuSprite.prototype.prepareTexture = function (gl, texture, program) {
-        // provide texture coordinates for the rectangle.
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-        var texCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-
-        var texWidth = 1.0;
-        var texHeight = 1.0;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            0, 0,
-            texWidth, 0,
-            0, texHeight,
-            0, texHeight,
-            texWidth, 0,
-            texWidth, texHeight]), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        this.setTextureParameters(gl);
-        return texture;
-    };
-
-    MocuGame.MocuSprite.prototype.setTextureParameters = function (gl) {
-        //Set the parameters so we can render any size image.
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    };
-
-    MocuGame.MocuSprite.prototype.applyEffects = function (gl, texture) {
-        var effectedTexture = texture;
-        for(var i = 0; i < this.effects.length; i++)
-        {
-            var effect = this.effects[i];
-
-            //Have the MocuRenderer set and enable the next framebuffer and texture
-            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width * effect.scale.x, this.height * effect.scale.y);
-
-            //Here load the shaders and run the callback contained withiin the effect object
-            var program = effect.apply(gl, this);
-            MocuGame.renderer.useProgram(program);
-
-            this.prepareTexture(gl, texture, program);
-
-
-            //Draw the triangles to the framebuffer
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
-        }
-
-        //If useParentProgramIfAvailable is set to true and the parent has a program/effets, apply those here
-
-        //Set the framebuffer to the default one
-        MocuGame.renderer.finishFramebufferEffects(gl);
-
-        //Return the texture
-        return effectedTexture;
-    }
 
     MocuGame.MocuSprite.prototype.drawGl = function (gl, displacement) {
 
@@ -374,7 +294,6 @@
 
         blankContext.clearRect(0, 0, this.width, this.height);
 
-        //Use framebuffers and multiple shaders here
         texture = this.applyEffects(gl, texture);
 
         MocuGame.renderer.useProgram(program);

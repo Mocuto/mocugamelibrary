@@ -99,29 +99,23 @@
         return program;
     }
 
-    MocuGame.MocuBackground.prototype.drawGl = function (gl, displacement) {
-        var program = this.preDrawGl(gl, displacement);
-        
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-
-        // provide texture coordinates for the rectangle.
-        var texCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-
-
-        var texWidth = this.width  / this.spriteSize.x;
+    MocuGame.MocuBackground.prototype.getTextureCoordinateArray = function () {
+        var texWidth =  this.width  / this.spriteSize.x;
         var texHeight = this.height / this.spriteSize.y;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        return new Float32Array([
             0, 0,
             texWidth, 0,
-            0, texHeight ,
+            0, texHeight,
             0, texHeight,
             texWidth, 0,
-            texWidth, texHeight]), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+            texWidth, texHeight]);
+    }
+
+    MocuGame.MocuBackground.prototype.drawGl = function (gl, displacement) {
+        var program = this.preDrawGl(gl, displacement);
 
         var texture = gl.createTexture();
+        this.prepareTexture(gl, texture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray.call(this));
 
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
@@ -149,15 +143,12 @@
             blankContext.fill();
         }
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-        //Set the parameters so we can render any size image.
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        texture = this.applyEffects(gl, texture);
+        this.prepareTexture(gl, texture, program);
+
+        MocuGame.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }

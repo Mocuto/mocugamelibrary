@@ -74,6 +74,10 @@
         - The offset of which the text is drawn.
     */
 
+    MocuGame.MocuText.prototype.getRenderingSize = function () {
+        return new MocuGame.Point(this.width * this.scale.x * MocuGame.uniscale, this.height * this.getNumberOfLines() * this.scale.y * MocuGame.uniscale);
+    }
+
     MocuGame.MocuText.prototype.getNumberOfLines = function () {
 
         //Set the font and color and alignment
@@ -113,43 +117,27 @@
                                 absWidth, absHeight]);
     };
 
-    MocuGame.MocuText.prototype.preDrawGl = function (gl, displacement) {
-        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
-
+    MocuGame.MocuText.prototype.setTranslationUniform = function (gl, program, displacement) {
         //Provide location of the translate uniform
         var translateLocation = gl.getUniformLocation(program, "u_translate");
         var translate = new Float32Array([
-            ((this.x + displacement.x) + (this.width /2 )) * MocuGame.uniscale, (this.y + (this.height * this.getNumberOfLines()/ 2) ) * MocuGame.uniscale
+            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, (this.y + (this.height * this.getNumberOfLines() / 2)) * MocuGame.uniscale
         ]);
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
+    };
 
-        //Provide locaiton of the rotation uniform
-        var rotateLocation = gl.getUniformLocation(program, "u_rotate");
-        gl.uniform2fv(rotateLocation, new Float32Array([
-            Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
-        ]))
+    MocuGame.MocuText.prototype.preDrawGl = function (gl, displacement) {
+        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
-        //Provide location of the scale uniform
-        var scaleLocation = gl.getUniformLocation(program, "u_scale");
-        gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
+        this.setTranslationUniform(gl, program, displacement);
 
-        //var alphaLocation = gl.getUniformLocation(program, "u_alpha");
-        //gl.uniform1f(alphaLocation, this.alpha)
+        this.setRotationUniform(gl, program);
 
-        var positionLocation = gl.getAttribLocation(program, "a_position");
+        this.setScaleUniform(gl, program)
 
-        // Provide position coordinates for the rectangle
-        var positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        this.setAlphaUniform(gl, program);
 
-        //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, this.getCoordinateArray(), gl.STATIC_DRAW);
-
-        //Activate the vertex attributes in the GPU program
-        gl.enableVertexAttribArray(positionLocation);
-
-        //Set the format of the positionLocation array
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        this.setPositionAttribute(gl, program);
 
         return program;
     }
@@ -165,7 +153,8 @@
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
 
-        this.prepareTexture(gl, program);
+        var texture = gl.createTexture();
+        this.prepareTexture(gl, texture, program);
 
         blankCanvas.width = this.width * MocuGame.uniscale;
         blankCanvas.height = this.height * MocuGame.uniscale * this.getNumberOfLines();
@@ -188,7 +177,7 @@
         this.numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
             testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
-            if (blankContext.measureText(testLine).width >= this.width / 2) {
+            if (blankContext.measureText(testLine).width >= this.width) {
                 blankContext.fillText(currentLine, 0, height);
                 if (this.doesStroke && this.strokeColor != null) {
                     blankContext.strokeText(currentLine, 0, height);
@@ -211,8 +200,9 @@
         blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
         blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
 
-        //Set the parameters so we can render any size image.
-        this.setTextureParameters(gl);
+        texture = this.applyEffects(gl, texture);
+
+        MocuGame.renderer.useProgram(program);
 
         //TODO: Use framebuffers and multiple shaders here
         gl.drawArrays(gl.TRIANGLES, 0, 6);
