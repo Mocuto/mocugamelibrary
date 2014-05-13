@@ -131,35 +131,47 @@
         var program = this.preDrawGl(gl, displacement);
 
         var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
 
         var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
 
-        // provide texture coordinates for the rectangle.
-        var texCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-
-        var texWidth = 1.0;
-        var texHeight = 1.0;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            0, 0,
-            texWidth, 0,
-            0, texHeight,
-            0, texHeight,
-            texWidth, 0,
-            texWidth, texHeight]), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
         var texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        this.prepareTexture(gl, texture, program);
 
+
+        //// provide texture coordinates for the rectangle.
+        //var texCoordBuffer = gl.createBuffer();
+        //gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+        //var texWidth = 1.0;
+        //var texHeight = 1.0;
+        //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        //    0, 0,
+        //    texWidth, 0,
+        //    0, texHeight,
+        //    0, texHeight,
+        //    texWidth, 0,
+        //    texWidth, texHeight]), gl.STATIC_DRAW);
+        //gl.enableVertexAttribArray(texCoordLocation);
+        //gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        //var texture = gl.createTexture();
+        //gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+
+        ////Set the parameters so we can render any size image.
+        //gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        //gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        //gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        //gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-        //Set the parameters so we can render any size image.
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        blankContext.clearRect(0, 0, this.width, this.height);
+
+        texture = this.applyEffects(gl, texture);
+
+        MocuGame.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }

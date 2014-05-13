@@ -57,6 +57,7 @@
         this.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
         this.fadeRect.usesFade = true;
         this.fadeRect.cameraTraits = null;
+        this.fadeRect.alpha = 0;
 
         this.trackingObject = null;
         this.trackingMargins = 0;
@@ -66,8 +67,11 @@
 
         this.lastDistance = 0;
 
+        this.bindPosition = false;
         this.minimumPosition = new MocuGame.Point(0, 0);
         this.maximumPosition = new MocuGame.Point(1000, 1000);
+
+  
     };
     MocuGame.MocuCamera.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuCamera.constructor = MocuGame.MocuCamera;
@@ -144,24 +148,27 @@
     */
     MocuGame.MocuCamera.prototype.update = function (deltaT) {
         MocuGame.MocuGroup.prototype.update.call(this, deltaT);
+        this.zoom += 0.1;
         if (this.trackingObject != null) {
             this.chaseTracker(deltaT);
         }
-        if (this.x < this.minimumPosition.x) {
-            this.x = this.minimumPosition.x;
-        }
-        if (this.x > this.maximumPosition.x - MocuGame.targetResolutionWidth) {
-            this.x = this.maximumPosition.x - MocuGame.targetResolutionWidth;
-            //alert(this.maximumPosition.x - MocuGame.resolution.x);
-            //alert("Test");
-            //this.angle = 90;
-        }
-        if (this.y < this.minimumPosition.y) {
-            this.y = this.minimumPosition.y;
-        }
-        var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16;
-        if (this.y > this.maximumPosition.y - targetHeight) {
-            this.y = this.maximumPosition.y - targetHeight;
+        if (this.bindPosition) {
+            if (this.x < this.minimumPosition.x) {
+                this.x = this.minimumPosition.x;
+            }
+            if (this.x > this.maximumPosition.x - MocuGame.targetResolutionWidth) {
+                this.x = this.maximumPosition.x - MocuGame.targetResolutionWidth;
+                //alert(this.maximumPosition.x - MocuGame.resolution.x);
+                //alert("Test");
+                //this.angle = 90;
+            }
+            if (this.y < this.minimumPosition.y) {
+                this.y = this.minimumPosition.y;
+            }
+            var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16;
+            if (this.y > this.maximumPosition.y - targetHeight) {
+                this.y = this.maximumPosition.y - targetHeight;
+            }
         }
 
 

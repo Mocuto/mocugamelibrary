@@ -82,7 +82,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\default.js">
       <PackagePath>js\default.js</PackagePath>
-      <Modified>2014-05-12T06:10:15.705</Modified>
+      <Modified>2014-05-13T04:26:07.763</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\Dependencies\audio-fx.min.js">
       <PackagePath>js\Dependencies\audio-fx.min.js</PackagePath>
@@ -114,7 +114,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocupatch.js">
       <PackagePath>js\mocupatch.js</PackagePath>
-      <Modified>2014-04-12T07:05:10.775</Modified>
+      <Modified>2014-05-12T12:34:42.708</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuanimation.js">
       <PackagePath>js\mocuanimation.js</PackagePath>
@@ -126,7 +126,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocucamera.js">
       <PackagePath>js\mocucamera.js</PackagePath>
-      <Modified>2014-04-03T23:30:29.434</Modified>
+      <Modified>2014-05-13T04:28:48.945</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocucameratraits.js">
       <PackagePath>js\mocucameratraits.js</PackagePath>
@@ -162,7 +162,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocuobject.js">
       <PackagePath>js\mocuobject.js</PackagePath>
-      <Modified>2014-05-12T06:14:54.977</Modified>
+      <Modified>2014-05-13T04:23:57.998</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocurenderer.js">
       <PackagePath>js\mocurenderer.js</PackagePath>
@@ -242,7 +242,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-sprite-vertex.shader">
       <PackagePath>js\mocugame-sprite-vertex.shader</PackagePath>
-      <Modified>2014-04-12T06:24:53.047</Modified>
+      <Modified>2014-05-13T04:31:11.358</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Mocuto\Documents\MocuGame Library\MocuGame Library\js\mocugame-vertex.shader">
       <PackagePath>js\mocugame-vertex.shader</PackagePath>

@@ -216,6 +216,23 @@
         gl.uniform1f(alphaLocation, this.alpha);
     };
 
+    MocuGame.MocuObject.prototype.setCameraTranslationUniform = function (gl, program) {
+        var scrollRate = new MocuGame.Point(1.0, 1.0);
+        if (this.cameraTraits != null) {
+            scrollRate = this.cameraTraits.scrollRate
+        }
+        var cameraTranslateLocation = gl.getUniformLocation(program, "u_cameraTranslate");
+        var cameraTranslate = new Float32Array([
+            -MocuGame.camera.x * scrollRate.x, -MocuGame.camera.y * scrollRate.y
+        ]);
+        gl.uniform2fv(cameraTranslateLocation, cameraTranslate);
+    };
+
+    MocuGame.MocuObject.prototype.setCameraZoomUniform = function (gl, program) {
+        var cameraZoomLocation = gl.getUniformLocation(program, "u_cameraZoom");
+        gl.uniform1f(cameraZoomLocation, MocuGame.camera.zoom);
+    };
+
     MocuGame.MocuObject.prototype.getTextureCoordinateArray = function () {
         var texWidth = 1.0;
         var texHeight = 1.0;
@@ -313,6 +330,10 @@
         MocuGame.renderer.useProgram(program);
 
         this.setTranslationUniform(gl, program, displacement);
+
+        this.setCameraTranslationUniform(gl, program, displacement);
+        
+        this.setCameraZoomUniform(gl, program, displacement);
 
         this.setRotationUniform(gl, program);
 
