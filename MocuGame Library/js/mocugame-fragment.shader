@@ -1,4 +1,6 @@
-﻿varying vec2 v_texCoord;
+﻿precision mediump float;
+
+varying vec2 v_texCoord;
 uniform vec4 u_color;
 
 void main() {

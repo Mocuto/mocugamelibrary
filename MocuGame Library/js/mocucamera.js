@@ -148,7 +148,7 @@
     */
     MocuGame.MocuCamera.prototype.update = function (deltaT) {
         MocuGame.MocuGroup.prototype.update.call(this, deltaT);
-        this.zoom += 0.1;
+        
         if (this.trackingObject != null) {
             this.chaseTracker(deltaT);
         }

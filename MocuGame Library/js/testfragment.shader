@@ -1,4 +1,6 @@
-﻿varying vec2 v_texCoord;
+﻿precision mediump float;
+
+varying vec2 v_texCoord;
 uniform sampler2D u_image;
 uniform float u_amount;
 
