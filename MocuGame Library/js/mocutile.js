@@ -52,6 +52,7 @@
         this.parentTilemap = parentTilemap;
         this.animates = false;
         this.active = false;
+        this.visible = false;
 
         if (this.parentTilemap != null) {
             this.worldPoint.x = this.parentTilemap.x + this.x;
@@ -62,4 +63,74 @@
     };
     MocuGame.MocuTile.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuTile.constructor = MocuGame.MocuTile;
+
+    MocuGame.MocuTile.prototype.preDrawGl = function (gl, displacement) {
+        var localProgram = this.program;
+        if (this.useParentEffects == true) {
+            if (this.parent != null) {
+                if (this.parent.program != null && typeof this.parent.program !== "undefined") {
+                    localProgram = this.parent.program;
+                }
+            }
+        }
+
+        var program = (localProgram == null) ? MocuGame.renderer.defaultProgram : localProgram;
+        MocuGame.renderer.useProgram(program);
+
+        this.setTranslationUniform(gl, program, displacement);
+        this.setPositionAttribute(gl, program);
+
+        if (this == this.parent.tileArray[0][0]) {
+            this.setCameraTranslationUniform(gl, program, displacement);
+
+            this.setCameraZoomUniform(gl, program, displacement);
+
+            this.setRotationUniform(gl, program);
+
+            this.setScaleUniform(gl, program)
+
+            this.setAlphaUniform(gl, program);
+
+
+        }
+
+        if (this.texture == null || typeof this.texture === "undefined") {
+            if (this.img.complete == true) {
+                this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+                //this.texture = gl.createTexture();
+                //this.prepareTexture(gl, this.texture, program);
+                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
+            }
+        }
+
+        return program;
+    }
+
+    MocuGame.MocuTile.prototype.drawGl = function (gl, displacement) {
+        if (this.animates) {
+            this.animate(deltaT);
+        }
+
+        if (this.isOnScreen() == false) {
+            return;
+        }
+
+
+        var program = this.preDrawGl(gl, displacement);
+
+        var texture = this.texture;
+
+
+        if (texture == null) {
+            return;
+        }
+
+        this.prepareTexture(gl, this.texture, program);
+
+        texture = this.applyEffects(gl, texture);
+
+        MocuGame.renderer.useProgram(program);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
 })();

@@ -144,7 +144,7 @@
                 }
             }
             if (this.cameraTraits != null) {
-                MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
             }
         }
     };

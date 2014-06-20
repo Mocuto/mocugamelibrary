@@ -4,6 +4,8 @@
         this.translate = new MocuGame.Point(0, 0);
 
         this.programCache = {};
+        this.textureCache = {};
+        this.textureBufferCache = {};
 
         this.defaultProgram = this.loadProgram(gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER);
 
@@ -163,6 +165,36 @@
 
         return texture;
     };
+
+    MocuGame.MocuRenderer.prototype.getCachedTexture = function (gl, image) {
+        if ((image.src in this.textureCache) == false)
+        {
+            var texture = this.createAndSetupTexture(gl);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            this.textureCache[image.src] = texture;
+        }
+
+        return this.textureCache[image.src];
+    }
+
+    MocuGame.MocuRenderer.prototype.getCachedTextureBuffer = function (gl, textureCoordinateArray) {
+        var key = Array.prototype.map.call(textureCoordinateArray, function (item) {
+            return String(item);
+        }).join();
+
+        if ((key in this.textureBufferCache) == false) {
+            texCoordBuffer = gl.createBuffer();
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STREAM_DRAW);
+
+            this.textureBufferCache[key] = texCoordBuffer;
+        }
+        else {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBufferCache[key]);
+        }
+        return this.textureBufferCache[key];
+    }
 
     MocuGame.MocuRenderer.prototype.setFramebufferForObject = function(gl, oldTexture, width, height)
     {

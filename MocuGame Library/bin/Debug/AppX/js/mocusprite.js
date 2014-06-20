@@ -85,6 +85,7 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+            var gl = MocuGame.renderer.gl;
             this.texture = null;
             this.effects = [];
         }
@@ -236,18 +237,33 @@
         
     }
 
+    MocuGame.MocuSprite.prototype.getTextureCoordinateArray = function () {
+        var texStartX = (this.frame.x * this.width) / this.img.naturalWidth;
+        var texStartY = (this.frame.y * this.height) / this.img.naturalHeight;
+        var texWidth = this.width / this.img.naturalWidth;
+        var texHeight = this.height / this.img.naturalHeight;
+
+        return new Float32Array([
+            texStartX, texStartY,
+            texStartX + texWidth, texStartY,
+            texStartX, texStartY + texHeight,
+            texStartX, texStartY + texHeight,
+            texStartX + texWidth, texStartY,
+            texStartX + texWidth, texStartY + texHeight
+        ]);
+    };
+
     MocuGame.MocuSprite.prototype.preDrawGl = function (gl, displacement) {
         var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
-        this.setTranslationUniform(gl, program, displacement);
-
-        this.setRotationUniform(gl, program);
-
-        this.setScaleUniform(gl, program)
-
-        this.setAlphaUniform(gl, program);
-
-        this.setPositionAttribute(gl, program);
+        if (this.texture == null || typeof this.texture === "undefined")
+        {
+            if (this.img.complete == true) {
+                this.texture = gl.createTexture();
+                this.prepareTexture(gl, this.texture, program);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
+            }
+        }
 
         return program;
     };
@@ -260,8 +276,13 @@
         
         var program = this.preDrawGl(gl, displacement);
 
-        var texture = gl.createTexture();
-        this.prepareTexture(gl, texture, program);
+        var texture = this.texture;
+
+        if (texture == null) {
+            return;
+        }
+
+        this.prepareTexture(gl, this.texture, program);
 
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
@@ -289,7 +310,7 @@
             blankContext.fill();
         }
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
 
         blankContext.clearRect(0, 0, this.width, this.height);

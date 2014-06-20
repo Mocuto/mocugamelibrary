@@ -104,10 +104,15 @@
                 this.tileArray[(i % this.widthInTiles)][Math.floor(i / this.widthInTiles)] = tile;
 
                 tile.density = (tileNum >= this.collisionStartingIndex);
+                tile.visible = tile.density;
                 tile.tileID = tileNum;
 
                 this.add(tile);
             }
+        }
+
+        if (MocuGame.isWindows81) {
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
         }
     };
     MocuGame.MocuTilemap.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
@@ -201,4 +206,6 @@
         }
         return returnTiles;
     };
+
+  
 })();

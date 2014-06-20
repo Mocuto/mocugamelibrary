@@ -93,8 +93,9 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER)
-            this.useParentEffects = true;
+            this.useParentEffects = false;
             this.effects = [];
+            this.lastCoordinateArray = null;
         }
     };
 
@@ -166,21 +167,33 @@
             coordinateArray = this.getCoordinateArray();
         }
 
+
         var positionLocation = gl.getAttribLocation(program, "a_position");
 
-        // Provide position coordinates for the rectangle
-        var positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        var positionBuffer = this.lastPositionBuffer;
+        if (this.lastCoordinateArray !== coordinateArray) {
 
 
-        //Create a buffer and set it to use the array buffer
-        gl.bufferData(gl.ARRAY_BUFFER, coordinateArray, gl.STATIC_DRAW)
+            // Provide position coordinates for the rectangle
+            positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+            //Create a buffer and set it to use the array buffer
+            gl.bufferData(gl.ARRAY_BUFFER, coordinateArray, gl.STATIC_DRAW)
+
+            this.lastPositionBuffer = positionBuffer;
+            this.lastCoordinateArray = coordinateArray;
+        }
+        else {
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        }
 
         //Activate the vertex attributes in the GPU program
         gl.enableVertexAttribArray(positionLocation);
 
         //Set the format of the positionLocation array
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
     };
 
     MocuGame.MocuObject.prototype.setResolutionUniform = function (gl, program, resolution) {
@@ -254,10 +267,21 @@
         }
 
         var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-        var texCoordBuffer = gl.createBuffer();
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STATIC_DRAW);
+        var texCoordBuffer = this.lastTexCoordBuffer;
+        if (textureCoordinateArray !== this.lastTextureCoordinateArray) {
+
+            texCoordBuffer = gl.createBuffer();
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STATIC_DRAW);
+
+            this.lastTextureCoordinateArray = textureCoordinateArray;
+            this.lastTexCoordBuffer = texCoordBuffer;
+        }
+        else {
+            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        }
 
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
@@ -265,6 +289,7 @@
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
         this.setTextureParameters(gl);
+
         return texture;
     };
 
