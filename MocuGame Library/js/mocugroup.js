@@ -52,7 +52,7 @@
         this.cameraTraits = null;
 
         if (MocuGame.isWindows81) {
-            this.program = null;
+            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
             var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
             this.effects = [effect];
             effect.uniformProperties["u_amount"] = 1.0;
@@ -106,6 +106,87 @@
         return effectedTexture;
     }
 
+    MocuGame.MocuGroup.prototype.drawGl = function (gl, displacement) {
+        var program = this.preDrawGl(gl, displacement);
+        var objectsForTexture = {};
+        var positionsForTexture = {};
+        var translationsForTexture = {};
+        var texCoordsForTexture = {};
+        var rotationsForTexture = {};
+        var scalesForTexture = {};
+        var cameraTranslationsForTexture = {};
+        var cameraZoomsForTexture = {};
+        var fadesForTexture = {};
+        var alphasForTexture = {};
+        var texture = null;
+
+        for (var i = 0; i < this.objects.length; i++) {
+            var object = this.objects[i];
+            if(MocuGame.MocuGroup.prototype.isPrototypeOf(object))
+            {
+                object.drawGl(gl, displacement);
+            }
+            else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
+                var sprite = object;
+                texture = sprite.getTexture(gl);
+
+                if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                    continue;
+                }
+
+                if (sprite.animates) {
+                    sprite.animate();
+                }
+
+                if((texture in objectsForTexture) == false) {
+                    //Load the other maps up
+                    objectsForTexture[texture] = [];
+                    positionsForTexture[texture] = [];
+                    translationsForTexture[texture] = [];
+                    texCoordsForTexture[texture] = [];
+                    rotationsForTexture[texture] = [];
+                    scalesForTexture[texture] = [];
+                    cameraTranslationsForTexture[texture] = [];
+                    cameraZoomsForTexture[texture] = [];
+                    fadesForTexture[texture] = [];
+                    alphasForTexture[texture] = [];
+                }
+
+                objectsForTexture[texture].push(sprite);
+                var properties = sprite.getGlProperties();
+
+                positionsForTexture[texture].push.apply(positionsForTexture[texture], properties["position"].value);
+                translationsForTexture[texture].push.apply(translationsForTexture[texture], properties["translation"].value);
+                texCoordsForTexture[texture].push.apply(texCoordsForTexture[texture], properties["texCoord"].value);
+                rotationsForTexture[texture].push.apply(rotationsForTexture[texture], properties["rotation"].value);
+                scalesForTexture[texture].push.apply(scalesForTexture[texture], properties["scale"].value);
+                cameraTranslationsForTexture[texture].push.apply(cameraTranslationsForTexture[texture], properties["cameraTranslation"].value);
+                cameraZoomsForTexture[texture].push.apply(cameraZoomsForTexture[texture], properties["cameraZoom"].value);
+                fadesForTexture[texture].push.apply(fadesForTexture[texture], properties["fade"].value);
+                alphasForTexture[texture].push.apply(alphasForTexture[texture], properties["alpha"].value);
+            }
+        }
+        for (mappedTexture in objectsForTexture)
+        {
+            //Here, load all of the properties
+            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(positionsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(translationsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(texCoordsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(rotationsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(scalesForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_cameraTranslation", new Float32Array(cameraTranslationsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_cameraZoom", new Float32Array(cameraZoomsForTexture[mappedTexture]), 1);
+            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(fadesForTexture[mappedTexture]), 4);
+            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(alphasForTexture[mappedTexture]), 1);
+
+            MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
+
+            var numberOfObjects = objectsForTexture[mappedTexture].length;
+
+            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects);
+        }
+    }
+
     /*
         draw is a function inherited from MocuObject. Draws all visible MocuObjects it contains.
 
@@ -119,6 +200,11 @@
     MocuGame.MocuGroup.prototype.draw = function (context, point) {
         if (typeof point == null || typeof point == 'undefined') {
             point = new MocuGame.Point(0, 0);
+        }
+        if (MocuGame.isWindows81) {
+            this.drawGl(context, point);
+            this.draw = this.drawGl;
+            return;
         }
 
         for (var i = 0; i < this.objects.length; i += 1) {
@@ -144,7 +230,7 @@
                 }
             }
             if (this.cameraTraits != null) {
-                MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
             }
         }
     };

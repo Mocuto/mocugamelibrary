@@ -4,6 +4,10 @@
         this.translate = new MocuGame.Point(0, 0);
 
         this.programCache = {};
+        this.textureCache = {};
+        this.textureBufferCache = {};
+        this.locationCache = {};
+        this.uniformLocationCache = {};
 
         this.defaultProgram = this.loadProgram(gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER);
 
@@ -156,13 +160,83 @@
 
         // Set up texture so we can render any size image and so we are
         // working with pixels.
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
         return texture;
     };
+
+    MocuGame.MocuRenderer.prototype.getCachedTexture = function (gl, image) {
+        if ((image.src in this.textureCache) == false)
+        {
+            var texture = this.createAndSetupTexture(gl);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            this.textureCache[image.src] = texture;
+        }
+
+        return this.textureCache[image.src];
+    }
+
+    MocuGame.MocuRenderer.prototype.getCachedLocation = function (gl, program, name) {
+        if ((name in this.locationCache) == false) {
+            this.locationCache[name] = gl.getAttribLocation(program, name);
+        }
+        return this.locationCache[name];
+    }
+
+    MocuGame.MocuRenderer.prototype.getCachedUniformLocation = function (gl, program, name) {
+        if ((name in this.uniformLocationCache) == false) {
+            this.uniformLocationCache[name] = gl.getUniformLocation(program, name);
+        }
+        return this.uniformLocationCache[name];
+    }
+
+    MocuGame.MocuRenderer.prototype.setAttribute = function (gl, program, attributeName, attributeValue, componentsPerAttribute) {
+        var buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        var location = this.getCachedLocation(gl, program, attributeName);
+
+        //Create a buffer and set it to use the array buffer
+        gl.bufferData(gl.ARRAY_BUFFER, attributeValue, gl.STATIC_DRAW)
+
+
+        //Activate the vertex attributes in the GPU program
+        gl.enableVertexAttribArray(location);
+
+        //Set the format of the positionLocation array
+        gl.vertexAttribPointer(location, componentsPerAttribute, gl.FLOAT, false, 0, 0);
+    }
+
+    MocuGame.MocuRenderer.prototype.setResolutionUniform = function (gl, program, resolution) {
+        var location = this.getCachedUniformLocation(gl, program, "u_resolution");
+
+        if (this.lastResolution != resolution) {
+            gl.uniform2fv(location, new Float32Array([resolution.x, resolution.y]));
+            this.lastResolution = resolution;
+        }
+    }
+
+    MocuGame.MocuRenderer.prototype.getCachedTextureBuffer = function (gl, textureCoordinateArray) {
+        var key = Array.prototype.map.call(textureCoordinateArray, function (item) {
+            return String(item);
+        }).join();
+
+        if ((key in this.textureBufferCache) == false) {
+            texCoordBuffer = gl.createBuffer();
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STREAM_DRAW);
+
+            this.textureBufferCache[key] = texCoordBuffer;
+        }
+        else {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBufferCache[key]);
+        }
+        return this.textureBufferCache[key];
+    }
 
     MocuGame.MocuRenderer.prototype.setFramebufferForObject = function(gl, oldTexture, width, height)
     {

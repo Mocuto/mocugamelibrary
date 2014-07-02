@@ -85,6 +85,7 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+            var gl = MocuGame.renderer.gl;
             this.texture = null;
             this.effects = [];
         }
@@ -236,18 +237,108 @@
         
     }
 
+    MocuGame.MocuSprite.prototype.getTextureCoordinateArray = function () {
+        if (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
+            this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x) {
+            var texStartX = (this.frame.x * this.width) / this.img.naturalWidth;
+            var texStartY = (this.frame.y * this.height) / this.img.naturalHeight;
+            var texWidth = this.width / this.img.naturalWidth;
+            var texHeight = this.height / this.img.naturalHeight;
+
+            this.lastTexCoordFrameX = this.frame.x;
+            this.lastTexCoordFrameY = this.frame.y;
+            this.lastTexCoordWidth = this.width;
+            this.lastTexCoordHeight = this.height;
+            this.lastTexCoordArray = [
+                texStartX, texStartY,
+                texStartX + texWidth, texStartY,
+                texStartX, texStartY + texHeight,
+                texStartX, texStartY + texHeight,
+                texStartX + texWidth, texStartY,
+                texStartX + texWidth, texStartY + texHeight
+            ];
+        }
+
+        return this.lastTexCoordArray;
+    };
+
+    MocuGame.MocuSprite.prototype.getGlProperties = function () {
+        var position = this.getCoordinateArray();
+        var texCoords = this.getTextureCoordinateArray();
+        var translation = [];
+        var rotation = [];
+        var scale = [];
+        var cameraTranslation = [];
+        var cameraZoom = [];
+        var fade = [];
+        var alpha = [];
+
+        var scrollRate = new MocuGame.Point(0.0, 0.0);
+        if (this.cameraTraits != null) {
+            scrollRate = this.cameraTraits.scrollRate
+        }
+        else if (typeof this.parent !== "undefined") {
+            if (this.parent.cameraTraits != null) {
+                scrollRate = this.cameraTraits.scrollRate;
+            }
+        }
+
+        for (var i = 0; i < MocuGame.VERTICES_PER_OBJECT; i += 1) {
+            translation.push(this.x);
+            translation.push(this.y);
+
+            rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
+            rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
+
+            scale.push(this.scale.x);
+            scale.push(this.scale.y);
+
+            cameraTranslation.push(-MocuGame.camera.x * scrollRate.x);
+            cameraTranslation.push(-MocuGame.camera.y * scrollRate.y);
+
+            cameraZoom.push(MocuGame.camera.zoom);
+
+            fade.push(this.fade.r);
+            fade.push(this.fade.g);
+            fade.push(this.fade.b);
+            fade.push(this.fade.a);
+
+            alpha.push(this.alpha);
+        }
+
+        return {
+            "position" : { type: "attribute", value: position },
+            "translation": { type: "attribute", value: translation },
+            "rotation": { type: "attribute", value: rotation },
+            "scale": { type: "attribute", value: scale },
+            "cameraTranslation": { type: "attribute", value: cameraTranslation },
+            "cameraZoom": { type: "attribute", value: cameraZoom },
+            "fade": { type: "attribute", value: fade },
+            "alpha": {type: "attribute", value:alpha},
+            "texCoord": { type: "attribute", value: texCoords }
+        };
+    }
+
+    MocuGame.MocuSprite.prototype.getTexture = function (gl) {
+        if (this.img.complete == true && this.texture == null) {
+            this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+        }
+
+        return this.texture;
+    }
+
     MocuGame.MocuSprite.prototype.preDrawGl = function (gl, displacement) {
         var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
-        this.setTranslationUniform(gl, program, displacement);
-
-        this.setRotationUniform(gl, program);
-
-        this.setScaleUniform(gl, program)
-
-        this.setAlphaUniform(gl, program);
-
-        this.setPositionAttribute(gl, program);
+        if (this.texture == null || typeof this.texture === "undefined")
+        {
+            if (this.img.complete == true) {
+                this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+                //this.texture = gl.createTexture();
+                //this.prepareTexture(gl, this.texture, program);
+                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
+            }
+        }
 
         return program;
     };
@@ -257,13 +348,22 @@
         if (this.animates) {
             this.animate(deltaT);
         }
+
+        if (this.isOnScreen() == false) {
+            return;
+        }
         
         var program = this.preDrawGl(gl, displacement);
 
-        var texture = gl.createTexture();
-        this.prepareTexture(gl, texture, program);
+        var texture = this.texture;
 
-        var blankCanvas = MocuGame.blankCanvas;
+        if (texture == null) {
+            return;
+        }
+
+        this.prepareTexture(gl, this.texture, program);
+
+        /*var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
 
 
@@ -289,10 +389,10 @@
             blankContext.fill();
         }
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
 
-        blankContext.clearRect(0, 0, this.width, this.height);
+        blankContext.clearRect(0, 0, this.width, this.height);*/
 
         texture = this.applyEffects(gl, texture);
 

@@ -55,20 +55,39 @@
                 //state.add(background);
 
                 var patch = new MocuGame.MocuPatch(new MocuGame.Point(MocuGame.resolution.x / 2 - 50, MocuGame.resolution.y / 2 - 50), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
-                state.add(patch);
+                //state.add(patch);
 
                 //background.velocity.y = -1;
 
-                var sprite = new MocuGame.MocuSprite(new MocuGame.Point(10, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                for (var i = 0; i < 2000; i++) {
+                    var randX = Math.ceil(Math.random() * MocuGame.resolution.x);
+                    var randY = Math.ceil(Math.random() * MocuGame.resolution.y);
+                    var test = new MocuGame.MocuSprite(new MocuGame.Point(randX, randY), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                    //test.animates = false;
+                    test.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
+                    test.play("Idle");
+                    state.add(test);
+                }
+
+                var sprite = new MocuGame.MocuSprite(new MocuGame.Point(116, 132), new MocuGame.Point(32, 32), "images/Mocuto.png");
                 sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
                 sprite.play("Idle");
-                sprite.scale = new MocuGame.Point(3, 3);
-                //sprite.alpha = 1.0;
+                //sprite.scale = new MocuGame.Point(2, 2);
+                //sprite.angularvelocity = 1;
+                sprite.fade.a = 1.0;
+                sprite.fade.g = 1.0;
+                var slot = new MocuGame.TimeSlot(1);
+                slot.addEvent(new MocuGame.Event(sprite, "alpha", 1.0, 0.0, 120));
+                //sprite.timeline.addSlot(slot)
                 //obj.velocity.x = 1;
                 obj.visible = true;
-                //sprite.scale.x = 1;
+                sprite.scale.x = 2;
                 //sprite.scale.y = 1;
-                //state.add(sprite);
+                //sprite.velocity.x = 1;
+                //MocuGame.camera.zoom = 2;
+                var sprite2 = new MocuGame.MocuSprite(new MocuGame.Point(100, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                state.add(sprite2);
+                state.add(sprite)
                 //state.add(obj);
 
                 var text = new MocuGame.Marquee(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50), "Test 123", 1);
