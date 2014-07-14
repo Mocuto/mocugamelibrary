@@ -84,10 +84,25 @@
         this.animates = true;
 
         if (MocuGame.isWindows81) {
-            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+            //this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
             var gl = MocuGame.renderer.gl;
             this.texture = null;
             this.effects = [];
+            this.lastGlParent = null;
+            this.lastGlParentIndex = -1;
+
+            this.lastGlWidth = null;
+            this.lastGlHeight = null;
+            this.lastGlX = null;
+            this.lastGlY = null;
+            this.lastGlAngle = null;
+            this.lastGlScaleX = null;
+            this.lastGlScaleY = null;
+            this.lastGlFadeR = null;
+            this.lastGlFadeG = null
+            this.lastGlFadeB = null
+            this.lastGlFadeA = null
+            this.lastGlAlpha = {};
         }
 
         this.addsom = 0;
@@ -264,6 +279,8 @@
 
     MocuGame.MocuSprite.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
+        var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
+            this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x);
         var texCoords = this.getTextureCoordinateArray();
         var translation = [];
         var rotation = [];
@@ -283,40 +300,58 @@
             }
         }
 
-        for (var i = 0; i < MocuGame.VERTICES_PER_OBJECT; i += 1) {
-            translation.push(this.x);
-            translation.push(this.y);
+        //for (var i = 0; i < MocuGame.VERTICES_PER_OBJECT; i += 1) {
+        translation.push(this.x + (-MocuGame.camera.x * scrollRate.x));
+        translation.push(this.y + (-MocuGame.camera.y * scrollRate.y));
 
-            rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
-            rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
+        rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
+        rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
 
-            scale.push(this.scale.x);
-            scale.push(this.scale.y);
+        scale.push(this.scale.x * MocuGame.camera.zoom);
+        scale.push(this.scale.y * MocuGame.camera.zoom);
 
-            cameraTranslation.push(-MocuGame.camera.x * scrollRate.x);
-            cameraTranslation.push(-MocuGame.camera.y * scrollRate.y);
 
-            cameraZoom.push(MocuGame.camera.zoom);
 
-            fade.push(this.fade.r);
-            fade.push(this.fade.g);
-            fade.push(this.fade.b);
-            fade.push(this.fade.a);
+        fade.push(this.fade.r);
+        fade.push(this.fade.g);
+        fade.push(this.fade.b);
+        fade.push(this.fade.a);
 
-            alpha.push(this.alpha);
-        }
+        alpha.push(this.alpha);
+        //}
 
-        return {
-            "position" : { type: "attribute", value: position },
-            "translation": { type: "attribute", value: translation },
-            "rotation": { type: "attribute", value: rotation },
-            "scale": { type: "attribute", value: scale },
-            "cameraTranslation": { type: "attribute", value: cameraTranslation },
-            "cameraZoom": { type: "attribute", value: cameraZoom },
-            "fade": { type: "attribute", value: fade },
-            "alpha": {type: "attribute", value:alpha},
-            "texCoord": { type: "attribute", value: texCoords }
-        };
+        var result = {
+            "position" : { type: "attribute", value: position,
+                hasChanged: (this.lastGlWidth != this.width || this.height != this.lastGlHeight) },
+            "translation": { type: "attribute", value: translation,
+                hasChanged: (this.lastGlX != this.x || this.lastGlY != this.y) },
+            "rotation": { type: "attribute", value: rotation,
+                hasChanged: (this.lastGlRotation != this.angle) },
+            "scale": { type: "attribute", value: scale,
+                hasChanged: (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y) },
+            "fade": { type: "attribute", value: fade,
+                hasChanged: (this.lastGlFadeR != this.fade.r || this.lastGlFadeG != this.fade.g ||
+                this.lastGlFadeB != this.fade.b || this.lastGlFadeA != this.fade.a) },
+            "alpha": {type: "attribute", value:alpha,
+                hasChanged: (this.lastGlAlpha != this.alpha)},
+            "texCoord": { type: "attribute", value: texCoords,
+                hasChanged: texCoordHasChanged }
+            }
+        this.lastGlWidth = this.width;
+        this.lastGlHeight = this.height;
+        this.lastGlX = this.x;
+        this.lastGlY = this.y;
+        this.lastGlRotation = this.angle;
+        this.lastGlScaleX = this.scale.x;
+        this.lastGlScaleY = this.scale.y;
+        this.lastGlFadeR = this.scale.r;
+        this.lastGlFadeG = this.scale.g;
+        this.lastGlFadeB = this.scale.b;
+        this.lastGlFadeA = this.scale.a;
+        this.lastGlAlpha = this.alpha;
+
+        return result;
+
     }
 
     MocuGame.MocuSprite.prototype.getTexture = function (gl) {

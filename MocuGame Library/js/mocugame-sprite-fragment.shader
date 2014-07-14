@@ -1,4 +1,5 @@
-﻿varying vec2 v_texCoord;
+﻿precision lowp float;
+varying vec2 v_texCoord;
 varying vec4 v_fade;
 
 uniform sampler2D u_image;

@@ -1,6 +1,7 @@
 ﻿(function () {
     MocuGame.MocuRenderer = function (gl) {
         this.gl = gl;
+        this.ext = gl.getExtension("ANGLE_instanced_arrays"); 
         this.translate = new MocuGame.Point(0, 0);
 
         this.programCache = {};
@@ -16,7 +17,7 @@
         gl.disable(gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
 
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
 
@@ -208,6 +209,13 @@
 
         //Set the format of the positionLocation array
         gl.vertexAttribPointer(location, componentsPerAttribute, gl.FLOAT, false, 0, 0);
+    }
+
+    MocuGame.MocuRenderer.prototype.setAttributeInstanced = function(gl, program, attributeName, attributeValue, componentsPerAttribute, divisor) {
+        this.setAttribute(gl, program, attributeName, attributeValue, componentsPerAttribute);
+        var location = this.getCachedLocation(gl, program, attributeName);
+
+        this.ext.vertexAttribDivisorANGLE(location, divisor);
     }
 
     MocuGame.MocuRenderer.prototype.setResolutionUniform = function (gl, program, resolution) {

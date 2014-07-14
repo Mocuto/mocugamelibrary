@@ -44,7 +44,7 @@
                 //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
 
                 MocuGame.targetResolutionWidth = window.innerWidth;
-                MocuGame.prepareCanvasForWindows81("myCanvas", new MocuGame.Point(6400, 4800),
+                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
                     new MocuGame.Point(window.innerWidth, window.innerHeight));
 
                 var state = new MocuGame.MocuState(60);

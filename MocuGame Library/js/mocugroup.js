@@ -59,6 +59,17 @@
             var slot = new MocuGame.TimeSlot(this.timeline.currentTime + 1);
             slot.addEvent(new MocuGame.Event(effect.uniformProperties, "u_amount", 1.0, 0.0, 120));
             //this.timeline.addSlot(slot);
+            this.objectsForTexture = {};
+            this.positionsForTexture = {};
+	        this.translationsForTexture = {};
+	        this.texCoordsForTexture = {};
+	        this.rotationsForTexture = {};
+	        this.scalesForTexture = {};
+	        this.cameraTranslationsForTexture = {};
+	        this.cameraZoomsForTexture = {};
+	        this.fadesForTexture = {};
+	        this.alphasForTexture = {};
+
         }
     };
     MocuGame.MocuGroup.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
@@ -76,7 +87,9 @@
         MocuGame.MocuObject.prototype.update.call(this, deltaT);
         for (var i = 0; i < this.objects.length; i += 1) {
             if (this.objects[i].exists && this.objects[i].active)
+            {
                 this.objects[i].update(deltaT);
+            }
         }
     };
 
@@ -120,71 +133,133 @@
         var alphasForTexture = {};
         var texture = null;
 
+        function updateProperty(property, valueArray, startIndex, endIndex) {
+        	while(property.length < endIndex) {
+        		property.push(null);
+        	}
+        	for(var i = startIndex; i < endIndex; i++) {
+        		property[i] = valueArray[(i - startIndex) % valueArray.length];
+        	}
+        }
+
         for (var i = 0; i < this.objects.length; i++) {
             var object = this.objects[i];
-            if(MocuGame.MocuGroup.prototype.isPrototypeOf(object))
-            {
+            if (MocuGame.MocuGroup.prototype.isPrototypeOf(object)) {
                 object.drawGl(gl, displacement);
             }
             else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
                 var sprite = object;
                 texture = sprite.getTexture(gl);
 
-                if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
-                    continue;
-                }
-
-                if (sprite.animates) {
+                if(sprite.animates) {
                     sprite.animate();
                 }
 
-                if((texture in objectsForTexture) == false) {
-                    //Load the other maps up
+                if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                    continue;
+                }
+                if ((texture in objectsForTexture) == false) {
                     objectsForTexture[texture] = [];
-                    positionsForTexture[texture] = [];
-                    translationsForTexture[texture] = [];
-                    texCoordsForTexture[texture] = [];
-                    rotationsForTexture[texture] = [];
-                    scalesForTexture[texture] = [];
-                    cameraTranslationsForTexture[texture] = [];
-                    cameraZoomsForTexture[texture] = [];
-                    fadesForTexture[texture] = [];
-                    alphasForTexture[texture] = [];
+                }
+                if((texture in this.objectsForTexture) == false) {
+                	this.objectsForTexture[texture] = [];
+                	this.positionsForTexture[texture] = [];
+                	this.texCoordsForTexture[texture] = [];
+                	this.translationsForTexture[texture] = [];
+                	this.scalesForTexture[texture] = [];
+                	this.rotationsForTexture[texture] = [];
+                	this.fadesForTexture[texture] = [];
+                	this.alphasForTexture[texture] = [];
+                }
+                var properties = sprite.getGlProperties();
+                var updateAllProperties = (sprite.glLastParentIndex != i || sprite.glLastParent != this);
+                
+                if (properties["position"].hasChanged || updateAllProperties) {
+                	updateProperty(this.positionsForTexture[texture], properties["position"].value,
+                	 i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                } 
+                if(properties["texCoord"].hasChanged || updateAllProperties) {
+                	updateProperty(this.texCoordsForTexture[texture], properties["texCoord"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
                 }
 
-                objectsForTexture[texture].push(sprite);
-                var properties = sprite.getGlProperties();
+                if(properties["translation"].hasChanged || updateAllProperties) {
+                	updateProperty(this.translationsForTexture[texture], properties["translation"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                }
 
-                positionsForTexture[texture].push.apply(positionsForTexture[texture], properties["position"].value);
-                translationsForTexture[texture].push.apply(translationsForTexture[texture], properties["translation"].value);
-                texCoordsForTexture[texture].push.apply(texCoordsForTexture[texture], properties["texCoord"].value);
-                rotationsForTexture[texture].push.apply(rotationsForTexture[texture], properties["rotation"].value);
-                scalesForTexture[texture].push.apply(scalesForTexture[texture], properties["scale"].value);
-                cameraTranslationsForTexture[texture].push.apply(cameraTranslationsForTexture[texture], properties["cameraTranslation"].value);
-                cameraZoomsForTexture[texture].push.apply(cameraZoomsForTexture[texture], properties["cameraZoom"].value);
-                fadesForTexture[texture].push.apply(fadesForTexture[texture], properties["fade"].value);
-                alphasForTexture[texture].push.apply(alphasForTexture[texture], properties["alpha"].value);
+                if(properties["scale"].hasChanged || updateAllProperties) {
+                	updateProperty(this.scalesForTexture[texture], properties["scale"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                }
+
+                if(properties["rotation"].hasChanged || updateAllProperties) {
+                	updateProperty(this.rotationsForTexture[texture], properties["rotation"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                }
+
+                if(properties["fade"].hasChanged || updateAllProperties) {
+                	updateProperty(this.fadesForTexture[texture], properties["fade"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 4, (i * MocuGame.VERTICES_PER_OBJECT * 4) + 24)
+                }
+
+                if(properties["alpha"].hasChanged || updateAllProperties) {
+                	updateProperty(this.alphasForTexture[texture], properties["alpha"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT, (i * MocuGame.VERTICES_PER_OBJECT) + 6);
+                }
+                //UpdateProperties
+                sprite.glLastParentIndex = i;
+                sprite.glLastParent = this;
+
+                objectsForTexture[texture].push(sprite);
+                //function loop1() {
+                //for(var j = 0; j < MocuGame.VERTICES_PER_OBJECT; j++) {
+                	//for(var k = 0; k < 2; k++) {
+ 	                	//translationsForTexture[texture].push(properties["translation"].value);               		
+	            	    //scalesForTexture[texture].push(properties["scale"].value);
+	                	//cameraTranslationsForTexture[texture].push(properties["cameraTranslation"].value);
+	                	//rotationsForTexture[texture].push(properties["rotation"].value);
+                	//}
+                	//for (var k = 0; k < 4; k++) {
+		                //fadesForTexture[texture].push(properties["fade"].value);
+                	//}
+	                //cameraZoomsForTexture[texture].push(properties["cameraZoom"].value[0]);
+	                //alphasForTexture[texture].push(properties["alpha"].value[0]);
+                //}
+            	//}
             }
         }
+    	
+
         for (mappedTexture in objectsForTexture)
         {
+    		if(typeof this.objectsForTexture[mappedTexture] === "undefined") {
+    			//Fix array lengths
+    		}
+    		else if(this.objectsForTexture[mappedTexture].length > objectsForTexture[mappedTexture]) {
+    			//Fix array lengths;
+    		}
             //Here, load all of the properties
-            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(positionsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(translationsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(texCoordsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(rotationsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(scalesForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_cameraTranslation", new Float32Array(cameraTranslationsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_cameraZoom", new Float32Array(cameraZoomsForTexture[mappedTexture]), 1);
-            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(fadesForTexture[mappedTexture]), 4);
-            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(alphasForTexture[mappedTexture]), 1);
+            //TODO: Add glVertexBindingDIvisor implementation here, could gain 6X performance yields
+            //TODO: Find way to open up this code to external shader properties
+            var ext = MocuGame.renderer.ext;
+            var tsts = this.texCoordsForTexture[mappedTexture]
+            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[mappedTexture]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[mappedTexture]), 4);
+            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[mappedTexture]), 1);
 
             MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
 
             var numberOfObjects = objectsForTexture[mappedTexture].length;
 
+            //.ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects, numberOfObjects);
             gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects);
         }
+        this.objectsForTexture = objectsForTexture;
     }
 
     /*
