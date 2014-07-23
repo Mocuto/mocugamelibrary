@@ -1,4 +1,6 @@
-﻿varying vec2 v_texCoord;
+﻿precision mediump float;
+
+varying vec2 v_texCoord;
 uniform vec2 u_scrollPosition;
 uniform vec4 u_color;
 uniform float u_alpha;

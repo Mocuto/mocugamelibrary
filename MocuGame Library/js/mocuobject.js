@@ -254,11 +254,13 @@
         if (this.cameraTraits != null) {
             scrollRate = this.cameraTraits.scrollRate
         }
+
         else if (typeof this.parent !== "undefined") {
             if (this.parent.cameraTraits != null) {
                 scrollRate = this.cameraTraits.scrollRate;
             }
         }
+
         var cameraTranslateLocation = (typeof this.cameraTranslateLocation == "undefined") ? gl.getUniformLocation(program, "u_cameraTranslate") : this.cameraTranslateLocation;
         this.cameraTranslateLocation = cameraTranslateLocation;
         if (MocuGame.renderer.currentCameraTranslate != new MocuGame.Point(-MocuGame.camera.x * scrollRate.x, -MocuGame.camera.y * scrollRate.y)) {

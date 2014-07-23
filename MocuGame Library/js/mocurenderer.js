@@ -7,6 +7,7 @@
         this.programCache = {};
         this.textureCache = {};
         this.textureBufferCache = {};
+
         this.locationCache = {};
         this.uniformLocationCache = {};
 
