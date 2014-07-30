@@ -60,6 +60,10 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_BACKGROUND_FRAGMENT_SHADER);
+
+            this.numOfTiles = new MocuGame.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
+
+            this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y);
         }
     }
     MocuGame.MocuBackground.prototype = new MocuGame.MocuSprite(new MocuGame.Point, MocuGame.Point);
@@ -88,27 +92,160 @@
             this.scrollPosition.y += this.spriteSize.y;
     }
 
-    MocuGame.MocuBackground.prototype.preDrawGl = function(gl, displacement) {
-        var program = MocuGame.MocuSprite.prototype.preDrawGl.call(this,gl ,displacement);
+    MocuGame.MocuBackground.prototype.preDrawGl = function (gl, displacement) {
+        var program = MocuGame.MocuSprite.prototype.preDrawGl.call(this, gl, displacement);
 
         var scrollPositionLocation = gl.getUniformLocation(program, "u_scrollPosition");
-        
+
         var absScrollPosition = new MocuGame.Point(this.scrollPosition.x / this.spriteSize.x, this.scrollPosition.y / this.spriteSize.y);
         gl.uniform2fv(scrollPositionLocation, new Float32Array([absScrollPosition.x, absScrollPosition.y]));
 
         return program;
+    };
+
+    MocuGame.MocuBackground.prototype.getCoordinateArray = function () {
+
+        var numOfTiles = this.numOfTiles;
+
+        var coords = [];
+
+        for (var x = 0; x < this.width; x += this.spriteSize.x) {
+            for (var y = 0; y < this.height; y += this.spriteSize.y) {
+                var absWidth = (x + this.spriteSize.x > this.width) ? ((this.width - x)) * MocuGame.uniscale : this.spriteSize.x * MocuGame.uniscale
+                var absHeight = (y + this.spriteSize.y > this.height) ? ((this.height - y) ) * MocuGame.uniscale : this.spriteSize.y * MocuGame.uniscale
+                var startX = (numOfTiles.x / -2 * this.spriteSize.x) + x;
+                var startY = (numOfTiles.y / -2 * this.spriteSize.y) + y;
+
+                var endX = startX + absWidth;
+                var endY = startY + absHeight;
+
+                coords = coords.concat([
+                    startX, startY,
+                    endX, startY,
+                    startX, endY,
+                    startX, endY,
+                    endX, startY,
+                    endX, endY
+                ]);
+               
+            }
+        }
+        return new Float32Array(coords);
     }
 
     MocuGame.MocuBackground.prototype.getTextureCoordinateArray = function () {
-        var texWidth =  this.width  / this.spriteSize.x;
-        var texHeight = this.height / this.spriteSize.y;
-        return new Float32Array([
-            0, 0,
-            texWidth, 0,
-            0, texHeight,
-            0, texHeight,
-            texWidth, 0,
-            texWidth, texHeight]);
+        var coords = [];
+
+        for (var x = 0; x < this.width; x += this.spriteSize.x) {
+            for (var y = 0; y < this.height; y += this.spriteSize.y) {
+                var texWidth = (x + this.spriteSize.x > this.width) ? (this.width - x) / this.spriteSize.x : 1;
+                var texHeight = (y + this.spriteSize.y > this.height) ? (this.height - y) / this.spriteSize.y : 1
+
+                coords = coords.concat([
+                    0, 0,
+                    texWidth, 0,
+                    0, texHeight,
+                    0, texHeight,
+                    texWidth, 0,
+                    texWidth, texHeight
+
+                ])
+            }
+
+        }
+
+        return new Float32Array(coords);
+    }
+
+    MocuGame.MocuBackground.prototype.getGlProperties = function () {
+        var position = this.getCoordinateArray();
+        var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
+            this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x);
+        var texCoords = this.getTextureCoordinateArray();
+        var translation = [];
+        var rotation = [];
+        var scale = [];
+        var cameraTranslation = [];
+        var cameraZoom = [];
+        var fade = [];
+        var alpha = [];
+
+        var scrollRate = new MocuGame.Point(0.0, 0.0);
+
+        if (this.cameraTraits != null) {
+            scrollRate = this.cameraTraits.scrollRate
+        }
+
+        else if (typeof this.parent !== "undefined") {
+            if (this.parent.cameraTraits != null) {
+                scrollRate = this.cameraTraits.scrollRate;
+            }
+        }
+
+        for (var i = 0; i < this.numOfTiles.x * this.numOfTiles.y; i++) {
+            translation.push((this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
+            translation.push((this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
+
+            rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
+            rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
+
+            scale.push(this.scale.x * MocuGame.camera.zoom);
+            scale.push(this.scale.y * MocuGame.camera.zoom);
+
+            fade.push(this.fade.r);
+            fade.push(this.fade.g);
+            fade.push(this.fade.b);
+            fade.push(this.fade.a);
+
+            alpha.push(this.alpha);
+        }
+
+        var result = {
+            "position": {
+                type: "attribute", value: position,
+                hasChanged: (this.lastGlWidth != this.width || this.height != this.lastGlHeight)
+            },
+            "translation": {
+                type: "attribute", value: translation,
+                hasChanged: (this.lastGlX != this.x || this.lastGlY != this.y)
+            },
+            "rotation": {
+                type: "attribute", value: rotation,
+                hasChanged: (this.lastGlRotation != this.angle)
+            },
+            "scale": {
+                type: "attribute", value: scale,
+                hasChanged: (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
+            },
+            "fade": {
+                type: "attribute", value: fade,
+                hasChanged: (this.lastGlFadeR != this.fade.r || this.lastGlFadeG != this.fade.g ||
+                this.lastGlFadeB != this.fade.b || this.lastGlFadeA != this.fade.a)
+            },
+            "alpha": {
+                type: "attribute", value: alpha,
+                hasChanged: (this.lastGlAlpha != this.alpha)
+            },
+            "texCoord": {
+                type: "attribute", value: texCoords,
+                hasChanged: texCoordHasChanged
+            }
+        }
+        this.lastGlWidth = this.width;
+        this.lastGlHeight = this.height;
+        this.lastGlX = this.x;
+        this.lastGlY = this.y;
+        this.lastGlRotation = this.angle;
+        this.lastGlScaleX = this.scale.x;
+        this.lastGlScaleY = this.scale.y;
+        this.lastGlFadeR = this.scale.r;
+        this.lastGlFadeG = this.scale.g;
+        this.lastGlFadeB = this.scale.b;
+        this.lastGlFadeA = this.scale.a;
+        this.lastGlAlpha = this.alpha;
+
+        return result;
+
     }
 
     MocuGame.MocuBackground.prototype.drawGl = function (gl, displacement) {

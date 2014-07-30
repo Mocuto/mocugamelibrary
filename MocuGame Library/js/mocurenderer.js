@@ -170,6 +170,15 @@
         return texture;
     };
 
+    MocuGame.MocuRenderer.prototype.getSourceForTexture = function (texture) {
+        for (imageSrc in this.textureCache) {
+            if (this.textureCache[imageSrc] == texture) {
+                return imageSrc;
+            }
+        }
+        return null;
+    }
+
     MocuGame.MocuRenderer.prototype.getCachedTexture = function (gl, image) {
         if ((image.src in this.textureCache) == false)
         {

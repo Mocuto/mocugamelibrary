@@ -150,6 +150,7 @@
             else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
                 var sprite = object;
                 texture = sprite.getTexture(gl);
+                var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
 
                 if(sprite.animates) {
                     sprite.animate();
@@ -158,106 +159,97 @@
                 if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
                     continue;
                 }
-                if ((texture in objectsForTexture) == false) {
-                    objectsForTexture[texture] = [];
+                if ((textureSrc in objectsForTexture) == false) {
+
+                    objectsForTexture[textureSrc] = [];
                 }
-                if((texture in this.objectsForTexture) == false) {
-                	this.objectsForTexture[texture] = [];
-                	this.positionsForTexture[texture] = [];
-                	this.texCoordsForTexture[texture] = [];
-                	this.translationsForTexture[texture] = [];
-                	this.scalesForTexture[texture] = [];
-                	this.rotationsForTexture[texture] = [];
-                	this.fadesForTexture[texture] = [];
-                	this.alphasForTexture[texture] = [];
+                if ((textureSrc in this.objectsForTexture) == false) {
+                    this.objectsForTexture[textureSrc] = [];
+                    this.positionsForTexture[textureSrc] = [];
+                    this.texCoordsForTexture[textureSrc] = [];
+                    this.translationsForTexture[textureSrc] = [];
+                    this.scalesForTexture[textureSrc] = [];
+                	this.rotationsForTexture[textureSrc] = [];
+                	this.fadesForTexture[textureSrc] = [];
+                	this.alphasForTexture[textureSrc] = [];
                 }
                 var properties = sprite.getGlProperties();
                 var updateAllProperties = (sprite.glLastParentIndex != i || sprite.glLastParent != this);
                 
                 if (properties["position"].hasChanged || updateAllProperties) {
-                	updateProperty(this.positionsForTexture[texture], properties["position"].value,
-                	 i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
-                } 
+                    updateProperty(this.positionsForTexture[textureSrc], properties["position"].value,
+                	 i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
+                }
+
                 if(properties["texCoord"].hasChanged || updateAllProperties) {
-                	updateProperty(this.texCoordsForTexture[texture], properties["texCoord"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                    updateProperty(this.texCoordsForTexture[textureSrc], properties["texCoord"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
                 }
 
                 if(properties["translation"].hasChanged || updateAllProperties) {
-                	updateProperty(this.translationsForTexture[texture], properties["translation"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                    updateProperty(this.translationsForTexture[textureSrc], properties["translation"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
                 }
 
                 if(properties["scale"].hasChanged || updateAllProperties) {
-                	updateProperty(this.scalesForTexture[texture], properties["scale"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                    updateProperty(this.scalesForTexture[textureSrc], properties["scale"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2) + 12 * sprite.primitives)
                 }
 
                 if(properties["rotation"].hasChanged || updateAllProperties) {
-                	updateProperty(this.rotationsForTexture[texture], properties["rotation"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2, (i * MocuGame.VERTICES_PER_OBJECT * 2) + 12)
+                    updateProperty(this.rotationsForTexture[textureSrc], properties["rotation"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2) + 12 * sprite.primitives)
                 }
 
                 if(properties["fade"].hasChanged || updateAllProperties) {
-                	updateProperty(this.fadesForTexture[texture], properties["fade"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 4, (i * MocuGame.VERTICES_PER_OBJECT * 4) + 24)
+                    updateProperty(this.fadesForTexture[textureSrc], properties["fade"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 4, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 4) + 24 * sprite.primitives)
                 }
 
                 if(properties["alpha"].hasChanged || updateAllProperties) {
-                	updateProperty(this.alphasForTexture[texture], properties["alpha"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT, (i * MocuGame.VERTICES_PER_OBJECT) + 6);
+                    updateProperty(this.alphasForTexture[textureSrc], properties["alpha"].value,
+                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives) + 6 * sprite.primitives);
                 }
                 //UpdateProperties
                 sprite.glLastParentIndex = i;
                 sprite.glLastParent = this;
 
-                objectsForTexture[texture].push(sprite);
-                //function loop1() {
-                //for(var j = 0; j < MocuGame.VERTICES_PER_OBJECT; j++) {
-                	//for(var k = 0; k < 2; k++) {
- 	                	//translationsForTexture[texture].push(properties["translation"].value);               		
-	            	    //scalesForTexture[texture].push(properties["scale"].value);
-	                	//cameraTranslationsForTexture[texture].push(properties["cameraTranslation"].value);
-	                	//rotationsForTexture[texture].push(properties["rotation"].value);
-                	//}
-                	//for (var k = 0; k < 4; k++) {
-		                //fadesForTexture[texture].push(properties["fade"].value);
-                	//}
-	                //cameraZoomsForTexture[texture].push(properties["cameraZoom"].value[0]);
-	                //alphasForTexture[texture].push(properties["alpha"].value[0]);
-                //}
-            	//}
+                objectsForTexture[textureSrc].push(sprite);
             }
         }
     	
 
-        for (mappedTexture in objectsForTexture)
+        for (textureSrc in objectsForTexture)
         {
-    		if(typeof this.objectsForTexture[mappedTexture] === "undefined") {
+            var texture = MocuGame.renderer.textureCache[textureSrc]
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+            this.setTextureParameters(gl);
+
+            if (typeof this.objectsForTexture[textureSrc] === "undefined") {
     			//Fix array lengths
     		}
-    		else if(this.objectsForTexture[mappedTexture].length > objectsForTexture[mappedTexture]) {
+            else if (this.objectsForTexture[textureSrc].length > objectsForTexture[textureSrc]) {
     			//Fix array lengths;
     		}
             //Here, load all of the properties
-            //TODO: Add glVertexBindingDIvisor implementation here, could gain 6X performance yields
             //TODO: Find way to open up this code to external shader properties
             var ext = MocuGame.renderer.ext;
-            var tsts = this.texCoordsForTexture[mappedTexture]
-            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[mappedTexture]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[mappedTexture]), 4);
-            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[mappedTexture]), 1);
+
+            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[textureSrc]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[textureSrc]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[textureSrc]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[textureSrc]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[textureSrc]), 2);
+            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[textureSrc]), 4);
+            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[textureSrc]), 1);
 
             MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
 
-            var numberOfObjects = objectsForTexture[mappedTexture].length;
+            var numberOfObjects = objectsForTexture[textureSrc].length;
 
             //.ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects, numberOfObjects);
-            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects);
+            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
         }
         this.objectsForTexture = objectsForTexture;
     }

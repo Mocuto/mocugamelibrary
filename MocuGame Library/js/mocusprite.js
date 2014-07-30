@@ -84,7 +84,7 @@
         this.animates = true;
 
         if (MocuGame.isWindows81) {
-            //this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+            this.primitives = 1;
             var gl = MocuGame.renderer.gl;
             this.texture = null;
             this.effects = [];
@@ -300,9 +300,8 @@
             }
         }
 
-        //for (var i = 0; i < MocuGame.VERTICES_PER_OBJECT; i += 1) {
-        translation.push(this.x + (-MocuGame.camera.x * scrollRate.x));
-        translation.push(this.y + (-MocuGame.camera.y * scrollRate.y));
+        translation.push((this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
+        translation.push((this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
 
         rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
         rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
@@ -310,15 +309,12 @@
         scale.push(this.scale.x * MocuGame.camera.zoom);
         scale.push(this.scale.y * MocuGame.camera.zoom);
 
-
-
         fade.push(this.fade.r);
         fade.push(this.fade.g);
         fade.push(this.fade.b);
         fade.push(this.fade.a);
 
         alpha.push(this.alpha);
-        //}
 
         var result = {
             "position" : { type: "attribute", value: position,
