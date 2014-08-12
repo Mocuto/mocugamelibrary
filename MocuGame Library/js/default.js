@@ -44,22 +44,14 @@
                 //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
 
                 MocuGame.targetResolutionWidth = window.innerWidth;
-                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
+                MocuGame.prepareCanvasForWindows81("myCanvas", new MocuGame.Point(6400, 4800),
                     new MocuGame.Point(window.innerWidth, window.innerHeight));
 
                 var state = new MocuGame.MocuState(60);
                 //state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
-                var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50));
-                obj.fade.a = 1;
-                var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(64, 64), new MocuGame.Point(MocuGame.resolution.x, MocuGame.resolution.y), "images/sampletile.png");
-                //state.add(background);
 
-                var patch = new MocuGame.MocuPatch(new MocuGame.Point(MocuGame.resolution.x / 2 - 50, MocuGame.resolution.y / 2 - 50), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
-                //state.add(patch);
 
-                //background.velocity.y = -1;
-
-                for (var i = 0; i < 2000; i++) {
+                /*for (var i = 0; i < 2000; i++) {
                     var randX = Math.ceil(Math.random() * MocuGame.resolution.x);
                     var randY = Math.ceil(Math.random() * MocuGame.resolution.y);
                     var test = new MocuGame.MocuSprite(new MocuGame.Point(randX, randY), new MocuGame.Point(32, 32), "images/Mocuto.png");
@@ -67,7 +59,19 @@
                     test.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
                     test.play("Idle");
                     state.add(test);
-                }
+                }*/
+
+                var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50));
+                obj.fade.a = 1;
+                var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(64, 64), new MocuGame.Point(64, 64), "images/sampletile.png");
+                background.scrollVelocity.x = 1;
+ 
+                state.add(background);
+
+                var patch = new MocuGame.MocuPatch(new MocuGame.Point(MocuGame.resolution.x / 2 - 50, MocuGame.resolution.y / 2 - 50), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
+                //state.add(patch);
+
+                //background.velocity.y = -1;
 
                 var sprite = new MocuGame.MocuSprite(new MocuGame.Point(116, 132), new MocuGame.Point(32, 32), "images/Mocuto.png");
                 sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
@@ -85,9 +89,9 @@
                 //sprite.scale.y = 1;
                 //sprite.velocity.x = 1;
                 //MocuGame.camera.zoom = 2;
-                var sprite2 = new MocuGame.MocuSprite(new MocuGame.Point(100, 100), new MocuGame.Point(32, 32), "images/Mocuto.png");
-                state.add(sprite2);
-                state.add(sprite)
+                var sprite2 = new MocuGame.MocuSprite(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                //state.add(sprite2);
+                //state.add(sprite)
                 //state.add(obj);
 
                 var text = new MocuGame.Marquee(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50), "Test 123", 1);

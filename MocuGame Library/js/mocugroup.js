@@ -142,6 +142,14 @@
         	}
         }
 
+        function getPropertyStartIndex(index, components, primitives) {
+            return index * MocuGame.VERTICES_PER_OBJECT * components * primitives;
+        }
+
+        function getPropertyEndIndex(index, components, primitives) {
+            return getPropertyStartIndex(index, components, primitives) + MocuGame.VERTICES_PER_OBJECT * components * primitives;
+        }
+
         for (var i = 0; i < this.objects.length; i++) {
             var object = this.objects[i];
             if (MocuGame.MocuGroup.prototype.isPrototypeOf(object)) {
@@ -175,40 +183,43 @@
                 }
                 var properties = sprite.getGlProperties();
                 var updateAllProperties = (sprite.glLastParentIndex != i || sprite.glLastParent != this);
-                
+
+                var propertyStartIndex1 = getPropertyStartIndex(i, 1, sprite.primitives);
+                var propertyEndIndex1 = getPropertyEndIndex(i, 1, sprite.primitives);
+
+                var propertyStartIndex2 = getPropertyStartIndex(i, 2, sprite.primitives);
+                var propertyEndIndex2 = getPropertyEndIndex(i, 2, sprite.primitives);
+
+                var propertyStartIndex4 = getPropertyStartIndex(i, 4, sprite.primitives);
+                var propertyEndIndex4 = getPropertyEndIndex(i, 4, sprite.primitives);
+
                 if (properties["position"].hasChanged || updateAllProperties) {
                     updateProperty(this.positionsForTexture[textureSrc], properties["position"].value,
-                	 i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
+                	 propertyStartIndex2, propertyStartIndex2 + 12 * sprite.primitives)
                 }
 
                 if(properties["texCoord"].hasChanged || updateAllProperties) {
-                    updateProperty(this.texCoordsForTexture[textureSrc], properties["texCoord"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
+                    updateProperty(this.texCoordsForTexture[textureSrc], properties["texCoord"].value, propertyStartIndex2, propertyEndIndex2)
                 }
 
                 if(properties["translation"].hasChanged || updateAllProperties) {
-                    updateProperty(this.translationsForTexture[textureSrc], properties["translation"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * 2 * sprite.primitives) + 12 * sprite.primitives)
+                    updateProperty(this.translationsForTexture[textureSrc], properties["translation"].value, propertyStartIndex2, propertyEndIndex2);
                 }
 
                 if(properties["scale"].hasChanged || updateAllProperties) {
-                    updateProperty(this.scalesForTexture[textureSrc], properties["scale"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2) + 12 * sprite.primitives)
+                    updateProperty(this.scalesForTexture[textureSrc], properties["scale"].value, propertyStartIndex2, propertyEndIndex2);
                 }
 
                 if(properties["rotation"].hasChanged || updateAllProperties) {
-                    updateProperty(this.rotationsForTexture[textureSrc], properties["rotation"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 2) + 12 * sprite.primitives)
+                    updateProperty(this.rotationsForTexture[textureSrc], properties["rotation"].value, propertyStartIndex2, propertyEndIndex2)
                 }
 
                 if(properties["fade"].hasChanged || updateAllProperties) {
-                    updateProperty(this.fadesForTexture[textureSrc], properties["fade"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 4, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives * 4) + 24 * sprite.primitives)
+                    updateProperty(this.fadesForTexture[textureSrc], properties["fade"].value, propertyStartIndex4, propertyEndIndex4);
                 }
 
                 if(properties["alpha"].hasChanged || updateAllProperties) {
-                    updateProperty(this.alphasForTexture[textureSrc], properties["alpha"].value,
-                		i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives, (i * MocuGame.VERTICES_PER_OBJECT * sprite.primitives) + 6 * sprite.primitives);
+                    updateProperty(this.alphasForTexture[textureSrc], properties["alpha"].value, propertyStartIndex1, propertyEndIndex1);
                 }
                 //UpdateProperties
                 sprite.glLastParentIndex = i;

@@ -63,7 +63,10 @@
 
             this.numOfTiles = new MocuGame.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
 
-            this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y);
+            this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y) * 4;
+
+            this.lastScrollPositionX = null;
+            this.lastScrollPositionY = null;
         }
     }
     MocuGame.MocuBackground.prototype = new MocuGame.MocuSprite(new MocuGame.Point, MocuGame.Point);
@@ -82,9 +85,9 @@
         MocuGame.MocuSprite.prototype.update.call(this, deltaT);
         this.scrollPosition.x += this.scrollVelocity.x * deltaT;
         this.scrollPosition.y += this.scrollVelocity.y * deltaT;
-        while (this.scrollPosition.x > this.spriteSize.x)
+        while (this.scrollPosition.x >= this.spriteSize.x)
             this.scrollPosition.x -= this.spriteSize.x;
-        while (this.scrollPosition.y > this.spriteSize.y)
+        while (this.scrollPosition.y >= this.spriteSize.y)
             this.scrollPosition.y -= this.spriteSize.y;
         while (this.scrollPosition.x < 0)
             this.scrollPosition.x += this.spriteSize.x;
@@ -109,25 +112,77 @@
 
         var coords = [];
 
+
         for (var x = 0; x < this.width; x += this.spriteSize.x) {
             for (var y = 0; y < this.height; y += this.spriteSize.y) {
-                var absWidth = (x + this.spriteSize.x > this.width) ? ((this.width - x)) * MocuGame.uniscale : this.spriteSize.x * MocuGame.uniscale
-                var absHeight = (y + this.spriteSize.y > this.height) ? ((this.height - y) ) * MocuGame.uniscale : this.spriteSize.y * MocuGame.uniscale
+                //var primStartX = (numOfTiles.x / -2 * this.spriteSize.x) + x;
+                //var primStartY = (numOfTiles.y / -2 * this.spriteSize.y) + y;
+                //var primWidth = (x + this.scrollPosition.x > this.width) ? (this.width - x) : this.width -  this.scrollPosition.x;
+                //var primHeight = (y + this.scrollPosition.y > this.height) ? (this.height - y) : this.height - this.scrollPosition.y;
+                //var primEndX = primStartX + primWidth;
+                //var primEndY = primStartY + primHeight;
+
+                //var absWidth = (x + this.spriteSize.x > this.width) ? ((this.width - x)) * MocuGame.uniscale : this.spriteSize.x * MocuGame.uniscale
+                //var absHeight = (y + this.spriteSize.y > this.height) ? ((this.height - y)) * MocuGame.uniscale : this.spriteSize.y * MocuGame.uniscale
+
+                //var secondStartX = primEndX;
+                //var secondStartY = primEndY;
+                //var secondEndX = primStartX + absWidth;
+                //var secondEndY = primStartY + absHeight;
                 var startX = (numOfTiles.x / -2 * this.spriteSize.x) + x;
                 var startY = (numOfTiles.y / -2 * this.spriteSize.y) + y;
 
-                var endX = startX + absWidth;
-                var endY = startY + absHeight;
+                var quad14X = startX + this.scrollPosition.x;
+                var quad14Width = this.spriteSize.x - this.scrollPosition.x;
 
+                var quad12Y = startY;
+                var quad12YHeight = this.spriteSize.y - this.scrollPosition.y;
+
+                var quad23X = startX;
+                var quad23Width = this.scrollPosition.x;
+
+                var quad34Y = quad12Y + quad12YHeight;
+                var quad34YHeight = this.scrollPosition.y;
+
+                //Quadrant I
                 coords = coords.concat([
-                    startX, startY,
-                    endX, startY,
-                    startX, endY,
-                    startX, endY,
-                    endX, startY,
-                    endX, endY
+                    quad14X,                 quad12Y,
+                    quad14X + quad14Width,   quad12Y,
+                    quad14X,                 quad12Y + quad12YHeight,
+                    quad14X,                 quad12Y + quad12YHeight,
+                    quad14X + quad14Width,   quad12Y,
+                    quad14X + quad14Width,   quad12Y + quad12YHeight
                 ]);
-               
+
+                //Quadrant II
+                coords = coords.concat([
+                    quad23X,                 quad12Y,
+                    quad23X + quad23Width,   quad12Y,
+                    quad23X,                 quad12Y + quad12YHeight,
+                    quad23X,                 quad12Y + quad12YHeight,
+                    quad23X + quad23Width,   quad12Y,
+                    quad23X + quad23Width,   quad12Y + quad12YHeight
+                ]);
+
+                //Quadrant III
+                coords = coords.concat([
+                    quad23X,                 quad34Y,
+                    quad23X + quad23Width,   quad34Y,
+                    quad23X,                 quad34Y + quad34YHeight,
+                    quad23X,                 quad34Y + quad34YHeight,
+                    quad23X + quad23Width,   quad34Y,
+                    quad23X + quad23Width,   quad34Y + quad34YHeight
+                ]);
+
+                //Quadrant IV
+                coords = coords.concat([
+                    quad14X,                 quad34Y,
+                    quad14X + quad14Width,   quad34Y,
+                    quad14X,                 quad34Y + quad34YHeight,
+                    quad14X,                 quad34Y + quad34YHeight,
+                    quad14X + quad14Width,   quad34Y,
+                    quad14X + quad14Width,   quad34Y + quad34YHeight
+                ]);
             }
         }
         return new Float32Array(coords);
@@ -138,18 +193,71 @@
 
         for (var x = 0; x < this.width; x += this.spriteSize.x) {
             for (var y = 0; y < this.height; y += this.spriteSize.y) {
-                var texWidth = (x + this.spriteSize.x > this.width) ? (this.width - x) / this.spriteSize.x : 1;
-                var texHeight = (y + this.spriteSize.y > this.height) ? (this.height - y) / this.spriteSize.y : 1
+
+
+                //Quadrant I
+                var texStartX = 0;
+                var texStartY = 0;
+                var texWidth = (this.spriteSize.x - this.scrollPosition.x) / this.spriteSize.x;
+                var texHeight = (this.spriteSize.y - this.scrollPosition.y) / this.spriteSize.y;
 
                 coords = coords.concat([
-                    0, 0,
-                    texWidth, 0,
-                    0, texHeight,
-                    0, texHeight,
-                    texWidth, 0,
-                    texWidth, texHeight
+                    texStartX,              texStartY,
+                    texStartX + texWidth,   texStartY,
+                    texStartX,              texStartY + texHeight,
+                    texStartX,              texStartY + texHeight,
+                    texStartX + texWidth,   texStartY,
+                    texStartX + texWidth,   texStartY + texHeight
+                ])
+
+                //Quadrant II
+                texStartX = (this.spriteSize.x - this.scrollPosition.x) / this.spriteSize.x;
+                texStartY = 0;
+                texWidth = 1 - texStartX;
+                texHeight = (this.spriteSize.y - this.scrollPosition.y) / this.spriteSize.y;
+
+                coords = coords.concat([
+                    texStartX, texStartY,
+                    texStartX + texWidth, texStartY,
+                    texStartX, texStartY + texHeight,
+                    texStartX, texStartY + texHeight,
+                    texStartX + texWidth, texStartY,
+                    texStartX + texWidth, texStartY + texHeight
 
                 ])
+
+                //Quadrant III
+                texStartX = (this.spriteSize.x - this.scrollPosition.x) / this.spriteSize.x;
+                texStartY = (this.spriteSize.y - this.scrollPosition.y) / this.spriteSize.y;
+                texWidth = 1 - texStartX;
+                texHeight = 1 - texStartY;
+
+                coords = coords.concat([
+                    texStartX, texStartY,
+                    texStartX + texWidth, texStartY,
+                    texStartX, texStartY + texHeight,
+                    texStartX, texStartY + texHeight,
+                    texStartX + texWidth, texStartY,
+                    texStartX + texWidth, texStartY + texHeight
+
+                ])
+
+                //Quadrant IV
+                texStartX = 0;
+                texStartY = (this.spriteSize.y - this.scrollPosition.y) / this.spriteSize.y;
+                texWidth = (this.spriteSize.x - this.scrollPosition.x) / this.spriteSize.x;
+                texHeight = 1 - texStartY;
+
+                coords = coords.concat([
+                    texStartX, texStartY,
+                    texStartX + texWidth, texStartY,
+                    texStartX, texStartY + texHeight,
+                    texStartX, texStartY + texHeight,
+                    texStartX + texWidth, texStartY,
+                    texStartX + texWidth, texStartY + texHeight
+
+                ])
+
             }
 
         }
@@ -160,7 +268,8 @@
     MocuGame.MocuBackground.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
         var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
-            this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x);
+            this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||
+                    this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y);
         var texCoords = this.getTextureCoordinateArray();
         var translation = [];
         var rotation = [];
@@ -182,7 +291,7 @@
             }
         }
 
-        for (var i = 0; i < this.numOfTiles.x * this.numOfTiles.y; i++) {
+        for (var i = 0; i < this.primitives; i++) {
             translation.push((this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
             translation.push((this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
 
@@ -203,7 +312,8 @@
         var result = {
             "position": {
                 type: "attribute", value: position,
-                hasChanged: (this.lastGlWidth != this.width || this.height != this.lastGlHeight)
+                hasChanged: (this.lastGlWidth != this.width || this.height != this.lastGlHeight ||
+                    this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y)
             },
             "translation": {
                 type: "attribute", value: translation,
@@ -243,6 +353,8 @@
         this.lastGlFadeB = this.scale.b;
         this.lastGlFadeA = this.scale.a;
         this.lastGlAlpha = this.alpha;
+        this.lastScrollPositionX = this.scrollPosition.x;
+        this.lastScrollPositionY = this.scrollPosition.y;
 
         return result;
 
