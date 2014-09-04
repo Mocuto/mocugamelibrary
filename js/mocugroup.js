@@ -165,6 +165,7 @@
                 }
 
                 if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                    sprite.glLastParentIndex = -1;
                     continue;
                 }
                 if ((textureSrc in objectsForTexture) == false) {
