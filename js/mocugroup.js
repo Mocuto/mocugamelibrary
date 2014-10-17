@@ -133,6 +133,8 @@
         var alphasForTexture = {};
         var texture = null;
 
+        var startPosition = new MocuGame.Point(displacement.x + this.x, displacement.y + this.y)
+
         function updateProperty(property, valueArray, startIndex, endIndex) {
         	while(property.length < endIndex) {
         		property.push(null);
@@ -153,7 +155,7 @@
         for (var i = 0; i < this.objects.length; i++) {
             var object = this.objects[i];
             if (MocuGame.MocuGroup.prototype.isPrototypeOf(object)) {
-                object.drawGl(gl, displacement);
+                object.drawGl(gl, startPosition);
             }
             else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
                 var sprite = object;
@@ -204,7 +206,12 @@
                 }
 
                 if(properties["translation"].hasChanged || updateAllProperties) {
-                    updateProperty(this.translationsForTexture[textureSrc], properties["translation"].value, propertyStartIndex2, propertyEndIndex2);
+                    updateProperty(this.translationsForTexture[textureSrc], 
+                        new MocuGame.Point(
+                            startPosition.x + properties["translation"].value.x,
+                            startPosition.y + properties["translation"].value.y
+                        ), 
+                        propertyStartIndex2, propertyEndIndex2);
                 }
 
                 if(properties["scale"].hasChanged || updateAllProperties) {

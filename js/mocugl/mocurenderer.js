@@ -170,6 +170,26 @@
         return texture;
     };
 
+    MocuGame.MocuRenderer.prototype.setupObjectTexture = function (gl) {
+        var texture = this.createAndSetupTexture(gl);
+                var blankCanvas = MocuGame.blankCanvas;
+        var blankContext = MocuGame.blankContext;
+
+        var texture = gl.createTexture();
+        this.prepareTexture(gl, texture, program);
+
+        blankCanvas.width = 1;
+        blankCanvas.height = 1;
+
+        blankContext.rect(0,0,1,1);
+        blankContext.fillStyle="white"
+        blankContext.fill();
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
+
+        this.textureCache[MocuGame.OBJECT_TEXTURE_SRC] = texture;
+    }
+
     MocuGame.MocuRenderer.prototype.getSourceForTexture = function (texture) {
         for (imageSrc in this.textureCache) {
             if (this.textureCache[imageSrc] == texture) {

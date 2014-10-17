@@ -104,8 +104,6 @@
             this.lastGlFadeA = null
             this.lastGlAlpha = {};
         }
-
-        this.addsom = 0;
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
@@ -365,9 +363,6 @@
         {
             if (this.img.complete == true) {
                 this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
-                //this.texture = gl.createTexture();
-                //this.prepareTexture(gl, this.texture, program);
-                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
             }
         }
 

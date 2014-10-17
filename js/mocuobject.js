@@ -291,6 +291,10 @@
         ]);
     };
 
+    MocuGame.MocuObject.prototype.getTexture = function(gl) {
+        return MocuGame.renderer.getCachedTexture(gl, {src : MocuGame.OBJECT_TEXTURE_SRC})
+    }
+
     MocuGame.MocuObject.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
         // provide texture coordinates for the rectangle.
         if (typeof textureCoordinateArray === "undefined") {
@@ -302,20 +306,6 @@
             var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
         }
 
-        /*var texCoordBuffer = this.lastTexCoordBuffer;
-        if (textureCoordinateArray[0] !== this.lastTextureCoordinateArray) {
-
-            texCoordBuffer = gl.createBuffer();
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, textureCoordinateArray, gl.STREAM_DRAW);
-
-            this.lastTextureCoordinateArray = textureCoordinateArray[0];
-            this.lastTexCoordBuffer = texCoordBuffer;
-        }
-        else {
-            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        }*/
         var texCoordBuffer = MocuGame.renderer.getCachedTextureBuffer(gl, textureCoordinateArray);
 
         gl.enableVertexAttribArray(texCoordLocation);
@@ -335,43 +325,6 @@
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     };
-
-    MocuGame.MocuObject.prototype.applyEffects = function (gl, texture) {
-        var effectedTexture = texture;
-
-        //If useParentEffects is set to true and the parent has a program/effets, apply those here
-        if (this.useParentEffects == true) {
-            if (this.parent != null) {
-                if (typeof this.parent.program !== "undefined") {
-                    effectedTexture = this.parent.applyEffectsToObject(this, gl, effectedTexture);
-                }
-            }
-        }
-
-        for (var i = 0; i < this.effects.length; i++) {
-            var effect = this.effects[i];
-
-            //Have the MocuRenderer set and enable the next framebuffer and texture
-            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, this.width * effect.scale.x, this.height * effect.scale.y);
-
-            //Here load the shaders and run the callback contained withiin the effect object
-            var program = effect.apply(gl, this);
-            MocuGame.renderer.useProgram(program);
-
-            this.prepareTexture(gl, texture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray(this));
-
-            //Draw the triangles to the framebuffer
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
-        }
-
-        //Set the framebuffer to the default one
-        MocuGame.renderer.finishFramebufferEffects(gl);
-
-        //Return the texture
-        return effectedTexture;
-    }
 
     MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
         //Extend in child classes
