@@ -6,9 +6,8 @@
 	}
 
 
-	MocuGame.MocuObject.prototype.composeProperty = function(propertyName, typeName, constructorFunc, hasChangedFunc) {
+	MocuGame.MocuObject.prototype.composeProperty = function(constructorFunc, hasChangedFunc) {
 		var property = {};
-		property["type"] = typeName;
 		property["value"] = constructorFunc.call(this);
 		property["hasChanged"] = hasChangedFunc.call(this);
 
@@ -17,64 +16,65 @@
 
 	MocuGame.MocuObject.prototype.composePositionProperty = function() {
 		return this.composeProperty(
-			"position", 
-			"attribute", 
 			MocuGame.MocuObject.prototype.getCoordinateArray, 
 			function() {
-				return (this.lastGlWidth != this.width || this.height != this.lastGlHeight) 
+				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight) ;
+				this.lastGlWidth = this.width;
+				this.lastGlHeight = this.height;
+				return hasChanged;
 			}
 		);
 	}
 
 	MocuGame.MocuObject.prototype.composeTranslationProperty = function() {
 		return this.composeProperty(
-			"translation",
-			"attribute",
 			function() {
 				return [
 					(this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
 					(this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y)
 				]
 			}, function() {
-				return (this.lastGlX != this.x || this.lastGlY != this.y)
+				var hasChanged = (this.lastGlX != this.x || this.lastGlY != this.y);
+				this.lastGlX = this.x;
+				this.lastGlY = this.y;
+				return hasChanged;
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
-			"rotation",
-			"attribute",
 			function() {
 				return [
 			        rotation.push(Math.cos(MocuGame.deg2rad(this.angle))),
         			rotation.push(Math.sin(MocuGame.deg2rad(this.angle)))
 				]
 			}, function() {
-				return (this.lastGlRotation != this.angle)
+				var hasChanged = (this.lastGlRotation != this.angle)
+				this.lastGlRotation = this.angle;
+				return hasChanged;
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
-			"scale",
-			"attribute",
 			function() {
 		        return [
 			       	this.scale.x * MocuGame.camera.zoom,
 	        		this.scale.y * MocuGame.camera.zoom
         		]
 			}, function() {
-				return (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
+				var hasChanged = (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
+				this.lastGlScaleX = this.scale.x;
+				this.lastGlScaleY = this.scale.y;
+				return hasChanged;
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
-			"fade",
-			"attribute",
 			function() {
 		        return [
 			        this.fade.r,
@@ -83,37 +83,78 @@
 			        this.fade.a
         		]
 			}, function() {
-				return (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
+				var hasChanged = (
+					this.fade.r != this.lastGlFadeR || 
+					this.fade.g != this.lastGlFadeG || 
+					this.fade.b != this.lastGLFadeB || 
+					this.fade.a != this.lastGlFadeA
+				)
+
+				this.lastGlFadeR = this.fade.r;
+				this.lastGlFadeG = this.fade.g;
+				this.lastGlFadeB = this.fade.b;
+				this.lastGlFadeA = this.fade.a;
+
+				return hasChanged;
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
-			"alpha",
-			"attribute",
 			function() {
 		        return [this.alpha]
 			}, function() {
-				return (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
+				var hasChanged = (this.alpha != this.lastGlAlpha)
+				this.lastGlAlpha = this.alpha;
+				return hasChanged
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
-			"texCoord", 
-			"attribute", 
 			MocuGame.MocuObject.prototype.getCoordinateArray, 
 			function() {
+		        var hasChanged = this.hasTexCoordChanged
+        		this.hasTexCoordChanged = false;
+				return hasChanged; 
+			}
+		)		
+	}
+
+	MocuGame.MocuSprite.prototype.composeTextureCoordinateProperty = function() {
+		return this.composeProperty(
+			MocuGame.MocuObject.prototype.getCoordinateArray, 
+			function() {
+		        var hasChanged = (
+		        	this.lastTexCoordWidth != this.width || 
+		        	this.lastTexCoordHeight != this.height ||
+            		this.lastTexCoordFrameY != this.frame.y || 
+            		this.lastTexCoordFrameX != this.frame.x
+        		);
+
+        		this.lastTexCoordWidth = this.width;
+        		this.lastTexCoordHeight = this.height;
+        		this.lastTexCoordFrameX = this.frame.x;
+        		this.lastTexCoordFrameY = this.frame.y;
 				var hasChanged = this.hasTexCoordChanged;
-				this.hasTexCoordChanged = false;
 				return hasChanged; 
 			}
 		)
 	}
 
 	MocuGame.MocuObject.prototype.getGlProperties = function() {
+
+		return {
+            "position" : this.composePositionProperty(),
+            "translation": this.composeTranslationProperty(),
+            "rotation": this.composeRotationProperty(),
+            "scale": this.composeScaleProperty(),
+            "fade": this.composeFadeProperty(),
+            "alpha": this.composeAlphaProperty(),
+            "texCoord": this.composeTextureCoordinateProperty();
+            }
 		
 	};
 })();
