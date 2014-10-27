@@ -83,31 +83,12 @@
 
         this.animates = true;
 
-        if (MocuGame.isWindows81) {
-            this.primitives = 1;
-            var gl = MocuGame.renderer.gl;
-            this.texture = null;
-            this.effects = [];
-            this.lastGlParent = null;
-            this.lastGlParentIndex = -1;
-
-            this.lastGlWidth = null;
-            this.lastGlHeight = null;
-            this.lastGlX = null;
-            this.lastGlY = null;
-            this.lastGlAngle = null;
-            this.lastGlScaleX = null;
-            this.lastGlScaleY = null;
-            this.lastGlFadeR = null;
-            this.lastGlFadeG = null
-            this.lastGlFadeB = null
-            this.lastGlFadeA = null
-            this.lastGlAlpha = {};
-        }
     }
     MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
     MocuGame.MocuSprite.prototype.constructor = MocuGame.MocuSprite.constructor;
+
+    MocuGame.MocuSprite.EXTENSION_METHODS = [];
 
     /*
         addAnimation is a function which adds a new animation to the MocuSprite's set of animations

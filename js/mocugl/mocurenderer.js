@@ -32,6 +32,7 @@
 
     };
     MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
+ 
 
     MocuGame.MocuRenderer.prototype.isProgramCached = function (gl, mocuVertexShader, mocuFragmentShader) {
         if (this.programCache.hasOwnProperty([mocuVertexShader.src, mocuFragmentShader.src])) {

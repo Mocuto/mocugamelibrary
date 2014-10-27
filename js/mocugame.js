@@ -810,12 +810,6 @@
         request.send()
         return request;
     }
-    
-MocuGame.DEFAULT_VERTEX_SHADER = new MocuGame.MocuShader("js/mocugame-vertex.shader", MocuGame.SHADER_TYPE_VERTEX);
-MocuGame.DEFAULT_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);
-MocuGame.DEFAULT_SPRITE_VERTEX_SHADER = new MocuGame.MocuShader("js/mocugame-sprite-vertex.shader", MocuGame.SHADER_TYPE_VERTEX);
-MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-sprite-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);
-MocuGame.DEFAULT_BACKGROUND_FRAGMENT_SHADER = new MocuGame.MocuShader("js/mocugame-background-fragment.shader", MocuGame.SHADER_TYPE_FRAGMENT);
 }
 )();
 

@@ -98,7 +98,20 @@
             this.lastCoordinateArray = null;
             this.texCoordLocation = null;
         }
+
+        this.runExtensionMethods()
     };
+
+    MocuGame.MocuObject.constructor = MocuGame.MocuObject;
+
+    MocuGame.MocuObject.EXTENSION_METHODS = [];
+
+    MocuGame.MocuObject.prototype.runExtensionMethods = function() {
+        for(var i = 0; i < MocuGame.MocuObject.EXTENSION_METHODS.length; i++)
+        {
+            MocuGame.MocuObject.EXTENSION_METHODS[i].call(this);
+        }
+    }
 
     /*
         update is a function which changes the MocuObject's properties based off its current state.

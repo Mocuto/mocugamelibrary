@@ -53,12 +53,6 @@
 
         if (MocuGame.isWindows81) {
             this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
-            var effect = new MocuGame.MocuEffect(new MocuGame.MocuShader("js/mocugame-sprite-slim-vertex.shader", MocuGame.SHADER_TYPE_VERTEX), new MocuGame.MocuShader("js/testfragment.shader", MocuGame.SHADER_TYPE_FRAGMENT), null, null);
-            this.effects = [effect];
-            effect.uniformProperties["u_amount"] = 1.0;
-            var slot = new MocuGame.TimeSlot(this.timeline.currentTime + 1);
-            slot.addEvent(new MocuGame.Event(effect.uniformProperties, "u_amount", 1.0, 0.0, 120));
-            //this.timeline.addSlot(slot);
             this.objectsForTexture = {};
             this.positionsForTexture = {};
 	        this.translationsForTexture = {};
@@ -207,10 +201,10 @@
 
                 if(properties["translation"].hasChanged || updateAllProperties) {
                     updateProperty(this.translationsForTexture[textureSrc], 
-                        new MocuGame.Point(
-                            startPosition.x + properties["translation"].value.x,
-                            startPosition.y + properties["translation"].value.y
-                        ), 
+                        [
+                            startPosition.x + properties["translation"].value[0],
+                            startPosition.y + properties["translation"].value[1]
+                        ], 
                         propertyStartIndex2, propertyEndIndex2);
                 }
 

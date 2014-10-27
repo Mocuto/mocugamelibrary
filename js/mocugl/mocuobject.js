@@ -1,10 +1,35 @@
 (function() {
-	MocuGame.MocuObject.oldConstructor = MocuGame.MocuObject;
-	MocuGame.MocuObject = function(point, size) {
-		MocuGame.MocuObject.oldConstructor.call(this, point, size);
-		this.hasTexCoordChanged = true;
-	}
 
+	MocuGame.MocuObject.EXTENSION_METHODS.push(function() {
+		if(typeof MocuGame.renderer === "undefined") {
+			return;
+		}
+        this.primitives = 1;
+        var gl = MocuGame.renderer.gl;
+        this.texture = null;
+        this.effects = [];
+        this.lastGlParent = null;
+        this.lastGlParentIndex = -1;
+
+        this.lastGlWidth = null;
+        this.lastGlHeight = null;
+        this.lastGlX = null;
+        this.lastGlY = null;
+        this.lastGlAngle = null;
+        this.lastGlScaleX = null;
+        this.lastGlScaleY = null;
+        this.lastGlFadeR = null;
+        this.lastGlFadeG = null
+        this.lastGlFadeB = null
+        this.lastGlFadeA = null
+        this.lastGlAlpha = {};
+	})
+
+	if(typeof MocuGame.MocuObject.old === "undefined") {
+		MocuGame.MocuObject.old = {};
+		MocuGame.MocuObject.old.constructor = MocuGame.MocuObject.constructor;
+		MocuGame.MocuObject.old.prototype = MocuGame.MocuObject.prototype;
+	}
 
 	MocuGame.MocuObject.prototype.composeProperty = function(constructorFunc, hasChangedFunc) {
 		var property = {};
@@ -153,7 +178,7 @@
             "scale": this.composeScaleProperty(),
             "fade": this.composeFadeProperty(),
             "alpha": this.composeAlphaProperty(),
-            "texCoord": this.composeTextureCoordinateProperty();
+            "texCoord": this.composeTextureCoordinateProperty()
             }
 		
 	};
