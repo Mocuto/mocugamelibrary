@@ -159,9 +159,72 @@
                 if(sprite.animates) {
                     sprite.animate();
                 }
+                var properties = sprite.getGlProperties();
+                var updateAllProperties = (sprite.glLastParentIndex != i || sprite.glLastParent != this);
+
+                var propertyStartIndex1 = getPropertyStartIndex(i, 1, sprite.primitives);
+                var propertyEndIndex1 = getPropertyEndIndex(i, 1, sprite.primitives);
+
+                var propertyStartIndex2 = getPropertyStartIndex(i, 2, sprite.primitives);
+                var propertyEndIndex2 = getPropertyEndIndex(i, 2, sprite.primitives);
+
+                var propertyStartIndex4 = getPropertyStartIndex(i, 4, sprite.primitives);
+                var propertyEndIndex4 = getPropertyEndIndex(i, 4, sprite.primitives);
 
                 if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                    if(sprite.glLastParentIndex != -1 && textureSrc != null) {
+                        for(property in properties) {
+                            updateProperty(
+                                this.positionsForTexture[textureSrc], 
+                                [null],
+                                propertyStartIndex2, 
+                                propertyStartIndex2 + 12 * sprite.primitives
+                            )
+                            updateProperty(
+                                this.texCoordsForTexture[textureSrc], 
+                                [null], 
+                                propertyStartIndex2, 
+                                propertyEndIndex2
+                            )
+                            updateProperty(
+                                this.translationsForTexture[textureSrc], 
+                                [null],
+                                propertyStartIndex2, 
+                                propertyEndIndex2
+                            );
+                            updateProperty(
+                                this.scalesForTexture[textureSrc], 
+                                [null], 
+                                propertyStartIndex2, 
+                                propertyEndIndex2
+                            );
+                            updateProperty(
+                                this.rotationsForTexture[textureSrc], 
+                                [null], 
+                                propertyStartIndex2, 
+                                propertyEndIndex2
+                            )
+                            updateProperty(
+                                this.fadesForTexture[textureSrc], 
+                                [null], 
+                                propertyStartIndex4, 
+                                propertyEndIndex4
+                            );
+
+                            updateProperty(
+                                this.alphasForTexture[textureSrc], 
+                                [null], 
+                                propertyStartIndex1, 
+                                propertyEndIndex1
+                            );
+
+ 
+                        }
+                        i--;
+                        updateAllProperties = true;
+                    }
                     sprite.glLastParentIndex = -1;
+
                     continue;
                 }
                 if ((textureSrc in objectsForTexture) == false) {
@@ -178,17 +241,6 @@
                 	this.fadesForTexture[textureSrc] = [];
                 	this.alphasForTexture[textureSrc] = [];
                 }
-                var properties = sprite.getGlProperties();
-                var updateAllProperties = (sprite.glLastParentIndex != i || sprite.glLastParent != this);
-
-                var propertyStartIndex1 = getPropertyStartIndex(i, 1, sprite.primitives);
-                var propertyEndIndex1 = getPropertyEndIndex(i, 1, sprite.primitives);
-
-                var propertyStartIndex2 = getPropertyStartIndex(i, 2, sprite.primitives);
-                var propertyEndIndex2 = getPropertyEndIndex(i, 2, sprite.primitives);
-
-                var propertyStartIndex4 = getPropertyStartIndex(i, 4, sprite.primitives);
-                var propertyEndIndex4 = getPropertyEndIndex(i, 4, sprite.primitives);
 
                 if (properties["position"].hasChanged || updateAllProperties) {
                     updateProperty(this.positionsForTexture[textureSrc], properties["position"].value,
