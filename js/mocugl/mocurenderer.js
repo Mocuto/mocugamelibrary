@@ -211,6 +211,10 @@
         return this.textureCache[image.src];
     }
 
+    MocuGame.MocuRenderer.prototype.cacheTextTexture = function(texture, textureSrc) {
+        this.textureCache[textureSrc] = texture;
+    }
+
     MocuGame.MocuRenderer.prototype.getCachedLocation = function (gl, program, name) {
         if ((name in this.locationCache) == false) {
             this.locationCache[name] = gl.getAttribLocation(program, name);

@@ -536,6 +536,19 @@
         }
     }
 
+    MocuGame.draw = function(context, blankContext) {
+        for (var i = 0; i < MocuGame.objects.length; i++) {
+            if (MocuGame.objects[i].exists) {
+                if (MocuGame.objects[i].visible) {
+                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+                    MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
+                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+                    
+                }
+            }
+        }
+    }
+
     /*
         animate is a function which updates all objects and then draws them to the canvas. Then it
         requests another animation from (requestAnimFrame), doing it all over again.
@@ -557,18 +570,7 @@
         }
         MocuGame.camera.update(MocuGame.currentState.lastDeltaT);
 
-        
-
-        for (var i = 0; i < MocuGame.objects.length; i++) {
-            if (MocuGame.objects[i].exists) {
-                if (MocuGame.objects[i].visible) {
-                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
-                    MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
-                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
-                    
-                }
-            }
-        }
+        MocuGame.draw(context, blankContext);
 
         if (MocuGame.currentMusic != null) {
             MocuGame.currentMusic.checkLoop();

@@ -80,8 +80,8 @@
             }
             var newloc = new MocuGame.Point(0, 0);
             var subtokens = tokens[i].split(",");
-            newloc.x = subtokens[0];
-            newloc.y = subtokens[1];
+            newloc.x = +subtokens[0];
+            newloc.y = +subtokens[1];
             this.coordinates.push(newloc);
         }
         if (doesReverseWhenFinished == true) {

@@ -78,6 +78,8 @@
         var currentRun = this.d.getTime();
 
         deltaT = (currentRun - this.lastRun);
+        this.actualDeltaT = deltaT;
+                
         this.timeAccumulator += deltaT;
         if (this.timeAccumulator > 5000)
         {
