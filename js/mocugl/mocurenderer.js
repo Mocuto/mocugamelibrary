@@ -39,7 +39,14 @@
             "alpha" : 1
         };
 
-        this.properties = {};
+        this.properties = [
+            new MocuGame.MocuGlProperty("position", "a_position", 2, false),
+            new MocuGame.MocuGlProperty("texCoord", "a_texCoord", 2, false),
+            new MocuGame.MocuGlProperty("scale", "a_scale", 2, false),
+            new MocuGmae.MocuGlProperty("rotation", "a_rotation", 2, false),
+            new MocuGame.MocuGlProperty("fade", "a_fade", 4, false),
+            new MocuGame.MocuGlProperty("alpha", "a_alpha", 1, false)
+        ]
 
     };
     MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
@@ -334,6 +341,20 @@
         gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
         this.framebufferIndex = 0;
     };
+
+    MocuGame.MocuRenderer.prototype.generateBatchKey = function(textureSrc) {
+        return textureSrc;
+    }
+
+    MocuGame.MocuRenderer.prototype.generatePropertySet = function() {
+        var result = [];
+        for (var i = 0; i < this.properties.length; i ++) {
+            var prop = this.properties[i];
+            var clone = MocuGame.clone(prop);
+            result.push(clone);
+        }
+        return result;
+    }
 
     MocuGame.MocuRenderer.prototype.draw = function(gl) {
         var program = this.preDrawGl(gl, displacement);

@@ -63,6 +63,8 @@
         var texture = null;
         var groupsToDraw = [];
 
+        var batches = {};
+
 		var ownProperties = this.getGlProperties();
         var startPosition = new MocuGame.Point(displacement.x + this.x, displacement.y + this.y)
 
@@ -97,6 +99,14 @@
                 texture = sprite.getTexture(gl);
                 var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
 
+                var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
+
+
+                if( (batchKey in batches) == false) {
+                    batches[batchKey] = new MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
+                }
+                var batch = batches[batchKey];
+
                 if(sprite.animates) {
                     sprite.animate();
                 }
@@ -119,9 +129,10 @@
                 var propertyStartIndex4 = getPropertyStartIndex(i, 4, sprite.primitives);
                 var propertyEndIndex4 = getPropertyEndIndex(i, 4, sprite.primitives);
 
-                if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                /*if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
                     if(sprite.glLastParentIndex != -1 && textureSrc != null) {
                         for(property in properties) {
+                            batch.updateProperty(property, [null], propertyStartIndex2, propertyStartIndex2 + 12 * sprite.primitives)
                             updateProperty(
                                 this.positionsForTexture[textureSrc], 
                                 [null],
@@ -166,7 +177,6 @@
                                 propertyEndIndex1
                             );
 
- 
                         }
                         i--;
                         updateAllProperties = true;
@@ -174,7 +184,7 @@
                     sprite.glLastParentIndex = -1;
 
                     continue;
-                }
+                }*/
                 if ((textureSrc in objectsForTexture) == false) {
 
                     objectsForTexture[textureSrc] = [];
@@ -189,6 +199,18 @@
                 	this.fadesForTexture[textureSrc] = [];
                 	this.alphasForTexture[textureSrc] = [];
                 }
+
+                //*** Batch rendering rewrite code!! ***//
+                for (propertyName in properties) {
+                    var glProperty = properties[propertyName];
+                    var batchProperty = batch.getPropertyWithName(propertyName);
+                    if (glProperty.hasChanged == true || updateAllProperties) {
+                        batch.updateProperty(propertyName, glProperty, values,
+                            batchProperty.values.length, glProperty.getLength(sprite.primitives))
+                    }
+                }
+
+                //**                                ***//
 
                 if (properties["position"].hasChanged || updateAllProperties) {
                     updateProperty(this.positionsForTexture[textureSrc], properties["position"].value,
