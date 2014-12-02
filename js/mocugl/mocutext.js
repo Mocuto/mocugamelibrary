@@ -8,6 +8,32 @@
 		this.needsNewTexture = true;
 	})
 
+    MocuGame.MocuText.prototype.getNumberOfLines = function () {
+
+        //Set the font and color and alignment
+        MocuGame.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        MocuGame.blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        MocuGame.blankContext.lineWidth = this.strokeWidth;
+        MocuGame.blankContext.font = this.font;
+        MocuGame.blankContext.textAlign = this.align;
+
+        var currentLine = '';
+        var words = this.text.split(' ');
+        var testLine = '';
+        var numberOfLines = 1;
+        for (var i = 0; i < words.length; i += 1) {
+            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
+            if (MocuGame.blankContext.measureText(testLine).width >= this.width) {
+                currentLine = words[i] + ' ';
+                numberOfLines++;
+            }
+            else {
+                currentLine = testLine;
+            }
+        }
+        return numberOfLines
+    }
+
 	MocuGame.MocuText.prototype.getTextureCoordinateArray = MocuGame.MocuObject.prototype.getTextureCoordinateArray;
 
 	MocuGame.MocuText.prototype.getTexture = function(gl) {
@@ -38,12 +64,26 @@
 	        var testLine = '';
 	        var height = 0;
 	        this.numberOfLines = 1;
+
+	        var textStartX = 0;
+
+	        if (this.align === "center")
+	        {
+	        	textStartX = this.width / 2;
+	        }
+
 	        for (var i = 0; i < words.length; i += 1) {
 	            testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
-	            if (blankContext.measureText(testLine).width >= this.width) {
-	                blankContext.fillText(currentLine, 0, height);
+	            var measuredWidth = blankContext.measureText(testLine).width;
+	            if (measuredWidth >= this.width) {
+
+	            	if (this.align === "right") {
+	            		textStartX = this.width - measuredWidth;
+	            	}
+
+	                blankContext.fillText(currentLine, textStartX, height);
 	                if (this.doesStroke && this.strokeColor != null) {
-	                    blankContext.strokeText(currentLine, 0, height);
+	                    blankContext.strokeText(currentLine, textStartX, height);
 	                }
 	                currentLine = words[i] + ' ';
 	                height += this.height;
@@ -53,9 +93,15 @@
 	                currentLine = testLine;
 	            }
 	        }
-	        blankContext.fillText(currentLine, 0, height);
+
+	        var measuredWidth = blankContext.measureText(testLine).width;
+        	if (this.align === "right") {
+        		textStartX = this.width - measuredWidth;
+        	}
+
+	        blankContext.fillText(currentLine, textStartX, height);
 	        if (this.doesStroke && this.strokeColor != null) {
-	            blankContext.strokeText(currentLine, 0, height);
+	            blankContext.strokeText(currentLine, textStartX, height);
 	        }
 
 	        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
