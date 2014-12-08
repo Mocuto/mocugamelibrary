@@ -14,7 +14,7 @@
 	MocuGame.MocuGlBatch = function(textureSrc, properties) {
 		this.textureSrc = textureSrc;
 		this.properties = properties;
-		this.objectsRendered = 0;
+		this.primitivesRendered = 0;
 	};
 
 	MocuGame.MocuGlBatch.prototype.__defineGetter__("key", function() {
@@ -46,8 +46,9 @@
 	* @param {Number} endIndex - The index to end updating the values
 	*/
 
-	MocuGame.MocuGlBatch.prototype.updateProperty = function(propertyName, valueArray, startIndex, endIndex) {
+	MocuGame.MocuGlBatch.prototype.updateProperty = function(propertyName, valueArray, startIndex, length) {
 		var property = this.getPropertyWithName(propertyName);
+		var endIndex = startIndex + length;
 		property.update(valueArray, startIndex, endIndex);
 	}
 })();

@@ -99,6 +99,15 @@
                 texture = sprite.getTexture(gl);
                 var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
 
+                if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
+                    if(sprite.glLastParentIndex != -1 && textureSrc != null) {
+                        i--;
+                        updateAllProperties = true;
+                    }
+                    sprite.glLastParentIndex = -1;
+                    continue;
+                }
+
                 var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
 
 
@@ -111,7 +120,7 @@
                     sprite.animate();
                 }
                 
-                batch.objectsRendered++;
+                batch.primitivesRendered += sprite.primitives;
 
                 var properties = sprite.getGlProperties();
                 var updateAllProperties = (sprite.glLastParentIndex != i ||
@@ -275,7 +284,7 @@
             }
 
             MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
-            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * batch.objectsRendered);
+            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * batch.primitivesRendered);
         }
 
         /*for (textureSrc in objectsForTexture)
