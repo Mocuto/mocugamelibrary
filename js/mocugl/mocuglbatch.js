@@ -11,17 +11,22 @@
 	 * @param {Array[MocuGlProperty]} - An array of MocuGlProperty objects, which will all be batch rendered in the same call
 	*/
 
-	MocuGame.MocuGlBatch = function(key, properties) {
-		this.key = key;
+	MocuGame.MocuGlBatch = function(textureSrc, properties) {
+		this.textureSrc = textureSrc;
 		this.properties = properties;
+		this.objectsRendered = 0;
 	};
+
+	MocuGame.MocuGlBatch.prototype.__defineGetter__("key", function() {
+		MocuGame.renderer.generateBatchKey(this.textureSrc)
+	})
 
 
 	/**
 	* Returns the MocuGlProperty in MocuGame.MocuGlBatch#properties with the given name
 	* @param {string} name - The name of the desired MocuGlProperty
 	*/
-	MocuGame.MocuGlBatch.getPropertyWithName = function(name) {
+	MocuGame.MocuGlBatch.prototype.getPropertyWithName = function(name) {
 		for(var i = 0; i < this.properties.length; i++) {
 			var prop = this.properties[i];
 

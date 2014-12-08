@@ -103,7 +103,7 @@
 
 
                 if( (batchKey in batches) == false) {
-                    batches[batchKey] = new MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
+                    batches[batchKey] = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
                 }
                 var batch = batches[batchKey];
 
@@ -111,6 +111,7 @@
                     sprite.animate();
                 }
                 
+                batch.objectsRendered++;
 
                 var properties = sprite.getGlProperties();
                 var updateAllProperties = (sprite.glLastParentIndex != i ||
@@ -185,11 +186,13 @@
 
                     continue;
                 }*/
-                if ((textureSrc in objectsForTexture) == false) {
+                /*if ((textureSrc in objectsForTexture) == false) 
+                {
 
                     objectsForTexture[textureSrc] = [];
                 }
-                if ((textureSrc in this.objectsForTexture) == false) {
+                if ((textureSrc in this.objectsForTexture) == false)
+                {
                     this.objectsForTexture[textureSrc] = [];
                     this.positionsForTexture[textureSrc] = [];
                     this.texCoordsForTexture[textureSrc] = [];
@@ -198,21 +201,22 @@
                 	this.rotationsForTexture[textureSrc] = [];
                 	this.fadesForTexture[textureSrc] = [];
                 	this.alphasForTexture[textureSrc] = [];
-                }
+                }*/
 
                 //*** Batch rendering rewrite code!! ***//
-                for (propertyName in properties) {
+                for (propertyName in properties) 
+                {
                     var glProperty = properties[propertyName];
                     var batchProperty = batch.getPropertyWithName(propertyName);
-                    if (glProperty.hasChanged == true || updateAllProperties) {
-                        batch.updateProperty(propertyName, glProperty, values,
+                    if (/*glProperty.hasChanged == true*/ true || updateAllProperties) {
+                        batch.updateProperty(propertyName, glProperty.values,
                             batchProperty.values.length, glProperty.getLength(sprite.primitives))
                     }
                 }
 
                 //**                                ***//
 
-                if (properties["position"].hasChanged || updateAllProperties) {
+                /*if (properties["position"].hasChanged || updateAllProperties) {
                     updateProperty(this.positionsForTexture[textureSrc], properties["position"].value,
                 	 propertyStartIndex2, propertyStartIndex2 + 12 * sprite.primitives)
                 }
@@ -249,12 +253,32 @@
                 sprite.glLastParentIndex = i;
                 sprite.glLastParent = this;
 
-                objectsForTexture[textureSrc].push(sprite);
+                objectsForTexture[textureSrc].push(sprite);*/
             }
         }
     	
+        for(batchKey in batches) {
+            var batch = batches[batchKey];
+            var texture = MocuGame.renderer.textureCache[batch.textureSrc]
 
-        for (textureSrc in objectsForTexture)
+            if(texture == null) {
+                continue;
+            }
+
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+            this.setTextureParameters(gl);
+
+            for(var i = 0; i < batch.properties.length; i++) {
+                var property = batch.properties[i];
+                MocuGame.renderer.setAttribute(gl, program, property.glslName, new Float32Array(property.values), property.components);
+            }
+
+            MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
+            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * batch.objectsRendered);
+        }
+
+        /*for (textureSrc in objectsForTexture)
         {
             var texture = MocuGame.renderer.textureCache[textureSrc]
             gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -285,10 +309,10 @@
 
             //.ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects, numberOfObjects);
             gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
-        }
+        }*/
       	for(var i = 0; i < groupsToDraw.length; i++) {
       		groupsToDraw[i].drawGl(gl, startPosition);
       	}
-        this.objectsForTexture = objectsForTexture;
+        //this.objectsForTexture = objectsForTexture;
     }
 })();

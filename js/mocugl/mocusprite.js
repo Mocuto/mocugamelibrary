@@ -1,6 +1,9 @@
 (function() {
 	MocuGame.MocuSprite.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
+            "texCoord",
+            "a_texCoord",
+            2,
 			MocuGame.MocuSprite.prototype.getTextureCoordinateArray, 
 			function() {
 		        var hasChanged = (

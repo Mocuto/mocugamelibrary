@@ -266,16 +266,22 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
 
-	MocuGame.MocuObject.prototype.composeProperty = function(constructorFunc, hasChangedFunc) {
-		var property = {};
-		property["value"] = constructorFunc.call(this);
-		property["hasChanged"] = hasChangedFunc.call(this);
+	MocuGame.MocuObject.prototype.composeProperty = function(name, glslName, components, constructorFunc, hasChangedFunc) {
+		//var property = {};
+		//property["value"] = constructorFunc.call(this);
+		//property["hasChanged"] = hasChangedFunc.call(this);
+        var values = constructorFunc.call(this);
+        var property = new MocuGame.MocuGlProperty(name, glslName, components, hasChangedFunc.call(this));
+        property.values = values;
 
 		return property;
 	}
 
 	MocuGame.MocuObject.prototype.composePositionProperty = function() {
 		return this.composeProperty(
+            "position",
+            "a_position",
+            2,
 			MocuGame.MocuObject.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight) ;
@@ -287,17 +293,22 @@
 	}
 
 	MocuGame.MocuObject.prototype.composeTranslationProperty = function() {
+        var displacement = (MocuGame.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new MocuGame.Point(0,0) :
+            this.parent.getWorldPoint();
 		return this.composeProperty(
+            "translation", //TODO:Redefine this as constants
+            "a_translation",
+            2,
 			function() {
 				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
 				return [
-					(this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
-					(this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y)
+					displacement.x + (this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
+					displacement.y + (this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y)
 				]
 			}, function() {
-				var hasChanged = (this.lastGlX != this.x || this.lastGlY != this.y);
-				this.lastGlX = this.x;
-				this.lastGlY = this.y;
+				var hasChanged = (this.lastGlX != this.getWorldPoint().x || this.lastGlY != this.getWorldPoint().y);
+				this.lastGlX = this.getWorldPoint().x;
+				this.lastGlY = this.getWorldPoint().y;
 				return hasChanged;
 			}
 		)
@@ -305,6 +316,9 @@
 
 	MocuGame.MocuObject.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
+            "rotation",
+            "a_rotation",
+            2,
 			function() {
 				return [
 			        Math.cos(MocuGame.deg2rad(this.angle)),
@@ -320,6 +334,9 @@
 
 	MocuGame.MocuObject.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
+            "scale",
+            "a_scale",
+            2,
 			function() {
 		        return [
 			       	this.scale.x * MocuGame.camera.zoom,
@@ -336,6 +353,9 @@
 
 	MocuGame.MocuObject.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
+            "fade",
+            "a_fade",
+            4,
 			function() {
 		        return [
 			        this.fade.r,
@@ -363,6 +383,9 @@
 
 	MocuGame.MocuObject.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
+            "alpha",
+            "a_alpha",
+            1,
 			function() {
 		        return [this.alpha]
 			}, function() {
@@ -375,6 +398,9 @@
 
 	MocuGame.MocuObject.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
+            "texCoord",
+            "a_texCoord",
+            2,
 			MocuGame.MocuObject.prototype.getCoordinateArray, 
 			function() {
 		        var hasChanged = this.hasTexCoordChanged

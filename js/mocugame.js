@@ -181,7 +181,7 @@
                         break;
                     default:
                     {
-                        temp[key] = MocuGame.cloneObj(object[key]);
+                        temp[key] = MocuGame.cloneObject(object[key]);
                        
                     }
                     break;

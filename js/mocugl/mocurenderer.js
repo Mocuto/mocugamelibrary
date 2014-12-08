@@ -41,9 +41,10 @@
 
         this.properties = [
             new MocuGame.MocuGlProperty("position", "a_position", 2, false),
+            new MocuGame.MocuGlProperty("translation", "a_translation", 2, false),
             new MocuGame.MocuGlProperty("texCoord", "a_texCoord", 2, false),
             new MocuGame.MocuGlProperty("scale", "a_scale", 2, false),
-            new MocuGmae.MocuGlProperty("rotation", "a_rotation", 2, false),
+            new MocuGame.MocuGlProperty("rotation", "a_rotation", 2, false),
             new MocuGame.MocuGlProperty("fade", "a_fade", 4, false),
             new MocuGame.MocuGlProperty("alpha", "a_alpha", 1, false)
         ]
@@ -350,7 +351,7 @@
         var result = [];
         for (var i = 0; i < this.properties.length; i ++) {
             var prop = this.properties[i];
-            var clone = MocuGame.clone(prop);
+            var clone = MocuGame.cloneObject(prop);
             result.push(clone);
         }
         return result;
