@@ -130,6 +130,14 @@
 
                 var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
 
+                if(batchKey !== this.lastBatches[batchIndex].key) {
+
+                }
+                else {
+                    lastBatch = this.lastBatches[batchIndex];
+                    batches.push(lastBatch)
+                }
+
                 if(batchKey != lastBatchKey) {
                     lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
                     lastBatchKey = batchKey
@@ -137,7 +145,7 @@
                 }
 
                 var batch = lastBatch;
-
+                var batchIndex = batches.length - 1;
 
                 if(sprite.animates) {
                     sprite.animate();
@@ -146,10 +154,13 @@
                 batch.primitivesRendered += sprite.primitives;
 
                 var properties = sprite.getGlProperties();
-                var updateAllProperties = (sprite.glLastParentIndex != i ||
+                var updateAllProperties = (
+                    sprite.glLastParentIndex != i ||
+                    sprite.glLastBatchIndex != batchIndex ||
                     sprite.glLastParent != this || 
                     ownProperties["translation"].hasChanged || 
-                    sprite.lastTextureSrc != textureSrc);
+                    sprite.lastTextureSrc != textureSrc)
+                ;
 
                 sprite.lastTextureSrc = textureSrc;
 
@@ -240,7 +251,7 @@
                 {
                     var glProperty = properties[propertyName];
                     var batchProperty = batch.getPropertyWithName(propertyName);
-                    if (/*glProperty.hasChanged == true*/ true || updateAllProperties) {
+                    if (glProperty.hasChanged == true || updateAllProperties) {
                         batch.updateProperty(propertyName, glProperty.values,
                             batchProperty.values.length, glProperty.getLength(sprite.primitives))
                     }
@@ -354,6 +365,7 @@
         {
       		//groupsToDraw[i].drawGl(gl, startPosition);
       	}
+        this.lastBatches = batches;
         //this.objectsForTexture = objectsForTexture;
     }
 })();
