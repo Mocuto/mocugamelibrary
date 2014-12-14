@@ -93,6 +93,8 @@
         var numberOfObjectsAtDepth = [this.objects.length];
         var objectArrayAtDepth = [this.objects];
         var indexAtDepth = [0];
+        var batchIndex = 0;
+        var indexInBatch = 0;
         //for (var i = 0; i < this.objects.length; i++) {
         while(depth >= 0)
         {
@@ -125,40 +127,51 @@
                         updateAllProperties = true;
                     }
                     sprite.glLastParentIndex = -1;
+                    sprite.glLastBatchIndex = -1;
                     continue;
                 }
 
                 var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
 
-                if(batchKey !== this.lastBatches[batchIndex].key) {
-
+                if (batchIndex >= this.lastBatches.length || batchKey != this.lastBatches[batchIndex].key) {
+                    if(this.lastBatches.length > 0) {
+                        var test = this.lastBatches[batchIndex].key
+                    }
+                    if(batchKey !== lastBatchKey) 
+                    {
+                        lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
+                        lastBatchKey = batchKey
+                        batches.push(lastBatch);
+                        indexInBatch = 0;
+                    }
                 }
                 else {
                     lastBatch = this.lastBatches[batchIndex];
-                    batches.push(lastBatch)
+                    if(batchKey != lastBatchKey) {
+                        lastBatchKey = batchKey;
+                        batches.push(lastBatch)
+                        lastBatch.primitivesRendered = 0;
+                    }
                 }
 
-                if(batchKey != lastBatchKey) {
+                /*if(batchKey != lastBatchKey) {
                     lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
                     lastBatchKey = batchKey
                     batches.push(lastBatch);
-                }
+                }*/
 
                 var batch = lastBatch;
-                var batchIndex = batches.length - 1;
+                batchIndex = batches.length - 1;
 
                 if(sprite.animates) {
                     sprite.animate();
                 }
-                
-                batch.primitivesRendered += sprite.primitives;
 
                 var properties = sprite.getGlProperties();
                 var updateAllProperties = (
-                    sprite.glLastParentIndex != i ||
+                    sprite.glLastParentIndex != indexInBatch ||
                     sprite.glLastBatchIndex != batchIndex ||
-                    sprite.glLastParent != this || 
-                    ownProperties["translation"].hasChanged || 
+                    //sprite.glLastParent != this || 
                     sprite.lastTextureSrc != textureSrc)
                 ;
 
@@ -253,9 +266,15 @@
                     var batchProperty = batch.getPropertyWithName(propertyName);
                     if (glProperty.hasChanged == true || updateAllProperties) {
                         batch.updateProperty(propertyName, glProperty.values,
-                            batchProperty.values.length, glProperty.getLength(sprite.primitives))
+                            glProperty.getLength(batch.primitivesRendered), glProperty.getLength(sprite.primitives))
                     }
                 }
+
+                sprite.glLastParentIndex = indexInBatch;
+                sprite.glLastBatchIndex = batchIndex;
+
+                indexInBatch++;
+                batch.primitivesRendered += sprite.primitives;
 
                 //**                                ***//
 
@@ -300,6 +319,7 @@
             }
 
             if(indexAtDepth[depth] >= numberOfObjectsAtDepth[depth]) {
+                indexAtDepth[depth] = 0;
                 depth--;
                 if(depth >= 0) {
                     indexAtDepth[depth]++;

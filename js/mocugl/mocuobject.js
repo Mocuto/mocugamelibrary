@@ -10,6 +10,7 @@
         this.effects = [];
         this.lastGlParent = null;
         this.lastGlParentIndex = -1;
+        this.lastGlBatchIndex = -1;
 
         this.lastGlWidth = null;
         this.lastGlHeight = null;
