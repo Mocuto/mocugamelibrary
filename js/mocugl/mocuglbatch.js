@@ -18,7 +18,7 @@
 	};
 
 	MocuGame.MocuGlBatch.prototype.__defineGetter__("key", function() {
-		MocuGame.renderer.generateBatchKey(this.textureSrc)
+		return MocuGame.renderer.generateBatchKey(this.textureSrc)
 	})
 
 
