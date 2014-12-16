@@ -11,6 +11,8 @@
         this.locationCache = {};
         this.uniformLocationCache = {};
 
+        this.bufferCache = {};
+
         this.defaultProgram = this.loadProgram(gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER);
 
         this.useProgram(this.defaultProgram);
@@ -48,6 +50,10 @@
             new MocuGame.MocuGlProperty("fade", "a_fade", 4, false),
             new MocuGame.MocuGlProperty("alpha", "a_alpha", 1, false)
         ]
+
+        this.additionalProperties = [];
+
+        this.setupObjectTexture(gl, this.defaultProgram);
 
     };
     MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
@@ -190,13 +196,12 @@
         return texture;
     };
 
-    MocuGame.MocuRenderer.prototype.setupObjectTexture = function (gl) {
+    MocuGame.MocuRenderer.prototype.setupObjectTexture = function (gl, program) {
         var texture = this.createAndSetupTexture(gl);
-                var blankCanvas = MocuGame.blankCanvas;
+        var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
 
-        var texture = gl.createTexture();
-        this.prepareTexture(gl, texture, program);
+        var texture = this.createAndSetupTexture(gl);
 
         blankCanvas.width = 1;
         blankCanvas.height = 1;
@@ -248,8 +253,21 @@
         return this.uniformLocationCache[name];
     }
 
+    MocuGame.MocuRenderer.prototype.getBufferForAttribute = function(gl, attributeName) {
+        //if((attributeName in this.bufferCache) == false) 
+        {
+            var buffer = gl.createBuffer();
+            this.bufferCache[attributeName] = buffer;
+        }
+
+        return this.bufferCache[attributeName];
+    }
+
     MocuGame.MocuRenderer.prototype.setAttribute = function (gl, program, attributeName, attributeValue, componentsPerAttribute) {
-        var buffer = gl.createBuffer();
+
+
+        var buffer = this.getBufferForAttribute(gl, attributeName);
+
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
         var location = this.getCachedLocation(gl, program, attributeName);
@@ -353,6 +371,11 @@
             var prop = this.properties[i];
             var clone = MocuGame.cloneObject(prop);
             result.push(clone);
+        }
+        for (var i = 0; i < this.additionalProperties.length; i++) {
+            var prop = this.additionalProperties[i];
+            var clone = MocuGame.cloneObject(prop);
+            result.push(clone);            
         }
         return result;
     }

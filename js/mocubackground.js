@@ -65,6 +65,17 @@
     MocuGame.MocuBackground.prototype = new MocuGame.MocuSprite(new MocuGame.Point, MocuGame.Point);
     MocuGame.MocuBackground.constructor = MocuGame.MocuBackground;
 
+    MocuGame.MocuBackground.EXTENSION_METHODS = [];
+
+
+    MocuGame.MocuBackground.prototype.runExtensionMethods = function() {
+        MocuGame.MocuSprite.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < MocuGame.MocuBackground.EXTENSION_METHODS.length; i++)
+        {
+            MocuGame.MocuBackground.EXTENSION_METHODS[i].call(this);
+        }
+    }
+
     /*
         update is a function inherited from MocuSprite which updates the scrollPosition of the
         background based off the scrollVelocity variable.

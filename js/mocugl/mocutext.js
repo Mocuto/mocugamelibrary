@@ -129,6 +129,9 @@
 
 	MocuGame.MocuText.prototype.composePositionProperty = function() {
 		return this.composeProperty(
+            "position",
+            "a_position",
+            2,
 			MocuGame.MocuObject.prototype.getCoordinateArray, 
 			function() {
 				return this.getHasChanged();
@@ -138,6 +141,9 @@
 
 	MocuGame.MocuText.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
+            "texCoord",
+            "a_texCoord",
+            2,
 			MocuGame.MocuObject.prototype.getTextureCoordinateArray, 
 			function() {
 				return this.getHasChanged(); 
@@ -147,6 +153,9 @@
 
 	MocuGame.MocuText.prototype.composeTranslationProperty = function() {
 		return this.composeProperty(
+            "translation",
+            "a_translation",
+            2,
 			function() {
 				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
 				return [

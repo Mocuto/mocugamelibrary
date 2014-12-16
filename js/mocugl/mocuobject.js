@@ -424,4 +424,8 @@
             }
 		
 	};
+
+    MocuGame.MocuObject.prototype.getAdditionalGlProperties = function() {
+        return {};
+    }
 })();

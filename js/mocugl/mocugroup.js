@@ -15,6 +15,8 @@
         this.cameraZoomsForTexture = {};
         this.fadesForTexture = {};
         this.alphasForTexture = {};
+
+        this.lastBatches = [];
 	})
 
 	if(typeof MocuGame.MocuGroup.old === "undefined") {
@@ -95,6 +97,7 @@
         var indexAtDepth = [0];
         var batchIndex = 0;
         var indexInBatch = 0;
+        var newBatch = false;
         //for (var i = 0; i < this.objects.length; i++) {
         while(depth >= 0)
         {
@@ -114,12 +117,13 @@
                 numberOfObjectsAtDepth[depth] = group.objects.length;
                 objectArrayAtDepth[depth] = group.objects;
             }
-            else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
+            else if (MocuGame.MocuObject.prototype.isPrototypeOf(object)) {
                 indexAtDepth[depth]++;
 
                 var sprite = object;
                 texture = sprite.getTexture(gl);
                 var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
+                
 
                 if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
                     if(sprite.glLastParentIndex != -1 && textureSrc != null) {
@@ -134,23 +138,22 @@
                 var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
 
                 if (batchIndex >= this.lastBatches.length || batchKey != this.lastBatches[batchIndex].key) {
-                    if(this.lastBatches.length > 0) {
-                        var test = this.lastBatches[batchIndex].key
-                    }
                     if(batchKey !== lastBatchKey) 
                     {
                         lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
                         lastBatchKey = batchKey
                         batches.push(lastBatch);
                         indexInBatch = 0;
+                        newBatch = true;
                     }
                 }
                 else {
-                    lastBatch = this.lastBatches[batchIndex];
                     if(batchKey != lastBatchKey) {
+                        lastBatch = this.lastBatches[batchIndex];
                         lastBatchKey = batchKey;
                         batches.push(lastBatch)
                         lastBatch.primitivesRendered = 0;
+                        newBatch = false;
                     }
                 }
 
@@ -168,12 +171,19 @@
                 }
 
                 var properties = sprite.getGlProperties();
+                var additionalProperties = sprite.getAdditionalGlProperties();
+
+                for(propertyName in additionalProperties) {
+                    properties[propertyName] = additionalProperties[propertyName];
+                }
+
                 var updateAllProperties = (
+                    newBatch == true ||
                     sprite.glLastParentIndex != indexInBatch ||
                     sprite.glLastBatchIndex != batchIndex ||
                     //sprite.glLastParent != this || 
-                    sprite.lastTextureSrc != textureSrc)
-                ;
+                    sprite.lastTextureSrc != textureSrc
+                );
 
                 sprite.lastTextureSrc = textureSrc;
 

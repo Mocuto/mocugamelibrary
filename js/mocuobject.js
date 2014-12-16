@@ -218,6 +218,9 @@
     */
 
     MocuGame.MocuObject.prototype.getWorldPoint = function () {
+        if(typeof this.parent === "undefined" || this.parent == null) {
+            return new MocuGame.Point(0,0);
+        }
         this.parent.getWorldPoint();
         this.worldPoint.x = this.parent.worldPoint.x + this.x;
         this.worldPoint.y = this.parent.worldPoint.y + this.y;

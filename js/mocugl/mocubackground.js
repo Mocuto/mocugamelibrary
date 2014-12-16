@@ -1,12 +1,9 @@
 (function() {
 	MocuGame.MocuBackground.EXTENSION_METHODS.push(function() {
-	    this.numOfTiles = new MocuGame.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
-
-	    this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y) * 4;
-
 	    this.lastScrollPositionX = null;
 	    this.lastScrollPositionY = null; 
-	};
+        this.primitives = 0;
+	});
 
     MocuGame.MocuBackground.prototype.getCoordinateArray = function () {
 
@@ -87,7 +84,7 @@
                 ]);
             }
         }
-        return new Float32Array(coords);
+        return coords;
     }
 
     MocuGame.MocuBackground.prototype.getTextureCoordinateArray = function () {
@@ -164,7 +161,7 @@
 
         }
 
-        return new Float32Array(coords);
+        return coords;
     }
 
 	MocuGame.MocuBackground.prototype.composePositionProperty = function() {
@@ -172,7 +169,7 @@
             "position",
             "a_position",
             2,
-			MocuGame.MocuObject.prototype.getCoordinateArray, 
+			MocuGame.MocuBackground.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight ||
                     this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y);
@@ -192,10 +189,12 @@
             2,
 			function() {
 				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
-				return [
-					displacement.x + (this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
-					displacement.y + (this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y)
-				]
+                var translations = [];
+                for(var i = 0; i < this.primitives; i++) {
+                    translations.push(displacement.x + (this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
+                    translations.push(displacement.y + (this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
+                }
+				return translations;
 			}, function() {
 				var hasChanged = (this.lastGlX != this.getWorldPoint().x || this.lastGlY != this.getWorldPoint().y);
 				this.lastGlX = this.getWorldPoint().x;
@@ -211,10 +210,12 @@
             "a_rotation",
             2,
 			function() {
-				return [
-			        Math.cos(MocuGame.deg2rad(this.angle)),
-        			Math.sin(MocuGame.deg2rad(this.angle))
-				]
+                var rotations = [];
+                for(var i = 0; i < this.primitives; i++) {
+                    rotations.push(Math.cos(MocuGame.deg2rad(this.angle)));
+                    rotations.push(Math.sin(MocuGame.deg2rad(this.angle)))
+                }
+				return rotations;
 			}, function() {
 				var hasChanged = (this.lastGlRotation != this.angle)
 				this.lastGlRotation = this.angle;
@@ -229,10 +230,12 @@
             "a_scale",
             2,
 			function() {
-		        return [
-			       	this.scale.x * MocuGame.camera.zoom,
-	        		this.scale.y * MocuGame.camera.zoom
-        		]
+                var scales = [];
+                for(var i = 0; i < this.primitives; i++) {
+                    scales.push(this.scale.x * MocuGame.camera.zoom);
+                    scales.push(this.scale.y * MocuGame.camera.zoom);
+                }
+		        return scales;
 			}, function() {
 				var hasChanged = (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
 				this.lastGlScaleX = this.scale.x;
@@ -270,7 +273,7 @@
 				this.lastGlFadeB = this.fade.b;
 				this.lastGlFadeA = this.fade.a;
 
-				return hasChanged;
+				return true;
 			}
 		)
 	}
@@ -299,16 +302,26 @@
             "texCoord",
             "a_texCoord",
             2,
-			MocuGame.MocuBackground.prototype.getCoordinateArray, 
+			MocuGame.MocuBackground.prototype.getTextureCoordinateArray, 
 			function() {
-		        var hasChanged = this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
+		        var hasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             		this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||
                     this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y);
         		this.hasTexCoordChanged = false;
+                this.lastScrollPositionX = this.scrollPosition.x;
+                this.lastScrollPositionY = this.scrollPosition.y;
 				return hasChanged; 
 			}
 		)		
 	}
+
+    MocuGame.MocuBackground.prototype.getGlProperties = function() {
+        this.numOfTiles = new MocuGame.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
+
+        this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y) * 4;
+
+        return MocuGame.MocuSprite.prototype.getGlProperties.call(this);
+    }
 
     /*MocuGame.MocuBackground.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
