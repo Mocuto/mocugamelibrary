@@ -380,6 +380,17 @@
         return result;
     }
 
+    MocuGame.MocuRenderer.prototype.generateCoordinateSquare = function(left, right, top, bottom) {
+        return [
+                left, top,
+                right, top,
+                left, bottom,
+                left, bottom,
+                right, top,
+                right, bottom
+            ];
+    }
+
     MocuGame.MocuRenderer.prototype.draw = function(gl) {
         var program = this.preDrawGl(gl, displacement);
         var objectsForTexture = {};

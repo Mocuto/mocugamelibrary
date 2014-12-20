@@ -10,6 +10,18 @@
     MocuGame.MocuPatch.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
     MocuGame.MocuPatch.constructor = MocuGame.MocuPatch;
 
+
+    MocuGame.MocuPatch.EXTENSION_METHODS = [];
+
+
+    MocuGame.MocuPatch.prototype.runExtensionMethods = function() {
+        MocuGame.MocuSprite.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < MocuGame.MocuPatch.EXTENSION_METHODS.length; i++)
+        {
+            MocuGame.MocuPatch.EXTENSION_METHODS[i].call(this);
+        }
+    }
+
     MocuGame.MocuPatch.prototype.blankCanvasDraw = function () {
         var blankCanvas = MocuGame.blankCanvas;
         var blankContext = MocuGame.blankContext;
