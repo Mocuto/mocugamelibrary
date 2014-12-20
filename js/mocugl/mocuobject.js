@@ -41,12 +41,13 @@
         var absHeight = (this.height / 2) * MocuGame.uniscale;
 
         return [
-                                -absWidth, -absHeight,
-                                 absWidth, -absHeight,
-                                -absWidth, absHeight,
-                                -absWidth, absHeight,
-                                absWidth, -absHeight,
-                                absWidth, absHeight];
+            -absWidth, -absHeight,
+            absWidth, -absHeight,
+            -absWidth, absHeight,
+            -absWidth, absHeight,
+            absWidth, -absHeight,
+            absWidth, absHeight
+        ];
     };
 
     MocuGame.MocuObject.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
