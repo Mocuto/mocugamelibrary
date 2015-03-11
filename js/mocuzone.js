@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocuzone.js
 
     MocuZone, derived from MocuObject, zones against an object, and allows for the execution of functions when an object leaves the bounds,
@@ -41,14 +41,14 @@
 
         position (Point) - 
     */
-    MocuGame.MocuZone = function (position, size) {
-        MocuGame.MocuObject.call(this, position, size);
+    mocu.MocuZone = function (position, size) {
+        mocu.MocuObject.call(this, position, size);
         this.objectsToCheckAgainst = new Array();
         this.objectsInZone = new Array();
         this.visible = false;
     };
-    MocuGame.MocuZone.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuZone.constructor = MocuGame.MocuZone;
+    mocu.MocuZone.prototype = new mocu.MocuObject(new mocu.Point, new mocu.Point);
+    mocu.MocuZone.constructor = mocu.MocuZone;
 
     /*
         zoneObject is a function which adds an object to the list of objects it checks its bounds against.
@@ -57,7 +57,7 @@
         object (MocuObject) - The object to add to the list of objects it checks its bounds against.
     */
 
-    MocuGame.MocuZone.prototype.zoneObject = function (object) {
+    mocu.MocuZone.prototype.zoneObject = function (object) {
         if (this.objectsToCheckAgainst.indexOf(object) == -1) {
             this.objectsToCheckAgainst.push(object);
         }
@@ -70,7 +70,7 @@
         object (MocuObject) - The object to remove from the list of objects it checks its bounds against.
     */
 
-    MocuGame.MocuZone.prototype.unZoneObject = function (object) {
+    mocu.MocuZone.prototype.unZoneObject = function (object) {
         var index = this.objectsToCheckAgainst.indexOf(object);
         if (index != -1) {
             this.objectsToCheckAgainst.splice(index, 1);
@@ -84,7 +84,7 @@
         object (MocuObject) - The object to check.
     */
 
-    MocuGame.MocuZone.prototype.isObjectInZone = function (object) {
+    mocu.MocuZone.prototype.isObjectInZone = function (object) {
         return (this.objectsInZone.indexOf(object) != -1);
     };
 
@@ -96,8 +96,8 @@
         deltaT (Number) - Amount of time since last update call
     */
 
-    MocuGame.MocuZone.prototype.update = function (deltaT) {
-        MocuGame.MocuObject.prototype.update.call(this, deltaT);
+    mocu.MocuZone.prototype.update = function (deltaT) {
+        mocu.MocuObject.prototype.update.call(this, deltaT);
         for (var i = 0; i < this.objectsToCheckAgainst.length; i++) {
             var object = this.objectsToCheckAgainst[i];
 
@@ -116,16 +116,16 @@
                     var objPos = object.getWorldPoint();
                     var pos = this.getWorldPoint();
                     if (objPos.y < pos.y) {
-                        direction = MocuGame.TOP;
+                        direction = mocu.TOP;
                     }
                     else if (objPos.y > pos.y + this.height) {
-                        direction = MocuGame.BOTTOM;
+                        direction = mocu.BOTTOM;
                     }
                     else if (objPos.x < pos.x) {
-                        direction = MocuGame.LEFT;
+                        direction = mocu.LEFT;
                     }
                     else {
-                        direction = MocuGame.RIGHT;
+                        direction = mocu.RIGHT;
                     }
                     this.onObjectExited(object, direction);
                 }
@@ -140,7 +140,7 @@
         object (MocuObject) - The object that entered the zone
     */
 
-    MocuGame.MocuZone.prototype.onObjectEntered = function (object) {
+    mocu.MocuZone.prototype.onObjectEntered = function (object) {
         //Override this
     };
 
@@ -153,7 +153,7 @@
         direction (String) - The direction the object exited the zone from.
     */
 
-    MocuGame.MocuZone.prototype.onObjectExited = function (object, direction) {
+    mocu.MocuZone.prototype.onObjectExited = function (object, direction) {
         //Override this
     };
 

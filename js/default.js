@@ -1,4 +1,4 @@
-﻿/*
+/*
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
 
     Eclipse Public License, Version 1.0 (EPL-1.0) (plain text) THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
@@ -37,73 +37,73 @@
     app.onactivated = function (args) {
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
-                //Call MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution) here
+                //Call mocu.prepareCanvasForWindows8(canvasId, gameBounds, resolution) here
 
-                //Overload MocuGame.onLoaded here
+                //Overload mocu.onLoaded here
 
-                //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
+                //Call mocu.init(state, imageManifest, musicManifest, soundManifest) here
 
-                MocuGame.targetResolutionWidth = window.innerWidth;
-                MocuGame.prepareCanvasForWindows81("myCanvas", new MocuGame.Point(6400, 4800),
-                    new MocuGame.Point(window.innerWidth, window.innerHeight));
+                mocu.targetResolutionWidth = window.innerWidth;
+                mocu.prepareCanvasForWindows81("myCanvas", new mocu.Point(6400, 4800),
+                    new mocu.Point(window.innerWidth, window.innerHeight));
 
-                var state = new MocuGame.MocuState(60);
-                //state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
+                var state = new mocu.MocuState(60);
+                //state.add(new mocu.MocuText(new mocu.Point(0, 0), new mocu.Point(100, 100), "Hello MocuGame!"));
 
 
                 /*for (var i = 0; i < 2000; i++) {
-                    var randX = Math.ceil(Math.random() * MocuGame.resolution.x);
-                    var randY = Math.ceil(Math.random() * MocuGame.resolution.y);
-                    var test = new MocuGame.MocuSprite(new MocuGame.Point(randX, randY), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                    var randX = Math.ceil(Math.random() * mocu.resolution.x);
+                    var randY = Math.ceil(Math.random() * mocu.resolution.y);
+                    var test = new mocu.MocuSprite(new mocu.Point(randX, randY), new mocu.Point(32, 32), "images/Mocuto.png");
                     //test.animates = false;
                     test.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
                     test.play("Idle");
                     state.add(test);
                 }*/
 
-                var obj = new MocuGame.MocuObject(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50));
+                var obj = new mocu.MocuObject(new mocu.Point(0, 50), new mocu.Point(100, 50));
                 obj.fade.a = 1;
-                var background = new MocuGame.MocuBackground(new MocuGame.Point(0, 0), new MocuGame.Point(64, 64), new MocuGame.Point(64, 64), "images/sampletile.png");
+                var background = new mocu.MocuBackground(new mocu.Point(0, 0), new mocu.Point(64, 64), new mocu.Point(64, 64), "images/sampletile.png");
                 background.scrollVelocity.x = 1;
  
                 state.add(background);
 
-                var patch = new MocuGame.MocuPatch(new MocuGame.Point(MocuGame.resolution.x / 2 - 50, MocuGame.resolution.y / 2 - 50), new MocuGame.Point(100, 100), "images/signpatch.png", new MocuGame.Point(38, 38), new MocuGame.Point(6, 6), new MocuGame.Point(26, 26));
+                var patch = new mocu.MocuPatch(new mocu.Point(mocu.resolution.x / 2 - 50, mocu.resolution.y / 2 - 50), new mocu.Point(100, 100), "images/signpatch.png", new mocu.Point(38, 38), new mocu.Point(6, 6), new mocu.Point(26, 26));
                 //state.add(patch);
 
                 //background.velocity.y = -1;
 
-                var sprite = new MocuGame.MocuSprite(new MocuGame.Point(116, 132), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                var sprite = new mocu.MocuSprite(new mocu.Point(116, 132), new mocu.Point(32, 32), "images/Mocuto.png");
                 sprite.addAnimation("Idle", "0,1 1,1 2,1 3,1 4,1", 10, true);
                 sprite.play("Idle");
-                //sprite.scale = new MocuGame.Point(2, 2);
+                //sprite.scale = new mocu.Point(2, 2);
                 //sprite.angularvelocity = 1;
                 sprite.fade.a = 1.0;
                 sprite.fade.g = 1.0;
-                var slot = new MocuGame.TimeSlot(1);
-                slot.addEvent(new MocuGame.Event(sprite, "alpha", 1.0, 0.0, 120));
+                var slot = new mocu.TimeSlot(1);
+                slot.addEvent(new mocu.Event(sprite, "alpha", 1.0, 0.0, 120));
                 //sprite.timeline.addSlot(slot)
                 //obj.velocity.x = 1;
                 obj.visible = true;
                 sprite.scale.x = 2;
                 //sprite.scale.y = 1;
                 //sprite.velocity.x = 1;
-                //MocuGame.camera.zoom = 2;
-                var sprite2 = new MocuGame.MocuSprite(new MocuGame.Point(0, 0), new MocuGame.Point(32, 32), "images/Mocuto.png");
+                //mocu.camera.zoom = 2;
+                var sprite2 = new mocu.MocuSprite(new mocu.Point(0, 0), new mocu.Point(32, 32), "images/Mocuto.png");
                 //state.add(sprite2);
                 //state.add(sprite)
                 //state.add(obj);
 
-                var text = new MocuGame.Marquee(new MocuGame.Point(0, 50), new MocuGame.Point(100, 50), "Test 123", 1);
-                text.fade = new MocuGame.RGBA(1, 1, 0, 1);
+                var text = new mocu.Marquee(new mocu.Point(0, 50), new mocu.Point(100, 50), "Test 123", 1);
+                text.fade = new mocu.RGBA(1, 1, 0, 1);
                 text.useParentEffects = false;
                 //state.add(text);
 
-                var text2 = new MocuGame.Marquee(new MocuGame.Point(0, 150), new MocuGame.Point(100, 50), "Test 123", 1);
-                text2.fade = new MocuGame.RGBA(1, 1, 0, 1);
+                var text2 = new mocu.Marquee(new mocu.Point(0, 150), new mocu.Point(100, 50), "Test 123", 1);
+                text2.fade = new mocu.RGBA(1, 1, 0, 1);
                 //state.add(text2);
 
-                MocuGame.init(state);
+                mocu.init(state);
 
             } else {
                 // TODO: This application has been reactivated from suspension.

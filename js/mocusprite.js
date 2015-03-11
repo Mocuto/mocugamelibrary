@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocuobject.js
 
     Object derived from MocuObject, contains an image to be drawn
@@ -47,8 +47,8 @@
         - The path to the sprite file.
     */
 
-    MocuGame.MocuSprite = function (point, size, spriteLocation, dontPreload) {
-        MocuGame.MocuObject.call(this, point, size);
+    mocu.MocuSprite = function (point, size, spriteLocation, dontPreload) {
+        mocu.MocuObject.call(this, point, size);
 
         if (typeof dontPreload == "undefined") {
             dontPreload = false;
@@ -57,23 +57,23 @@
         this.animations = new Array();
 
         if (typeof spriteLocation != "undefined") {
-            this.img = MocuGame.preload.getResult(spriteLocation);
+            this.img = mocu.preload.getResult(spriteLocation);
             if (dontPreload || this.img == null) {
                 this.img = new Image();
                 this.img.src = spriteLocation;
             }
         }
 
-        this.frame = new MocuGame.Point(0, 0);
+        this.frame = new mocu.Point(0, 0);
 
-        this.anim = new MocuGame.MocuAnimation("Default", "0,0", 20, true);
+        this.anim = new mocu.MocuAnimation("Default", "0,0", 20, true);
         this.animations.push(this.anim);
 
-        this.flip = new MocuGame.Point(1, 1);
+        this.flip = new mocu.Point(1, 1);
 
         this.drawmode = "source-over";
         
-        this.tint = new MocuGame.RGBA(0, 0, 0, 0);
+        this.tint = new mocu.RGBA(0, 0, 0, 0);
 
         //this.fade.a = 1;
         this.visible = true;
@@ -84,11 +84,11 @@
         this.animates = true;
 
     }
-    MocuGame.MocuSprite.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuSprite.constructor = MocuGame.MocuSprite;
-    MocuGame.MocuSprite.prototype.constructor = MocuGame.MocuSprite.constructor;
+    mocu.MocuSprite.prototype = new mocu.MocuObject(new mocu.Point, new mocu.Point);
+    mocu.MocuSprite.constructor = mocu.MocuSprite;
+    mocu.MocuSprite.prototype.constructor = mocu.MocuSprite.constructor;
 
-    MocuGame.MocuSprite.EXTENSION_METHODS = [];
+    mocu.MocuSprite.EXTENSION_METHODS = [];
 
     /*
         addAnimation is a function which adds a new animation to the MocuSprite's set of animations
@@ -104,8 +104,8 @@
         - Whether the animation loops.
     */
 
-    MocuGame.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
-        var newanim = new MocuGame.MocuAnimation(name, coords, speed, loop, reverse);
+    mocu.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
+        var newanim = new mocu.MocuAnimation(name, coords, speed, loop, reverse);
         this.animations.push(newanim);
     }
 
@@ -118,7 +118,7 @@
 
     */
 
-    MocuGame.MocuSprite.prototype.play = function (name, forceRestart) {
+    mocu.MocuSprite.prototype.play = function (name, forceRestart) {
         forceRestart = (typeof forceRestart == "undefined") ? false : forceRestart;
         if (typeof this.anim != "undefined") {
             if (this.anim.name === name && forceRestart || this.anim.name !== name)
@@ -149,7 +149,7 @@
         - The animation name to search for
     */
 
-    MocuGame.MocuSprite.prototype.hasAnimationNamed = function (name, forceRestart) {
+    mocu.MocuSprite.prototype.hasAnimationNamed = function (name, forceRestart) {
 
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].name == name) {
@@ -168,7 +168,7 @@
         - Time elapsed since the last update call.
     */
 
-    MocuGame.MocuSprite.prototype.animate = function (deltaT) {
+    mocu.MocuSprite.prototype.animate = function (deltaT) {
         this.frame.x = this.anim.coordinates[this.anim.frame].x;
         this.frame.y = this.anim.coordinates[this.anim.frame].y;
     }
@@ -182,8 +182,8 @@
         - Time elapsed since the last update call.
     */
 
-    MocuGame.MocuSprite.prototype.update = function (deltaT) {
-        MocuGame.MocuObject.prototype.update.call(this, deltaT);
+    mocu.MocuSprite.prototype.update = function (deltaT) {
+        mocu.MocuObject.prototype.update.call(this, deltaT);
     }
 
     /*
@@ -197,9 +197,9 @@
         - The offset given the the object's drawing.
     */
 
-    MocuGame.MocuSprite.prototype.colorEffect = function (context, displacement) {
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+    mocu.MocuSprite.prototype.colorEffect = function (context, displacement) {
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         blankContext.globalCompositeOperation = "source-over";
@@ -223,10 +223,10 @@
         context.globalAlpha = this.alpha;
         context.globalCompositeOperation = this.drawmode;
         context.drawImage(blankCanvas, 0, 0, (this.width > blankCanvas.width) ? blankCanvas.width : this.width, (this.height > blankCanvas.height) ? blankCanvas.height : this.height,
-                 (-(this.width / 2) * this.scale.x) * MocuGame.uniscale,
-                (-(this.height / 2) * this.scale.y) * MocuGame.uniscale,
-                ((this.width) * this.scale.x) * MocuGame.uniscale,
-                ((this.height) * this.scale.y) * MocuGame.uniscale);
+                 (-(this.width / 2) * this.scale.x) * mocu.uniscale,
+                (-(this.height / 2) * this.scale.y) * mocu.uniscale,
+                ((this.width) * this.scale.x) * mocu.uniscale,
+                ((this.height) * this.scale.y) * mocu.uniscale);
         blankContext.clearRect(0, 0, blankCanvas.width, blankCanvas.height);
         
     }
@@ -241,26 +241,26 @@
         - The offset given the the object's drawing.
     */
 
-    MocuGame.MocuSprite.prototype.draw = function (context, displacement) {
+    mocu.MocuSprite.prototype.draw = function (context, displacement) {
 
         if (this.animates) {
             this.animate(deltaT);
         }
 
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
             return;
         }
 
         if (typeof displacement == null || typeof displacement == 'undefined')
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
 
         if (this.isOnScreen() == false) {
             return;
         }
         
-        context.translate(Math.round(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale), Math.round(((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale));
+        context.translate(Math.round(((this.x + displacement.x) + (this.width / 2)) * mocu.uniscale), Math.round(((this.y + this.height / 2) + displacement.y) * mocu.uniscale));
         context.scale(this.flip.x, this.flip.y);
         context.rotate((this.angle * 3.14159265359) / 180);
         
@@ -270,15 +270,15 @@
             this.colorEffect(context, displacement);
         else {
             context.drawImage(this.img, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height,
-                Math.round((-(this.width / 2) * this.scale.x) * MocuGame.uniscale),
-                Math.round((-(this.height / 2) * this.scale.y) * MocuGame.uniscale),
-                Math.round(((this.width) * this.scale.x) * MocuGame.uniscale),
-                Math.round(((this.height) * this.scale.y) * MocuGame.uniscale));
+                Math.round((-(this.width / 2) * this.scale.x) * mocu.uniscale),
+                Math.round((-(this.height / 2) * this.scale.y) * mocu.uniscale),
+                Math.round(((this.width) * this.scale.x) * mocu.uniscale),
+                Math.round(((this.height) * this.scale.y) * mocu.uniscale));
         }
         context.rotate(-(this.angle * 3.14159265359) / 180);
         context.scale(this.flip.x, this.flip.y);
 
-        context.translate(-Math.round((((this.x + this.width / 2) + displacement.x))*MocuGame.uniscale), -Math.round((((this.y + this.height / 2) + displacement.y))*MocuGame.uniscale));
+        context.translate(-Math.round((((this.x + this.width / 2) + displacement.x))*mocu.uniscale), -Math.round((((this.y + this.height / 2) + displacement.y))*mocu.uniscale));
         context.globalCompositeOperation = "source-over";
     }
 })();

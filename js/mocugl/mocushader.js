@@ -1,5 +1,5 @@
 ﻿(function () {
-    MocuGame.MocuShader = function(shaderLocation, type, dontPreload)
+    mocu.Shader = function(shaderLocation, type, dontPreload)
     {
         this.src = shaderLocation;
         this.type = type;
@@ -9,9 +9,9 @@
         }
 
         if (typeof shaderLocation != "undefined") {
-            this.file = MocuGame.preload.getResult(shaderLocation);
+            this.file = mocu.preload.getResult(shaderLocation);
             if (dontPreload || this.file == null) {
-                this.file = MocuGame.loadServerFile(shaderLocation);
+                this.file = mocu.loadServerFile(shaderLocation);
                 
             }
         }
@@ -20,7 +20,7 @@
         this.compiledObject = null;
     }
 
-    MocuGame.MocuShader.prototype.getText = function () {
+    mocu.Shader.prototype.getText = function () {
         if (typeof this.file =="undefined")
         {
             return "";

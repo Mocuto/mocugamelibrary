@@ -1,4 +1,4 @@
-﻿/*
+/*
     timeslot.js
 
     Object that store Events. Handles the animation of values.
@@ -44,7 +44,7 @@
         - The time it should begin updating its events.
     */
 
-    MocuGame.TimeSlot = function (time) {
+    mocu.TimeSlot = function (time) {
         this.events = new Array();
         this.time = time;
         this.nextTimeSlot = null;
@@ -58,7 +58,7 @@
         Boolean - Whether all events within the slot have reached their endValue.
     */
 
-    MocuGame.TimeSlot.prototype.isFinished = function () {
+    mocu.TimeSlot.prototype.isFinished = function () {
         var finished = true;
         for (var i = 0; i < this.events.length; i++) {
             if (!this.events[i].elapsed) {
@@ -79,7 +79,7 @@
         - The time elapsed since the last update call.
     */
 
-    MocuGame.TimeSlot.prototype.update = function (currentTime, deltaT) {
+    mocu.TimeSlot.prototype.update = function (currentTime, deltaT) {
          for (var i = 0; i < this.events.length; i += 1) {
             if (currentTime >= this.time) {
             
@@ -98,7 +98,7 @@
         restart is a function which restarts all of the events in the slot.
     */
 
-    MocuGame.TimeSlot.prototype.restart = function () {
+    mocu.TimeSlot.prototype.restart = function () {
         for (var i = 0; i < this.events.length; i += 1) {
             this.events[i].elapsed = false;
             this.events[i].lastValue = null;
@@ -115,7 +115,7 @@
         - The event to be added.
     */
 
-    MocuGame.TimeSlot.prototype.addEvent = function (event) {
+    mocu.TimeSlot.prototype.addEvent = function (event) {
         this.events.push(event);
     };
 
@@ -129,7 +129,7 @@
         - The variable name that the event should correspond to.
     */
 
-    MocuGame.TimeSlot.prototype.getEvent = function (object, varname) {
+    mocu.TimeSlot.prototype.getEvent = function (object, varname) {
         for (var i = 0; i < this.events.length; i += 1) {
             if (this.events[i].object == object && this.events[i].variableName == varname)
                 return this.events[i];

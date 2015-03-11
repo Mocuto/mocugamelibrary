@@ -1,4 +1,4 @@
-﻿/*
+/*
     event.js
     Component of the Timeline System. Transitions a set variable from a start value to an end value
     over a given duration.
@@ -54,7 +54,7 @@
         - The method used to interpolate between values.
     */
 
-    MocuGame.Event = function (object, variableName, startValue, endValue, time, interp) {
+    mocu.Event = function (object, variableName, startValue, endValue, time, interp) {
         variableName = (typeof variableName == 'undefined' || typeof variableName == null) ? "empty" : variableName;
         startValue = (typeof startValue == 'undefined' || typeof startValue == null) ? 1 : startValue;
         endValue = (typeof endValue == 'undefined' || typeof endValue == null) ? 1 : endValue;
@@ -105,7 +105,7 @@
         start is a function with assignsthe startValue based off of whether actualStartValue is equal to
         "current" or a variable.
     */
-    MocuGame.Event.prototype.start = function () {
+    mocu.Event.prototype.start = function () {
         this.startValue = (this.actualStartValue == "current") ? this.object[this.variableName] : this.actualStartValue;
     };
 
@@ -121,7 +121,7 @@
         - The amount of time in frames since the last update call.
     */
 
-    MocuGame.Event.prototype.update = function (currentTime, deltaT) {
+    mocu.Event.prototype.update = function (currentTime, deltaT) {
         if (!this.elapsed) {
             switch (this.interp) {
                 case "linear":

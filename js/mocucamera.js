@@ -36,45 +36,45 @@
 (function () {
 
     /*
-        MocuCamera constructor. Initializes the object with its position.
+        Camera constructor. Initializes the object with its position.
 
         Parameters:
         position (Point) - The position the camera starts at.
     */
-    MocuGame.MocuCamera = function (position) {
-        MocuGame.MocuGroup.call(this, position, new MocuGame.Point(1, 1));
-        var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16
-        this.centerMarker = new MocuGame.MocuObject(new MocuGame.Point(MocuGame.targetResolutionWidth / 2, targetHeight / 2),
-            new MocuGame.Point(1, 1));
+    mocu.Camera = function (position) {
+        mocu.MocuGroup.call(this, position, new mocu.Point(1, 1));
+        var targetHeight = (mocu.targetResolutionWidth * 9) / 16
+        this.centerMarker = new mocu.MocuObject(new mocu.Point(mocu.targetResolutionWidth / 2, targetHeight / 2),
+            new mocu.Point(1, 1));
 
         this.add(this.centerMarker);
         this.zoom = 1.0;
 
         this.angle = 0;
 
-        this.flip = new MocuGame.Point(1, 1);
+        this.flip = new mocu.Point(1, 1);
 
-        this.fadeRect = new MocuGame.MocuObject(new MocuGame.Point(0, 0), new MocuGame.Point(1, 1));
+        this.fadeRect = new mocu.MocuObject(new mocu.Point(0, 0), new mocu.Point(1, 1));
         this.fadeRect.usesFade = true;
         this.fadeRect.cameraTraits = null;
         this.fadeRect.alpha = 0;
 
         this.trackingObject = null;
         this.trackingMargins = 0;
-        this.trackingOffset = new MocuGame.Point(0, 0);
+        this.trackingOffset = new mocu.Point(0, 0);
         this.tracksVertical = true;
         this.tracksHorizontal = true;
 
         this.lastDistance = 0;
 
         this.bindPosition = false;
-        this.minimumPosition = new MocuGame.Point(0, 0);
-        this.maximumPosition = new MocuGame.Point(1000, 1000);
+        this.minimumPosition = new mocu.Point(0, 0);
+        this.maximumPosition = new mocu.Point(1000, 1000);
 
   
     };
-    MocuGame.MocuCamera.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuCamera.constructor = MocuGame.MocuCamera;
+    mocu.Camera.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
+    mocu.Camera.constructor = mocu.Camera;
 
     /*
         preDraw is a function which does the predrawing translation for each object based off its cameraTraits
@@ -82,11 +82,11 @@
         Parameters:
         context (Context) - The context that the objects will be drawn on
         displacement (Point) - The displacement that the camera is drawn off
-        cameraTraits (MocuCameraTrait) - The traits that should be applied to the camera's transformations
+        cameraTraits (CameraTrait) - The traits that should be applied to the camera's transformations
     */
-    MocuGame.MocuCamera.prototype.preDraw = function (context, displacement, cameraTraits) {
-        context.translate(Math.round((-(MocuGame.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
-            Math.round((-(MocuGame.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
+    mocu.Camera.prototype.preDraw = function (context, displacement, cameraTraits) {
+        context.translate(Math.round((-(mocu.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
+            Math.round((-(mocu.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x * this.zoom, this.flip.y * this.zoom);
         }
@@ -102,17 +102,17 @@
         Parameters:
         context (Context) - The context that the object has been drawn on
         displacement (Point) - the displacement that teh camera is drawn off
-        cameraTraits (MocuCameraTrait) - The trait that has been applied to the camera's transformations
+        cameraTraits (CameraTrait) - The trait that has been applied to the camera's transformations
     */
-    MocuGame.MocuCamera.prototype.postDraw = function (context, displacement, cameraTraits) {
+    mocu.Camera.prototype.postDraw = function (context, displacement, cameraTraits) {
         if (cameraTraits.doesRotate) {
             context.rotate(-((this.angle * 3.14159265359) / 180));
         }
         if (cameraTraits.doesZoom) {
             context.scale(this.flip.x / this.zoom, this.flip.y / this.zoom);
         }
-        context.translate(-Math.round((-(MocuGame.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
-    -Math.round((-(MocuGame.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
+        context.translate(-Math.round((-(mocu.uniscale * this.x * cameraTraits.scrollRate.x) + displacement.x)),
+    -Math.round((-(mocu.uniscale * this.y * cameraTraits.scrollRate.y) + displacement.y)));
 
     };
 
@@ -121,7 +121,7 @@
 
         deltaT (Number) - The amount of time since the last run
     */
-    MocuGame.MocuCamera.prototype.chaseTracker = function (deltaT) {
+    mocu.Camera.prototype.chaseTracker = function (deltaT) {
         if (this.tracksHorizontal) {
             var dist = Math.abs((this.trackingObject.getWorldPoint().x + (this.trackingObject.width / 2) + this.trackingOffset.x) -
                 (this.x + this.centerMarker.x));
@@ -141,13 +141,13 @@
     };
 
     /*
-        update is a function which updates the MocuCamera's properties based off its current state.
+        update is a function which updates the Camera's properties based off its current state.
 
         Parameters:
         deltaT (Number) - The amount of time since the last update call.
     */
-    MocuGame.MocuCamera.prototype.update = function (deltaT) {
-        MocuGame.MocuGroup.prototype.update.call(this, deltaT);
+    mocu.Camera.prototype.update = function (deltaT) {
+        mocu.MocuGroup.prototype.update.call(this, deltaT);
         //this.zoom += 0.1;
         if (this.trackingObject != null) {
             this.chaseTracker(deltaT);
@@ -156,16 +156,16 @@
             if (this.x < this.minimumPosition.x) {
                 this.x = this.minimumPosition.x;
             }
-            if (this.x > this.maximumPosition.x - MocuGame.targetResolutionWidth) {
-                this.x = this.maximumPosition.x - MocuGame.targetResolutionWidth;
-                //alert(this.maximumPosition.x - MocuGame.resolution.x);
+            if (this.x > this.maximumPosition.x - mocu.targetResolutionWidth) {
+                this.x = this.maximumPosition.x - mocu.targetResolutionWidth;
+                //alert(this.maximumPosition.x - mocu.resolution.x);
                 //alert("Test");
                 //this.angle = 90;
             }
             if (this.y < this.minimumPosition.y) {
                 this.y = this.minimumPosition.y;
             }
-            var targetHeight = (MocuGame.targetResolutionWidth * 9) / 16;
+            var targetHeight = (mocu.targetResolutionWidth * 9) / 16;
             if (this.y > this.maximumPosition.y - targetHeight) {
                 this.y = this.maximumPosition.y - targetHeight;
             }
@@ -175,13 +175,13 @@
     };
 
     /*
-        viewPoint is a function which sets the MocuCamera object to position itself such that the center of the viewpoint is on the point
+        viewPoint is a function which sets the Camera object to position itself such that the center of the viewpoint is on the point
         specified
 
         Parameters:
         point (Point) - the point specified
     */
-    MocuGame.MocuCamera.prototype.viewPoint = function (point) {
+    mocu.Camera.prototype.viewPoint = function (point) {
         this.x = point.x - this.centerMarker.x;
         this.y = point.y - this.centerMarker.y;
     };

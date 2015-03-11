@@ -1,10 +1,10 @@
 (function() {
 
-	MocuGame.MocuGroup.EXTENSION_METHODS.push(function() {
-		if(typeof MocuGame.renderer === "undefined") {
+	mocu.Group.EXTENSION_METHODS.push(function() {
+		if(typeof mocu.renderer === "undefined") {
 			return;
 		}
-        this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+        this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_SPRITE_FRAGMENT_SHADER);
         this.objectsForTexture = {};
         this.positionsForTexture = {};
         this.translationsForTexture = {};
@@ -19,12 +19,12 @@
         this.lastBatches = [];
 	})
 
-	if(typeof MocuGame.MocuGroup.old === "undefined") {
-		MocuGame.MocuGroup.old = {};
-		MocuGame.MocuGroup.old.constructor = MocuGame.MocuGroup.constructor;
-		MocuGame.MocuGroup.old.prototype = MocuGame.MocuGroup.prototype;
+	if(typeof mocu.Group.old === "undefined") {
+		mocu.Group.old = {};
+		mocu.Group.old.constructor = mocu.Group.constructor;
+		mocu.Group.old.prototype = mocu.Group.prototype;
 	}
-    MocuGame.MocuGroup.prototype.applyEffectsToObject = function (object, gl, texture)
+    mocu.Group.prototype.applyEffectsToObject = function (object, gl, texture)
     {
         var effectedTexture = texture;
         for (var i = 0; i < this.effects.length; i++) {
@@ -32,25 +32,25 @@
 
             //Have the MocuRenderer set and enable the next framebuffer and texture
             var renderingSize = object.getRenderingSize();
-            MocuGame.renderer.setFramebufferForObject(gl, effectedTexture, renderingSize.x, renderingSize.y);
+            mocu.renderer.setFramebufferForObject(gl, effectedTexture, renderingSize.x, renderingSize.y);
             
 
             //Here load the shaders and run the callback contained withiin the effect object
             var program = effect.apply(gl, object);
-            MocuGame.renderer.useProgram(program);
+            mocu.renderer.useProgram(program);
 
-            this.prepareTexture(gl, effectedTexture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray.call(object));
+            this.prepareTexture(gl, effectedTexture, program, mocu.MocuObject.prototype.getTextureCoordinateArray.call(object));
 
 
             //Draw the triangles to the framebuffer
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            effectedTexture = MocuGame.renderer.advanceFramebufferTexture(gl);
+            effectedTexture = mocu.renderer.advanceFramebufferTexture(gl);
         }
         return effectedTexture;
     }
 
-    MocuGame.MocuGroup.prototype.drawGl = function (gl, displacement) {
+    mocu.Group.prototype.drawGl = function (gl, displacement) {
         var program = this.preDrawGl(gl, displacement);
         var objectsForTexture = {};
         var positionsForTexture = {};
@@ -70,7 +70,7 @@
         var lastBatchKey = null;
 
 		var ownProperties = this.getGlProperties();
-        var startPosition = new MocuGame.Point(displacement.x + this.x, displacement.y + this.y)
+        var startPosition = new mocu.Point(displacement.x + this.x, displacement.y + this.y)
 
         function updateProperty(property, valueArray, startIndex, endIndex) {
         	if(property == null) {
@@ -85,11 +85,11 @@
         }
 
         function getPropertyStartIndex(index, components, primitives) {
-            return index * MocuGame.VERTICES_PER_OBJECT * components * primitives;
+            return index * mocu.VERTICES_PER_OBJECT * components * primitives;
         }
 
         function getPropertyEndIndex(index, components, primitives) {
-            return getPropertyStartIndex(index, components, primitives) + MocuGame.VERTICES_PER_OBJECT * components * primitives;
+            return getPropertyStartIndex(index, components, primitives) + mocu.VERTICES_PER_OBJECT * components * primitives;
         }
         var depth = 0;
         var numberOfObjectsAtDepth = [this.objects.length];
@@ -104,7 +104,7 @@
             //var object = this.objects[i];
             var i  = indexAtDepth[depth]
             var object = objectArrayAtDepth[depth][i];
-            if (MocuGame.MocuGroup.prototype.isPrototypeOf(object)) {
+            if (mocu.Group.prototype.isPrototypeOf(object)) {
             	//groupsToDraw.push(object);
                 var group = object;
 
@@ -117,12 +117,12 @@
                 numberOfObjectsAtDepth[depth] = group.objects.length;
                 objectArrayAtDepth[depth] = group.objects;
             }
-            else if (MocuGame.MocuObject.prototype.isPrototypeOf(object)) {
+            else if (mocu.MocuObject.prototype.isPrototypeOf(object)) {
                 indexAtDepth[depth]++;
 
                 var sprite = object;
                 texture = sprite.getTexture(gl);
-                var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
+                var textureSrc = mocu.renderer.getSourceForTexture(texture);
                 
 
                 if (texture == null || sprite.visible == false || sprite.exists == false || sprite.isOnScreen() == false) {
@@ -135,12 +135,12 @@
                     continue;
                 }
 
-                var batchKey = MocuGame.renderer.generateBatchKey(textureSrc);
+                var batchKey = mocu.renderer.generateBatchKey(textureSrc);
 
                 if (batchIndex >= this.lastBatches.length || batchKey != this.lastBatches[batchIndex].key) {
                     if(batchKey !== lastBatchKey) 
                     {
-                        lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
+                        lastBatch = new mocu.MocuGlBatch(batchKey, mocu.renderer.generatePropertySet());
                         lastBatchKey = batchKey
                         batches.push(lastBatch);
                         indexInBatch = 0;
@@ -158,7 +158,7 @@
                 }
 
                 /*if(batchKey != lastBatchKey) {
-                    lastBatch = new MocuGame.MocuGlBatch(batchKey, MocuGame.renderer.generatePropertySet());
+                    lastBatch = new mocu.MocuGlBatch(batchKey, mocu.renderer.generatePropertySet());
                     lastBatchKey = batchKey
                     batches.push(lastBatch);
                 }*/
@@ -339,7 +339,7 @@
     	
         for(batchKey in batches) {
             var batch = batches[batchKey];
-            var texture = MocuGame.renderer.textureCache[batch.textureSrc]
+            var texture = mocu.renderer.textureCache[batch.textureSrc]
 
             if(texture == null) {
                 continue;
@@ -352,16 +352,16 @@
             for(var i = 0; i < batch.properties.length; i++) 
             {
                 var property = batch.properties[i];
-                MocuGame.renderer.setAttribute(gl, program, property.glslName, new Float32Array(property.values), property.components);
+                mocu.renderer.setAttribute(gl, program, property.glslName, new Float32Array(property.values), property.components);
             }
 
-            MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
-            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * batch.primitivesRendered);
+            mocu.renderer.setResolutionUniform(gl, program, mocu.resolution);
+            gl.drawArrays(gl.TRIANGLES, 0, mocu.VERTICES_PER_OBJECT * batch.primitivesRendered);
         }
 
         /*for (textureSrc in objectsForTexture)
         {
-            var texture = MocuGame.renderer.textureCache[textureSrc]
+            var texture = mocu.renderer.textureCache[textureSrc]
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.setTextureParameters(gl);
@@ -374,22 +374,22 @@
     		}
             //Here, load all of the properties
             //TODO: Find way to open up this code to external shader properties
-            var ext = MocuGame.renderer.ext;
+            var ext = mocu.renderer.ext;
 
-            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[textureSrc]), 4);
-            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[textureSrc]), 1);
+            mocu.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[textureSrc]), 4);
+            mocu.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[textureSrc]), 1);
 
-            MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
+            mocu.renderer.setResolutionUniform(gl, program, mocu.resolution);
 
             var numberOfObjects = objectsForTexture[textureSrc].length;
 
-            //.ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * numberOfObjects, numberOfObjects);
-            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
+            //.ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, mocu.VERTICES_PER_OBJECT * numberOfObjects, numberOfObjects);
+            gl.drawArrays(gl.TRIANGLES, 0, mocu.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
         }*/
       	//for(var i = 0; i < groupsToDraw.length; i++)
         {

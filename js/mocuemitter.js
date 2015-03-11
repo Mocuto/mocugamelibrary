@@ -36,7 +36,7 @@
 
 (function () {
     /*
-        MocuEmitter constructor. Initializes the object with it's spawn point, the particle it emits, the properties applied to the particle,
+        Emitter constructor. Initializes the object with it's spawn point, the particle it emits, the properties applied to the particle,
         a of randomized properties, and the timeline to be applied to the object.
 
         Parameters:
@@ -55,35 +55,35 @@
         - The timeline to be applied to each clone.
     */
 
-    MocuGame.MocuEmitter = function (point, particle, speed, particleProperties, randomizedProperties, particleTimeline) {
-        MocuGame.MocuGroup.call(this, point, new MocuGame.Point(500, 500));
+    mocu.Emitter = function (point, particle, speed, particleProperties, randomizedProperties, particleTimeline) {
+        mocu.MocuGroup.call(this, point, new mocu.Point(500, 500));
         this.particle = particle;
         this.speed = speed;
         this.particleProperties = particleProperties;
         this.randomizedProperties = randomizedProperties;
         this.particleTimeline = particleTimeline;
 
-        this.subEmitters = new MocuGame.MocuGroup();
+        this.subEmitters = new mocu.MocuGroup();
         this.add(this.subEmitters);
 
         this.maxSpawn = 10;
         this.currentSpawn = this.maxSpawn;
 
-        this.addGroup = MocuGame.currentState;
+        this.addGroup = mocu.currentState;
 
         this.particleLife = 0;
         this.amountToAdd = 10;
         this.dispAdd = true;
 
-        this.particleProperties.push.apply(this.particleProperties, MocuGame.MocuEmitter.defaultProperties);
+        this.particleProperties.push.apply(this.particleProperties, mocu.Emitter.defaultProperties);
 
         this.timer = null;
 
         this.start();
     }
-    MocuGame.MocuEmitter.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuEmitter.constructor = MocuGame.MocuEmitter;
-    MocuGame.MocuEmitter.defaultProperties = ["x", "y", "width", "height", "velocity.x", "velocity.y", "acceleration.x", "acceleration.y", "img"];
+    mocu.Emitter.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
+    mocu.Emitter.constructor = mocu.Emitter;
+    mocu.Emitter.defaultProperties = ["x", "y", "width", "height", "velocity.x", "velocity.y", "acceleration.x", "acceleration.y", "img"];
 
 
     /*
@@ -93,7 +93,7 @@
         (MocuSprite) generated Clone;
     */
 
-    MocuGame.MocuEmitter.prototype.generateClone = function () {
+    mocu.Emitter.prototype.generateClone = function () {
         var clone = new this.particle.constructor();
         clone.visible = true;
         if (typeof this.particleProperties != "undefined") {
@@ -145,9 +145,9 @@
         if (typeof this.particleTimeline != "undefined") {
             for (var i = 0; i < this.particleTimeline.slots.length; i++) {
                 var oSlot = this.particleTimeline.slots[i];
-                var slot = new MocuGame.TimeSlot(oSlot.time);
+                var slot = new mocu.TimeSlot(oSlot.time);
                 for (var n = 0; n < this.particleTimeline.slots[i].events.length; n++) {
-                    slot.addEvent(new MocuGame.Event(clone, oSlot.events[n].originalVariableName,
+                    slot.addEvent(new mocu.Event(clone, oSlot.events[n].originalVariableName,
                         oSlot.events[n].startValue, oSlot.events[n].endValue, oSlot.events[n].operationTime, oSlot.events[n].interp));
                 }
                 clone.timeline.addSlot(slot);
@@ -184,14 +184,14 @@
         - The clone that was added to the addGroup.
     */
 
-    MocuGame.MocuEmitter.prototype.onParticleAdded = function (clone) {
+    mocu.Emitter.prototype.onParticleAdded = function (clone) {
     }
 
     /*
         start is a function which triggers the emitter to start emitting particles.
     */
 
-    MocuGame.MocuEmitter.prototype.start = function () {
+    mocu.Emitter.prototype.start = function () {
         this.timer = window.setInterval((function () {
             for (var i = 0; i < Math.ceil(this.speed / 60) ; i++) {
                 this.addParticle();
@@ -203,7 +203,7 @@
         stop is a function which ends the emission of particles.
     */
 
-    MocuGame.MocuEmitter.prototype.stop = function () {
+    mocu.Emitter.prototype.stop = function () {
         window.clearInterval(this.timer);
     }
 
@@ -211,9 +211,9 @@
         addParticle is a function which adds a particle to the addGroup.
     */
     
-    MocuGame.MocuEmitter.prototype.addParticle = function () {
+    mocu.Emitter.prototype.addParticle = function () {
 
-        this.addGroup = MocuGame.currentState;
+        this.addGroup = mocu.currentState;
 
         this.currentSpawn = this.maxSpawn;
         var clone = this.generateClone();
@@ -232,8 +232,8 @@
         kill is a function overriden from MocuObject which stops the timer when called, then does its inherited behavior.
     */
 
-    MocuGame.MocuEmitter.prototype.kill = function () {
+    mocu.Emitter.prototype.kill = function () {
         this.stop();
-        MocuGame.MocuObject.prototype.kill.call(this);
+        mocu.MocuObject.prototype.kill.call(this);
     }
 })();

@@ -1,5 +1,5 @@
 (function() {
-	MocuGame.MocuPatch.EXTENSION_METHODS.push(function() {
+	mocu.Patch.EXTENSION_METHODS.push(function() {
 		this.primitives = 4;
 
 		this.lastGlCenterPatchX = null;
@@ -9,13 +9,13 @@
 		this.lastGlCoordinateArray = null;
 	})
 
-	MocuGame.MocuPatch.prototype.getCoordinateArray = function() {
+	mocu.Patch.prototype.getCoordinateArray = function() {
 		if( this.lastGlCenterPatchX != this.centerPatchPosition.x || this.lastGlCenterPatchY != this.centerPatchPosition.y ||
 			this.lastGlCenterPatchWidth != this.centerPatchSize.x || this.lastGlCenterPatchHeight != this.centerPatchSize.y ||
 			this.lastGlWidth != this.width || this.lastGlHeight != this.height) {
 	        
-	        var absWidth = (this.width / 2) * MocuGame.uniscale;
-        	var absHeight = (this.height / 2) * MocuGame.uniscale;
+	        var absWidth = (this.width / 2) * mocu.uniscale;
+        	var absHeight = (this.height / 2) * mocu.uniscale;
 
         	var left,right,top,bottom;
 			
@@ -44,7 +44,7 @@
            		top = -absHeight;
            		bottom = top + this.centerPatchPosition.y;
 
-           		topCenterCoords = topCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+           		topCenterCoords = topCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
            		//Bottom Center
            		left = x;
@@ -53,7 +53,7 @@
            		top = endY;
            		bottom = absHeight;
 
-           		bottomCenterCoords = bottomCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+           		bottomCenterCoords = bottomCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
            		for(var y = startY; y < endY; y += this.centerPatchSize.y) {
 
@@ -65,7 +65,7 @@
 	           			top = y;
 	           			bottom = Math.min(y + this.centerPatchSize.y, endY);
 
-	           			leftCenterCoords = leftCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+	           			leftCenterCoords = leftCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
 	           			//Center Right
 	          			left = endX;
@@ -74,7 +74,7 @@
 	           			top = y;
 	           			bottom = Math.min(y + this.centerPatchSize.y, endY);
 
-	           			rightCenterCoords = rightCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+	           			rightCenterCoords = rightCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
            			}
 
            			//Center
@@ -84,7 +84,7 @@
            			top = y;
            			bottom = Math.min(y + this.centerPatchSize.y, endY);
 
-           			var coords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           			var coords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
            			centerCoords = centerCoords.concat(coords);
            		}
            		drawnSides = true;
@@ -97,7 +97,7 @@
 			top = -absHeight;
 			bottom = top + this.centerPatchPosition.y;
 
-			var topLeftCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+			var topLeftCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Top right corner
@@ -107,7 +107,7 @@
            	top = -absHeight;
            	bottom = top + this.centerPatchPosition.y;
 
-           	var topRightCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var topRightCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Bottom left corner
@@ -117,7 +117,7 @@
            	top = absHeight - (this.spriteSize.y - (this.centerPatchPosition.y + this.centerPatchSize.y));
            	bottom = absHeight;
 
-           	var bottomLeftCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var bottomLeftCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Bottom right corner
@@ -127,7 +127,7 @@
            	top = absHeight - (this.spriteSize.y - (this.centerPatchPosition.y + this.centerPatchSize.y));
            	bottom = absHeight;
 
-           	var bottomRightCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var bottomRightCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
            	this.lastGlCoordinateArray = centerCoords
            		.concat(topCenterCoords)
@@ -144,7 +144,7 @@
 		return this.lastGlCoordinateArray;
 	}
 
-	MocuGame.MocuPatch.prototype.getTextureCoordinateArray = function() {
+	mocu.Patch.prototype.getTextureCoordinateArray = function() {
 		if( this.lastGlCenterPatchX != this.centerPatchPosition.x || this.lastGlCenterPatchY != this.centerPatchPosition.y ||
 			this.lastGlCenterPatchWidth != this.centerPatchSize.x || this.lastGlCenterPatchHeight != this.centerPatchSize.y ||
 			this.lastGlWidth != this.width || this.lastGlHeight != this.height) {
@@ -180,7 +180,7 @@
            		top = 0;
            		bottom = this.centerPatchPosition.y / this.spriteSize.y;
 
-           		topCenterCoords = topCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+           		topCenterCoords = topCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
            		//Bottom Center
            		left = startX;
@@ -189,7 +189,7 @@
            		top = endY;
            		bottom = 1;
 
-           		bottomCenterCoords = bottomCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+           		bottomCenterCoords = bottomCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
            		for(var loopY = this.centerPatchPosition.y; loopY < loopHeight; loopY += this.centerPatchSize.y) 
            		{
@@ -202,7 +202,7 @@
 	           			top = startY;
 	           			bottom = top + Math.min((loopHeight - loopY), this.centerPatchSize.y) / this.spriteSize.y;
 
-	           			leftCenterCoords = leftCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+	           			leftCenterCoords = leftCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
 
 	           			//Center Right
 	          			left = endX;
@@ -211,7 +211,7 @@
 	           			top = startY;
 	           			bottom = top + Math.min((loopHeight - loopY), this.centerPatchSize.y) / this.spriteSize.y;
 
-	           			rightCenterCoords = rightCenterCoords.concat(MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom));
+	           			rightCenterCoords = rightCenterCoords.concat(mocu.renderer.generateCoordinateSquare(left, right, top, bottom));
            			}
 
            			//Center
@@ -221,7 +221,7 @@
            			top = startY;
            			bottom = top + Math.min((loopHeight - loopY), this.centerPatchSize.y) / this.spriteSize.y;
 
-           			var coords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           			var coords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
            			centerCoords = centerCoords.concat(coords);
 
            			console.log("RUN!");
@@ -236,7 +236,7 @@
 			top = 0;
 			bottom = this.centerPatchPosition.y / this.spriteSize.y;
 
-			var topLeftCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+			var topLeftCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Top right corner
@@ -246,7 +246,7 @@
            	top = 0;
            	bottom = this.centerPatchPosition.y / this.spriteSize.y;
 
-           	var topRightCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var topRightCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Bottom left corner
@@ -256,7 +256,7 @@
            	top = (this.centerPatchPosition.y + this.centerPatchSize.y) / this.spriteSize.x;
            	bottom = 1;
 
-           	var bottomLeftCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var bottomLeftCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
 
            	//Bottom right corner
@@ -266,7 +266,7 @@
            	top = (this.centerPatchPosition.y + this.centerPatchSize.y) / this.spriteSize.x;
            	bottom = 1;
 
-           	var bottomRightCoords = MocuGame.renderer.generateCoordinateSquare(left, right, top, bottom);
+           	var bottomRightCoords = mocu.renderer.generateCoordinateSquare(left, right, top, bottom);
 
            	this.lastGlTextureCoordinateArray = centerCoords
            		.concat(topCenterCoords)
@@ -282,12 +282,12 @@
 		return this.lastGlTextureCoordinateArray;
 	}
 
-	MocuGame.MocuPatch.prototype.composeTextureCoordinateProperty = function() {
+	mocu.Patch.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
 			"texCoord",
 			"a_texCoord",
 			2,
-			MocuGame.MocuPatch.prototype.getTextureCoordinateArray,
+			mocu.Patch.prototype.getTextureCoordinateArray,
 			function() {
 				var hasChanged = 
 					(
@@ -301,12 +301,12 @@
 		);
 	}
 
-	MocuGame.MocuPatch.prototype.composePositionProperty = function() {
+	mocu.Patch.prototype.composePositionProperty = function() {
 		return this.composeProperty(
 			"position",
 			"a_position",
 			2,
-			MocuGame.MocuPatch.prototype.getCoordinateArray,
+			mocu.Patch.prototype.getCoordinateArray,
 			function() {
 				var hasChanged = 
 					(
@@ -320,17 +320,17 @@
 		);
 	};
 
-	MocuGame.MocuPatch.prototype.composeTranslationProperty = MocuGame.MocuBackground.prototype.composeTranslationProperty;
+	mocu.Patch.prototype.composeTranslationProperty = mocu.MocuBackground.prototype.composeTranslationProperty;
 
-	MocuGame.MocuPatch.prototype.composeRotationProperty = MocuGame.MocuBackground.prototype.composeRotationProperty;
+	mocu.Patch.prototype.composeRotationProperty = mocu.MocuBackground.prototype.composeRotationProperty;
 
-	MocuGame.MocuPatch.prototype.composeScaleProperty = MocuGame.MocuBackground.prototype.composeScaleProperty;
+	mocu.Patch.prototype.composeScaleProperty = mocu.MocuBackground.prototype.composeScaleProperty;
 
-	MocuGame.MocuPatch.prototype.composeFadeProperty = MocuGame.MocuBackground.prototype.composeFadeProperty;
+	mocu.Patch.prototype.composeFadeProperty = mocu.MocuBackground.prototype.composeFadeProperty;
 
-	MocuGame.MocuPatch.prototype.composeAlphaProperty = MocuGame.MocuBackground.prototype.composeAlphaProperty;
+	mocu.Patch.prototype.composeAlphaProperty = mocu.MocuBackground.prototype.composeAlphaProperty;
 
-	MocuGame.MocuPatch.prototype.getGlProperties = function() {
+	mocu.Patch.prototype.getGlProperties = function() {
 
 		var middleWidth = this.width - (this.centerPatchPosition.x + (this.spriteSize.x - (this.centerPatchPosition.x + this.centerPatchSize.x)));
 		var middleVerticalPrimitives = Math.ceil(middleWidth / this.centerPatchSize.x);
@@ -342,7 +342,7 @@
 
 		this.primitives =  centerPrimitives + (2 *(middleVerticalPrimitives + middleHorizontalPrimitives)) + 4;
 
-		var properties = MocuGame.MocuSprite.prototype.getGlProperties.call(this);
+		var properties = mocu.MocuSprite.prototype.getGlProperties.call(this);
 
 		this.lastGlCenterPatchX = this.centerPatchPosition.x;
 		this.lastGlCenterPatchY = this.centerPatchPosition.y;

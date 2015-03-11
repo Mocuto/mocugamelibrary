@@ -36,8 +36,8 @@
 */
 
 (function () {
-    MocuGame.MocuCameraZone = function (position, size, tracksHorizontal, tracksVertical, snapPoint) {
-        MocuGame.MocuZone.call(this, position, size);
+    mocu.CameraZone = function (position, size, tracksHorizontal, tracksVertical, snapPoint) {
+        mocu.MocuZone.call(this, position, size);
         this.tracksHorizontal = tracksHorizontal;
         this.tracksVertical = tracksVertical;
 
@@ -49,40 +49,40 @@
 
         this.snapPoint = snapPoint;
     }
-    MocuGame.MocuCameraZone.prototype = new MocuGame.MocuZone(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuCameraZone.constructor = MocuGame.MocuCameraZone;
+    mocu.CameraZone.prototype = new mocu.MocuZone(new mocu.Point, new mocu.Point);
+    mocu.CameraZone.constructor = mocu.CameraZone;
 
-    MocuGame.MocuCameraZone.prototype.onObjectEntered = function (object) {
-        this.lastCameraTracksHorizontal = MocuGame.camera.tracksHorizontal;
-        this.lastCameraTracksVertical = MocuGame.camera.tracksVertical;
+    mocu.CameraZone.prototype.onObjectEntered = function (object) {
+        this.lastCameraTracksHorizontal = mocu.camera.tracksHorizontal;
+        this.lastCameraTracksVertical = mocu.camera.tracksVertical;
 
-        MocuGame.camera.tracksHorizontal = this.tracksHorizontal;
-        MocuGame.camera.tracksVertical = this.tracksVertical;
+        mocu.camera.tracksHorizontal = this.tracksHorizontal;
+        mocu.camera.tracksVertical = this.tracksVertical;
 
-        this.lastCamera = MocuGame.camera;;
+        this.lastCamera = mocu.camera;;
 
         if (this.snapPoint != null) {
             this.lastCamera.viewPoint(this.snapPoint);
         }
     };
 
-    MocuGame.MocuCameraZone.prototype.onObjectExited = function (object, direction) {
-        MocuGame.camera.tracksHorizontal = this.lastCameraTracksHorizontal;
-        MocuGame.camera.tracksVertical = this.lastCameraTracksVertical;
+    mocu.CameraZone.prototype.onObjectExited = function (object, direction) {
+        mocu.camera.tracksHorizontal = this.lastCameraTracksHorizontal;
+        mocu.camera.tracksVertical = this.lastCameraTracksVertical;
     };
 
-    MocuGame.MocuCameraZone.prototype.kill = function () {
+    mocu.CameraZone.prototype.kill = function () {
         if (this.lastCamera != null) {
             this.onObjectExited(this.lastCamera);
         }
-        MocuGame.MocuObject.prototype.kill.call(this);
+        mocu.MocuObject.prototype.kill.call(this);
     };
 
-    MocuGame.MocuCameraZone.prototype.update = function (deltaT) {
-        if (!this.isZoningCamera && MocuGame.camera.trackingObject != null) {
+    mocu.CameraZone.prototype.update = function (deltaT) {
+        if (!this.isZoningCamera && mocu.camera.trackingObject != null) {
             this.isZoningCamera = true;
-            this.zoneObject(MocuGame.camera.trackingObject);
+            this.zoneObject(mocu.camera.trackingObject);
         }
-        MocuGame.MocuZone.prototype.update.call(this, deltaT);
+        mocu.MocuZone.prototype.update.call(this, deltaT);
     };
 })();

@@ -1,6 +1,6 @@
 ﻿/*
     marquee.js
-    Child of the MocuText Object. Text that supports a horizontal scrolling marquee effect.
+    Child of the Text Object. Text that supports a horizontal scrolling marquee effect.
 
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
 
@@ -39,8 +39,8 @@
         Marquee constructor. Initializes the marquee with its text, size, and rate of scrolling.
     */
 
-    MocuGame.Marquee = function (point, size, text, rate) {
-        MocuGame.MocuText.call(this, point, size, text);
+    mocu.Marquee = function (point, size, text, rate) {
+        mocu.Text.call(this, point, size, text);
         this.rate = rate;
         this.scrollPosition = 0;
         this.doesRestart = true;
@@ -53,34 +53,34 @@
         this.autoResetStops = true;
         this.ended = false;
     };
-    MocuGame.Marquee.prototype = new MocuGame.MocuText(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.Marquee.constructor = MocuGame.Marquee;
+    mocu.Marquee.prototype = new mocu.Text(new mocu.Point, new mocu.Point);
+    mocu.Marquee.constructor = mocu.Marquee;
 
-    MocuGame.Marquee.prototype.getTextWidth = function () {
-        var textWidth = ((this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) < this.width * MocuGame.uniscale) ? (this.scrollWidth * MocuGame.uniscale)
-            : (this.width * MocuGame.uniscale) - (this.scrollPosition * MocuGame.uniscale);
+    mocu.Marquee.prototype.getTextWidth = function () {
+        var textWidth = ((this.scrollPosition * mocu.uniscale) + (this.scrollWidth * mocu.uniscale) < this.width * mocu.uniscale) ? (this.scrollWidth * mocu.uniscale)
+            : (this.width * mocu.uniscale) - (this.scrollPosition * mocu.uniscale);
 
         if (this.scrollPosition < 0) {
-            textWidth = (this.scrollWidth * MocuGame.uniscale) + (this.scrollPosition * MocuGame.uniscale);
+            textWidth = (this.scrollWidth * mocu.uniscale) + (this.scrollPosition * mocu.uniscale);
         }
 
         return textWidth;
     };
 
-    MocuGame.Marquee.prototype.getRenderingSize = function () {
-        return new MocuGame.Point(this.width * this.scale.x * MocuGame.uniscale, this.height * this.scale.y * MocuGame.uniscale);
+    mocu.Marquee.prototype.getRenderingSize = function () {
+        return new mocu.Point(this.width * this.scale.x * mocu.uniscale, this.height * this.scale.y * mocu.uniscale);
     }
 
     /*
-        update is a function which is inherited from MocuText. Updates the Marquees position.
+        update is a function which is inherited from Text. Updates the Marquees position.
 
         Parameters:
         deltaT (Number)
         - Time elapsed since the last update call, in frames.
     */
 
-    MocuGame.Marquee.prototype.update = function (deltaT) {
-        MocuGame.MocuText.prototype.update.call(this, deltaT);
+    mocu.Marquee.prototype.update = function (deltaT) {
+        mocu.Text.prototype.update.call(this, deltaT);
         if (!this.restarting && !this.ended) {
             this.scrollPosition += this.rate * deltaT;
         }
@@ -100,7 +100,7 @@
         doesRestart is set to false
     */
 
-    MocuGame.Marquee.prototype.onEnd = function () {
+    mocu.Marquee.prototype.onEnd = function () {
         this.ended = true;
     };
 
@@ -113,29 +113,29 @@
         - right
     */
 
-    MocuGame.Marquee.prototype.restart = function (num) {
-        var slot = new MocuGame.TimeSlot(this.timeline.currentTime + this.restartDelay);
-        slot.addEvent(new MocuGame.Event(this, "restarting", false, false, 1));
+    mocu.Marquee.prototype.restart = function (num) {
+        var slot = new mocu.TimeSlot(this.timeline.currentTime + this.restartDelay);
+        slot.addEvent(new mocu.Event(this, "restarting", false, false, 1));
         if (num > 0) {
-            slot.addEvent(new MocuGame.Event(this, "scrollPosition", 1, -2*this.renderWidth + 1, 1));
+            slot.addEvent(new mocu.Event(this, "scrollPosition", 1, -2*this.renderWidth + 1, 1));
             this.scrollPosition = - (this.renderWidth * 2) + 1;
         }
         else {
-            slot.addEvent(new MocuGame.Event(this, "scrollPosition", 1, this.width - 2, 1));
+            slot.addEvent(new mocu.Event(this, "scrollPosition", 1, this.width - 2, 1));
             this.scrollPosition = this.width - 1;
         }
         this.timeline.addSlot(slot);
         this.restarting = true;
     };
 
-    MocuGame.Marquee.prototype.getCoordinateArray = function () {
+    mocu.Marquee.prototype.getCoordinateArray = function () {
         var textWidth = this.getTextWidth();
         if (this.scrollPosition < 0) {
-            textWidth = (this.scrollWidth * MocuGame.uniscale) + (this.scrollPosition * MocuGame.uniscale);
+            textWidth = (this.scrollWidth * mocu.uniscale) + (this.scrollPosition * mocu.uniscale);
         }
 
         var absWidth = textWidth;
-        var absHeight = (this.height / 2) * MocuGame.uniscale;
+        var absHeight = (this.height / 2) * mocu.uniscale;
 
         return new Float32Array([
                                 0, -absHeight,
@@ -146,24 +146,24 @@
                                 absWidth, absHeight]);
     };
 
-    MocuGame.Marquee.prototype.setTranslationUniform = function (gl, program, displacement) {
+    mocu.Marquee.prototype.setTranslationUniform = function (gl, program, displacement) {
         //Provide location of the translate uniform
         var translateLocation = gl.getUniformLocation(program, "u_translate");
         var translate = new Float32Array([
-            ((this.x + displacement.x)) * MocuGame.uniscale + (this.scrollPosition > 0) ? (this.scrollPosition * MocuGame.uniscale) : 0,
-            ((this.y) + displacement.y) * MocuGame.uniscale
+            ((this.x + displacement.x)) * mocu.uniscale + (this.scrollPosition > 0) ? (this.scrollPosition * mocu.uniscale) : 0,
+            ((this.y) + displacement.y) * mocu.uniscale
         ]);
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
     };
 
 
-    MocuGame.Marquee.prototype.preDrawGl = function (gl, displacement) {
-        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
+    mocu.Marquee.prototype.preDrawGl = function (gl, displacement) {
+        var program = mocu.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
         return program;
     };
 
-    MocuGame.Marquee.prototype.getTextureCoordinateArray = function () {
+    mocu.Marquee.prototype.getTextureCoordinateArray = function () {
         var textWidth = this.getTextWidth();
 
         var texStartX = ((this.scrollPosition > 0) ? 0 : -this.scrollPosition) / this.width
@@ -179,9 +179,9 @@
             texStartX + texWidth, texStartY + texHeight]);
     };
 
-    MocuGame.Marquee.prototype.drawGl = function (gl, displacement) {
+    mocu.Marquee.prototype.drawGl = function (gl, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined') {
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
         }
 
         var textWidth = this.getTextWidth();
@@ -192,21 +192,21 @@
 
         var program = this.preDrawGl(gl, displacement);
 
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         var texture = gl.createTexture();
-        this.prepareTexture(gl, texture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray.call(this));
+        this.prepareTexture(gl, texture, program, mocu.MocuObject.prototype.getTextureCoordinateArray.call(this));
 
         this.preDraw();
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-        blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
-        blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
+        blankContext.scale(this.flip.x / (mocu.uniscale), this.flip.y / (mocu.uniscale));
+        blankContext.clearRect(0, 0, this.width * mocu.uniscale, this.height * mocu.uniscale * this.getNumberOfLines());
 
         texture = this.applyEffects(gl, texture);
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         this.setPositionAttribute(gl, program);
 
@@ -221,9 +221,9 @@
     /*
         preDraw is a function that prerenders the text onto the blankCanvas.
     */
-    MocuGame.Marquee.prototype.preDraw = function () {
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext
+    mocu.Marquee.prototype.preDraw = function () {
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         //Set the font and color and alignment
@@ -243,7 +243,7 @@
         return blankCanvas;
     };
     /*
-        draw is a function which is inherited from MocuText. Draws the Marquee onto the canvas.
+        draw is a function which is inherited from Text. Draws the Marquee onto the canvas.
 
         Parameters:
         context (Object)
@@ -251,22 +251,22 @@
         displacement (MocuPoint)
         - The displacement of the object, based off its parent's position.
     */
-    MocuGame.Marquee.prototype.draw = function (context, displacement) {
+    mocu.Marquee.prototype.draw = function (context, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined')
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
 
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
             return;
         }
 
 
-        context.translate(((this.x + displacement.x)) * MocuGame.uniscale, ((this.y) + displacement.y) * MocuGame.uniscale);
+        context.translate(((this.x + displacement.x)) * mocu.uniscale, ((this.y) + displacement.y) * mocu.uniscale);
         if (this.align == "center" || this.align == "start")
-            context.translate((this.width / 2) * MocuGame.uniscale, 0);
+            context.translate((this.width / 2) * mocu.uniscale, 0);
 
-        context.scale(this.flip.x * this.scale.x * (MocuGame.uniscale * 2), this.flip.y * this.scale.y * (MocuGame.uniscale * 2));
+        context.scale(this.flip.x * this.scale.x * (mocu.uniscale * 2), this.flip.y * this.scale.y * (mocu.uniscale * 2));
         context.rotate((this.angle * 3.14159265359) / 180);
 
         context.globalCompositeOperation = this.drawmode;
@@ -274,29 +274,29 @@
 
         var blankCanvas = this.predraw();
 
-        var textWidth = ((this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) < this.width * MocuGame.uniscale) ? (this.scrollWidth * MocuGame.uniscale) : (this.width * MocuGame.uniscale) - (this.scrollPosition * MocuGame.uniscale);
-        var secondWidth = ((this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) > this.width * MocuGame.uniscale) ? (this.scrollPosition * MocuGame.uniscale) + (this.scrollWidth * MocuGame.uniscale) - (this.width * MocuGame.uniscale) : 0;
+        var textWidth = ((this.scrollPosition * mocu.uniscale) + (this.scrollWidth * mocu.uniscale) < this.width * mocu.uniscale) ? (this.scrollWidth * mocu.uniscale) : (this.width * mocu.uniscale) - (this.scrollPosition * mocu.uniscale);
+        var secondWidth = ((this.scrollPosition * mocu.uniscale) + (this.scrollWidth * mocu.uniscale) > this.width * mocu.uniscale) ? (this.scrollPosition * mocu.uniscale) + (this.scrollWidth * mocu.uniscale) - (this.width * mocu.uniscale) : 0;
         if (this.scrollPosition < 0) {
-            textWidth = (this.scrollWidth * MocuGame.uniscale) + (this.scrollPosition * MocuGame.uniscale);
-            secondWidth = (this.scrollPosition * MocuGame.uniscale);
+            textWidth = (this.scrollWidth * mocu.uniscale) + (this.scrollPosition * mocu.uniscale);
+            secondWidth = (this.scrollPosition * mocu.uniscale);
         }
         context.save();
-        context.rect(0, -this.height * MocuGame.uniscale, this.width * MocuGame.uniscale, this.height * 2 * MocuGame.uniscale);
+        context.rect(0, -this.height * mocu.uniscale, this.width * mocu.uniscale, this.height * 2 * mocu.uniscale);
         context.clip();
 
-        context.drawImage(blankCanvas, (this.scrollPosition > 0) ? 0 : -this.scrollPosition * MocuGame.uniscale, 0, textWidth, this.height,
-            (this.scrollPosition > 0) ? (this.scrollPosition * MocuGame.uniscale) : 0, -this.height * MocuGame.uniscale,
-            textWidth, this.height * MocuGame.uniscale * 2);
+        context.drawImage(blankCanvas, (this.scrollPosition > 0) ? 0 : -this.scrollPosition * mocu.uniscale, 0, textWidth, this.height,
+            (this.scrollPosition > 0) ? (this.scrollPosition * mocu.uniscale) : 0, -this.height * mocu.uniscale,
+            textWidth, this.height * mocu.uniscale * 2);
 
         context.restore();
 
         blankCanvas.getContext('2d').clearRect(0, 0, blankCanvas.width, blankCanvas.height);
 
         context.rotate(-(this.angle * 3.14159265359) / 180);
-        context.scale(this.flip.x / this.scale.x / (MocuGame.uniscale * 2), this.flip.y / this.scale.y / (MocuGame.uniscale * 2));
-        context.translate((-((this.x) + displacement.x)) * MocuGame.uniscale, (-((this.y) + displacement.y)) * MocuGame.uniscale);
+        context.scale(this.flip.x / this.scale.x / (mocu.uniscale * 2), this.flip.y / this.scale.y / (mocu.uniscale * 2));
+        context.translate((-((this.x) + displacement.x)) * mocu.uniscale, (-((this.y) + displacement.y)) * mocu.uniscale);
         if (this.align == "center" || this.align == "start")
-            context.translate(-(this.width / 2) * MocuGame.uniscale, 0);
+            context.translate(-(this.width / 2) * mocu.uniscale, 0);
         context.globalCompositeOperation = "source-over";
     };
 })();

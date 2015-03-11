@@ -1,4 +1,4 @@
-﻿/*
+/*
     pointer.js
 
     Object which stores a pointer (Mouse, Pen, Touch) event and related information.
@@ -46,10 +46,10 @@
         - True if the pointer is down.
     */
 
-    MocuGame.Pointer = function (e, down) {
+    mocu.Pointer = function (e, down) {
         this.event = event;
         this.ID = e.pointerId;
-        this.position = new MocuGame.Point(e.clientX / MocuGame.uniscale, e.clientY / MocuGame.uniscale);
+        this.position = new mocu.Point(e.clientX / mocu.uniscale, e.clientY / mocu.uniscale);
         this.button = e.button;
         this.lastpos = null;
         this.isDown = down;
@@ -65,9 +65,9 @@
         - True if the pointer is down
     */
 
-    MocuGame.Pointer.prototype.updatePosition = function (e, down) {
-        this.lastPosition = new MocuGame.Point(this.position.x, this.position.y);
-        this.position = new MocuGame.Point(e.clientX / MocuGame.uniscale, e.clientY / MocuGame.uniscale);
+    mocu.Pointer.prototype.updatePosition = function (e, down) {
+        this.lastPosition = new mocu.Point(this.position.x, this.position.y);
+        this.position = new mocu.Point(e.clientX / mocu.uniscale, e.clientY / mocu.uniscale);
         this.isDown = down;
     };
 })();

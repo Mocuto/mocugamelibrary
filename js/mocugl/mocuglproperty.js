@@ -10,7 +10,7 @@
 	* @param {Number} components - The number of components (x,y,z,etc) for the given attribute
 	* @param {Boolean} hasChanged - whether 
 	*/
-	MocuGame.MocuGlProperty = function(name, glslName, components, hasChanged) {
+	mocu.GlProperty = function(name, glslName, components, hasChanged) {
 		this.name = name;
 		this.glslName = glslName;
 		this.components = components;
@@ -18,7 +18,7 @@
 		this.hasChanged  = hasChanged;
 	}
 
-	MocuGame.MocuGlProperty.prototype.update = function(valueArray, startIndex, endIndex) {
+	mocu.GlProperty.prototype.update = function(valueArray, startIndex, endIndex) {
 	    while(this.values.length < endIndex) {
 	        this.values.push(null);
 	    }
@@ -27,7 +27,7 @@
 	    }
 	}
 
-	MocuGame.MocuGlProperty.prototype.getLength = function(primitives) {
-		return MocuGame.VERTICES_PER_OBJECT * this.components * primitives;
+	mocu.GlProperty.prototype.getLength = function(primitives) {
+		return mocu.VERTICES_PER_OBJECT * this.components * primitives;
 	}
 })();

@@ -37,7 +37,7 @@
 (function () {
     
     /*
-        MocuGroup constructor. Initializes object at the given point and with the given size.
+        Group constructor. Initializes object at the given point and with the given size.
 
         Parameters:
         point (Point)
@@ -45,14 +45,14 @@
         size (Point)
         - Dimensions of object.
     */
-    MocuGame.MocuGroup = function (point, size) {
-        MocuGame.MocuObject.call(this, point, size);
+    mocu.Group = function (point, size) {
+        mocu.MocuObject.call(this, point, size);
         this.objects = new Array();
         this.setParent = true;
         this.cameraTraits = null;
 
-        if (MocuGame.isWindows81) {
-            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+        if (mocu.isWindows81) {
+            this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_SPRITE_FRAGMENT_SHADER);
             this.objectsForTexture = {};
             this.positionsForTexture = {};
 	        this.translationsForTexture = {};
@@ -66,16 +66,16 @@
 
         }
     };
-    MocuGame.MocuGroup.prototype = new MocuGame.MocuObject(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuGroup.constructor = MocuGame.MocuGroup;
+    mocu.Group.prototype = new mocu.MocuObject(new mocu.Point, new mocu.Point);
+    mocu.Group.constructor = mocu.Group;
 
-    MocuGame.MocuGroup.EXTENSION_METHODS = [];
+    mocu.Group.EXTENSION_METHODS = [];
 
-    MocuGame.MocuGroup.prototype.runExtensionMethods = function() {
-        MocuGame.MocuObject.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < MocuGame.MocuGroup.EXTENSION_METHODS.length; i++)
+    mocu.Group.prototype.runExtensionMethods = function() {
+        mocu.MocuObject.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < mocu.Group.EXTENSION_METHODS.length; i++)
         {
-            MocuGame.MocuGroup.EXTENSION_METHODS[i].call(this);
+            mocu.Group.EXTENSION_METHODS[i].call(this);
         }
     }
 
@@ -87,8 +87,8 @@
         - Time elapsed since last update call.
     */
 
-    MocuGame.MocuGroup.prototype.update = function (deltaT) {
-        MocuGame.MocuObject.prototype.update.call(this, deltaT);
+    mocu.Group.prototype.update = function (deltaT) {
+        mocu.MocuObject.prototype.update.call(this, deltaT);
         for (var i = 0; i < this.objects.length; i += 1) {
             if (this.objects[i].exists && this.objects[i].active)
             {
@@ -109,11 +109,11 @@
         - The displacement of the object, based off its parent's position.
     */
 
-    MocuGame.MocuGroup.prototype.draw = function (context, point) {
+    mocu.Group.prototype.draw = function (context, point) {
         if (typeof point == null || typeof point == 'undefined') {
-            point = new MocuGame.Point(0, 0);
+            point = new mocu.Point(0, 0);
         }
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, point);
             this.draw = this.drawGl;
             return;
@@ -124,37 +124,37 @@
             if (this.objects[i].visible && this.objects[i].exists) {
                 //Pre drawing operations
                 if (this.objects[i].cameraTraits != null) {
-                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
+                    //mocu.camera.preDraw(context, new mocu.Point(0, 0), this.objects[i].cameraTraits);
                 }
                 else if (this.cameraTraits != null) {
-                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                    //mocu.camera.preDraw(context, new mocu.Point(0, 0), this.cameraTraits);
                 }
 
                 //Draw the object
-                this.objects[i].draw(context, new MocuGame.Point(this.x + point.x, this.y + point.y));
+                this.objects[i].draw(context, new mocu.Point(this.x + point.x, this.y + point.y));
 
                 //Post Drawing operations
                 if (this.objects[i].cameraTraits != null) {
-                   // MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.objects[i].cameraTraits);
+                   // mocu.camera.postDraw(context, new mocu.Point(0, 0), this.objects[i].cameraTraits);
                 }
                 else if (this.cameraTraits != null) {
-                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                    //mocu.camera.postDraw(context, new mocu.Point(0, 0), this.cameraTraits);
                 }
             }
             if (this.cameraTraits != null) {
-                //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), this.cameraTraits);
+                //mocu.camera.postDraw(context, new mocu.Point(0, 0), this.cameraTraits);
             }
         }
     };
 
     /*
-        add is a function which adds MocuObject(s) to the MocuGroup object.
+        add is a function which adds MocuObject(s) to the Group object.
 
         Parameters:
         ... (MocuObjects)
         - Objects to be added.
     */
-    MocuGame.MocuGroup.prototype.add = function () {
+    mocu.Group.prototype.add = function () {
         var objs = Array.prototype.slice.call(arguments);
         for (var n = 0; n < objs.length; n += 1) {
             var object = objs[n];
@@ -174,14 +174,14 @@
     };
 
     /*
-        remove is a function which removes MocuObject(s) from the MocuGroup object.
+        remove is a function which removes MocuObject(s) from the Group object.
 
         Parameters:
         ... (MocuObjects)
         - Objects to be removed from the object.
     */
 
-    MocuGame.MocuGroup.prototype.remove = function () {
+    mocu.Group.prototype.remove = function () {
         var objs = Array.prototype.slice.call(arguments);
         for (var i = 0; i < objs.length; i++) {
             var index = this.objects.indexOf(objs[i]);
@@ -199,14 +199,14 @@
         - The index at which the object to be removed is located.
     */
 
-    MocuGame.MocuGroup.prototype.removeAt = function (index) {
+    mocu.Group.prototype.removeAt = function (index) {
         this.objects.splice(index, 1);
     };
     
     /*
     */
     
-    MocuGame.MocuGroup.prototype.getObjectNamed = function (name) {
+    mocu.Group.prototype.getObjectNamed = function (name) {
         //alert("getObjectNamed");
         for (var i = 0; i < this.objects.length; i++) {
             var obj = this.objects[i];
@@ -214,7 +214,7 @@
                 return obj;
                 //alert("Found");
             }
-            else if (MocuGame.MocuGroup.prototype.isPrototypeOf(obj)) {
+            else if (mocu.Group.prototype.isPrototypeOf(obj)) {
                 var result = obj.getObjectNamed(name);
                 if (result != null) {
                     return result;
@@ -226,14 +226,14 @@
     }
 
     /*
-        copyContentsTo is a function which adds all of a MocuGroup objects contents to another MocuGroup object.
+        copyContentsTo is a function which adds all of a Group objects contents to another Group object.
 
         Parameters:
-        group (MocuGroup)
+        group (Group)
         - The group to add its objects to.
     */
 
-    MocuGame.MocuGroup.prototype.copyContentsTo = function (group) {
+    mocu.Group.prototype.copyContentsTo = function (group) {
         group.add.apply(group, this.objects);
     };
 })();

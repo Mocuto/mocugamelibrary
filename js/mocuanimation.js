@@ -38,7 +38,7 @@
 (function () {
 
     /*
-        MocuAnimation constructor. Initializes the animation with its name, coordinates, animation
+        Animation constructor. Initializes the animation with its name, coordinates, animation
         speed, and whether it doesLoops or not.
 
         For a speed of 100, the animation frame will change every game frame.
@@ -55,7 +55,7 @@
         - Subtoken[1] is the y location of the frame on the sprite sheet.
     */
 
-    MocuGame.MocuAnimation = function(name, coords, speed, doesLoop, doesReverseWhenFinished)
+    mocu.Animation = function(name, coords, speed, doesLoop, doesReverseWhenFinished)
     {
         this.name = name;
         coords = (typeof coords == 'undefined' || typeof coords == null) ? "0,0" : coords;
@@ -78,7 +78,7 @@
                 this.length--;
                 continue;
             }
-            var newloc = new MocuGame.Point(0, 0);
+            var newloc = new mocu.Point(0, 0);
             var subtokens = tokens[i].split(",");
             newloc.x = +subtokens[0];
             newloc.y = +subtokens[1];
@@ -98,11 +98,11 @@
     /*
         start is a function which starts the animation update timer.
     */
-    MocuGame.MocuAnimation.prototype.start = function () {
+    mocu.Animation.prototype.start = function () {
         if (!this.isPlaying) {
             this.frame = 0;
             this.isFinished = false;
-            this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this)
+            this.timer = window.setTimeout(mocu.Animation.prototype.update.bind(this)
             , 1000 / this.speed, this);
             this.isPlaying = true;
         }
@@ -112,7 +112,7 @@
         stop is a function which ends the animation update timer.
     */
 
-    MocuGame.MocuAnimation.prototype.stop = function () {
+    mocu.Animation.prototype.stop = function () {
         window.clearTimeout(this.timer);
         this.isPlaying = false;
     };
@@ -126,12 +126,12 @@
     */
 
 
-    MocuGame.MocuAnimation.prototype.update = function () {
+    mocu.Animation.prototype.update = function () {
         this.frame += 1;
         if (this.frame >= this.length) {
             if (this.doesLoop) {
                 this.frame = 0;
-                this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this), 1000 / this.speed, this);
+                this.timer = window.setTimeout(mocu.Animation.prototype.update.bind(this), 1000 / this.speed, this);
             }
             else {
                 this.isFinished = true;
@@ -139,7 +139,7 @@
             }
         }
         else {
-            this.timer = window.setTimeout(MocuGame.MocuAnimation.prototype.update.bind(this), 1000 / this.speed, this);
+            this.timer = window.setTimeout(mocu.Animation.prototype.update.bind(this), 1000 / this.speed, this);
         }
     };
 })();

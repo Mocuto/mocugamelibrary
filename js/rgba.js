@@ -1,4 +1,4 @@
-﻿/*
+/*
     rgba.js
 
     An object which stores RGBA values. Is used with various drawing operations.
@@ -50,7 +50,7 @@
         - Number between 0 and 1 representing the alpha channel.
     */
 
-    MocuGame.RGBA = function (r, g, b, a) {
+    mocu.RGBA = function (r, g, b, a) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -64,7 +64,7 @@
         Number - brightness of the RGBA object.
     */
 
-    MocuGame.RGBA.prototype.getBrightness = function()
+    mocu.RGBA.prototype.getBrightness = function()
     {
         return (0.2126 * this.r) + (0.7152 * this.g) + (0.0722 * this.b);
     };

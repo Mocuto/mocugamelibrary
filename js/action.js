@@ -1,4 +1,4 @@
-﻿/*
+/*
     action.js
     Component of the Timeline System. Calls a specific function when updated.
 
@@ -44,7 +44,7 @@
         obj (Object)
         - The "this" argument to be used with the "callback" function.
     */
-    MocuGame.Action = function (callback, obj) {
+    mocu.Action = function (callback, obj) {
         this.callback = callback;
         this.obj = obj;
         this.elapsed = false;
@@ -57,7 +57,7 @@
         start is a function which calls the Action's callback, with "obj" as the "this" argument.
     */
 
-    MocuGame.Action.prototype.start = function () {
+    mocu.Action.prototype.start = function () {
         if (typeof this.callback == "undefined" || this.callback == null) {
             return;
         }
@@ -75,7 +75,7 @@
         - Unused (currently).
     */
 
-    MocuGame.Action.prototype.update = function (currentTime, deltaT) {
+    mocu.Action.prototype.update = function (currentTime, deltaT) {
         if (!this.started)
             this.start();
     }

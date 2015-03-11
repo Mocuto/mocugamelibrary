@@ -30,8 +30,8 @@
 
 MocuGame = {};
 
-MocuGame.preload = new createjs.LoadQueue();
-MocuGame.LEFT = "LEFT";
-MocuGame.RIGHT = "RIGHT";
-MocuGame.TOP = "TOP";
-MocuGame.BOTTOM = "BOTTOM";
+mocu.preload = new createjs.LoadQueue();
+mocu.LEFT = "LEFT";
+mocu.RIGHT = "RIGHT";
+mocu.TOP = "TOP";
+mocu.BOTTOM = "BOTTOM";

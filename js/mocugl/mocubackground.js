@@ -1,11 +1,11 @@
 (function() {
-	MocuGame.MocuBackground.EXTENSION_METHODS.push(function() {
+	mocu.MocuBackground.EXTENSION_METHODS.push(function() {
 	    this.lastScrollPositionX = null;
 	    this.lastScrollPositionY = null; 
         this.primitives = 0;
 	});
 
-    MocuGame.MocuBackground.prototype.getCoordinateArray = function () {
+    mocu.MocuBackground.prototype.getCoordinateArray = function () {
 
         var numOfTiles = this.numOfTiles;
 
@@ -21,8 +21,8 @@
                 //var primEndX = primStartX + primWidth;
                 //var primEndY = primStartY + primHeight;
 
-                //var absWidth = (x + this.spriteSize.x > this.width) ? ((this.width - x)) * MocuGame.uniscale : this.spriteSize.x * MocuGame.uniscale
-                //var absHeight = (y + this.spriteSize.y > this.height) ? ((this.height - y)) * MocuGame.uniscale : this.spriteSize.y * MocuGame.uniscale
+                //var absWidth = (x + this.spriteSize.x > this.width) ? ((this.width - x)) * mocu.uniscale : this.spriteSize.x * mocu.uniscale
+                //var absHeight = (y + this.spriteSize.y > this.height) ? ((this.height - y)) * mocu.uniscale : this.spriteSize.y * mocu.uniscale
 
                 //var secondStartX = primEndX;
                 //var secondStartY = primEndY;
@@ -87,7 +87,7 @@
         return coords;
     }
 
-    MocuGame.MocuBackground.prototype.getTextureCoordinateArray = function () {
+    mocu.MocuBackground.prototype.getTextureCoordinateArray = function () {
         var coords = [];
 
         for (var x = 0; x < this.width; x += this.spriteSize.x) {
@@ -164,12 +164,12 @@
         return coords;
     }
 
-	MocuGame.MocuBackground.prototype.composePositionProperty = function() {
+	mocu.MocuBackground.prototype.composePositionProperty = function() {
 		return this.composeProperty(
             "position",
             "a_position",
             2,
-			MocuGame.MocuBackground.prototype.getCoordinateArray, 
+			mocu.MocuBackground.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight ||
                     this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y);
@@ -180,19 +180,19 @@
 		);
 	}
 
-	MocuGame.MocuBackground.prototype.composeTranslationProperty = function() {
-        var displacement = (MocuGame.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new MocuGame.Point(0,0) :
+	mocu.MocuBackground.prototype.composeTranslationProperty = function() {
+        var displacement = (mocu.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new mocu.Point(0,0) :
             this.parent.getWorldPoint();
 		return this.composeProperty(
             "translation", //TODO:Redefine this as constants
             "a_translation",
             2,
 			function() {
-				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
+				var scrollRate = (this.cameraTraits == null) ? new mocu.Point(1, 1) : this.cameraTraits.scrollRate;
                 var translations = [];
                 for(var i = 0; i < this.primitives; i++) {
-                    translations.push(displacement.x + (this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
-                    translations.push(displacement.y + (this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
+                    translations.push(displacement.x + (this.x + this.width / 2) + (-mocu.camera.x * scrollRate.x));
+                    translations.push(displacement.y + (this.y + this.height / 2) + (-mocu.camera.y * scrollRate.y));
                 }
 				return translations;
 			}, function() {
@@ -204,7 +204,7 @@
 		)
 	}
 
-	MocuGame.MocuBackground.prototype.composeRotationProperty = function() {
+	mocu.MocuBackground.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
             "rotation",
             "a_rotation",
@@ -212,8 +212,8 @@
 			function() {
                 var rotations = [];
                 for(var i = 0; i < this.primitives; i++) {
-                    rotations.push(Math.cos(MocuGame.deg2rad(this.angle)));
-                    rotations.push(Math.sin(MocuGame.deg2rad(this.angle)))
+                    rotations.push(Math.cos(mocu.deg2rad(this.angle)));
+                    rotations.push(Math.sin(mocu.deg2rad(this.angle)))
                 }
 				return rotations;
 			}, function() {
@@ -224,7 +224,7 @@
 		)
 	}
 
-	MocuGame.MocuBackground.prototype.composeScaleProperty = function() {
+	mocu.MocuBackground.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
             "scale",
             "a_scale",
@@ -232,8 +232,8 @@
 			function() {
                 var scales = [];
                 for(var i = 0; i < this.primitives; i++) {
-                    scales.push(this.scale.x * MocuGame.camera.zoom);
-                    scales.push(this.scale.y * MocuGame.camera.zoom);
+                    scales.push(this.scale.x * mocu.camera.zoom);
+                    scales.push(this.scale.y * mocu.camera.zoom);
                 }
 		        return scales;
 			}, function() {
@@ -245,7 +245,7 @@
 		)
 	}
 
-	MocuGame.MocuBackground.prototype.composeFadeProperty = function() {
+	mocu.MocuBackground.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
             "fade",
             "a_fade",
@@ -278,7 +278,7 @@
 		)
 	}
 
-	MocuGame.MocuBackground.prototype.composeAlphaProperty = function() {
+	mocu.MocuBackground.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
             "alpha",
             "a_alpha",
@@ -297,12 +297,12 @@
 		)
 	}
 
-	MocuGame.MocuBackground.prototype.composeTextureCoordinateProperty = function() {
+	mocu.MocuBackground.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			MocuGame.MocuBackground.prototype.getTextureCoordinateArray, 
+			mocu.MocuBackground.prototype.getTextureCoordinateArray, 
 			function() {
 		        var hasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             		this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||
@@ -315,15 +315,15 @@
 		)		
 	}
 
-    MocuGame.MocuBackground.prototype.getGlProperties = function() {
-        this.numOfTiles = new MocuGame.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
+    mocu.MocuBackground.prototype.getGlProperties = function() {
+        this.numOfTiles = new mocu.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
 
         this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y) * 4;
 
-        return MocuGame.MocuSprite.prototype.getGlProperties.call(this);
+        return mocu.MocuSprite.prototype.getGlProperties.call(this);
     }
 
-    /*MocuGame.MocuBackground.prototype.getGlProperties = function () {
+    /*mocu.MocuBackground.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
         var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||
@@ -337,7 +337,7 @@
         var fade = [];
         var alpha = [];
 
-        var scrollRate = new MocuGame.Point(0.0, 0.0);
+        var scrollRate = new mocu.Point(0.0, 0.0);
 
         if (this.cameraTraits != null) {
             scrollRate = this.cameraTraits.scrollRate
@@ -350,14 +350,14 @@
         }
 
         for (var i = 0; i < this.primitives; i++) {
-            translation.push((this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
-            translation.push((this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
+            translation.push((this.x + this.width / 2) + (-mocu.camera.x * scrollRate.x));
+            translation.push((this.y + this.height / 2) + (-mocu.camera.y * scrollRate.y));
 
-            rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
-            rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
+            rotation.push(Math.cos(mocu.deg2rad(this.angle)));
+            rotation.push(Math.sin(mocu.deg2rad(this.angle)));
 
-            scale.push(this.scale.x * MocuGame.camera.zoom);
-            scale.push(this.scale.y * MocuGame.camera.zoom);
+            scale.push(this.scale.x * mocu.camera.zoom);
+            scale.push(this.scale.y * mocu.camera.zoom);
 
             fade.push(this.fade.r);
             fade.push(this.fade.g);

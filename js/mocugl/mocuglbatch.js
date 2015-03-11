@@ -11,22 +11,28 @@
 	 * @param {Array[MocuGlProperty]} - An array of MocuGlProperty objects, which will all be batch rendered in the same call
 	*/
 
-	MocuGame.MocuGlBatch = function(textureSrc, properties) {
+	mocu.GlBatch = function(textureSrc, properties) {
 		this.textureSrc = textureSrc;
 		this.properties = properties;
 		this.primitivesRendered = 0;
 	};
 
-	MocuGame.MocuGlBatch.prototype.__defineGetter__("key", function() {
-		return MocuGame.renderer.generateBatchKey(this.textureSrc)
+	Object.defineProperty(mocu.GlBatch.prototype, "key", {
+		get : function() {
+			return mocu.renderer.generateBatchKey(this.textureSrc)
+		}
 	})
+
+	/*mocu.GlBatch.prototype.__defineGetter__("key", function() {
+		return mocu.renderer.generateBatchKey(this.textureSrc)
+	})*/
 
 
 	/**
-	* Returns the MocuGlProperty in MocuGame.MocuGlBatch#properties with the given name
+	* Returns the MocuGlProperty in mocu.GlBatch#properties with the given name
 	* @param {string} name - The name of the desired MocuGlProperty
 	*/
-	MocuGame.MocuGlBatch.prototype.getPropertyWithName = function(name) {
+	mocu.GlBatch.prototype.getPropertyWithName = function(name) {
 		for(var i = 0; i < this.properties.length; i++) {
 			var prop = this.properties[i];
 
@@ -46,7 +52,7 @@
 	* @param {Number} endIndex - The index to end updating the values
 	*/
 
-	MocuGame.MocuGlBatch.prototype.updateProperty = function(propertyName, valueArray, startIndex, length) {
+	mocu.GlBatch.prototype.updateProperty = function(propertyName, valueArray, startIndex, length) {
 		var property = this.getPropertyWithName(propertyName);
 		var endIndex = startIndex + length;
 		property.update(valueArray, startIndex, endIndex);

@@ -37,7 +37,7 @@
 
 (function () {
     /*
-        MocuBackground constructor. Initializes the object with the dimensions of the sprite which
+        Background constructor. Initializes the object with the dimensions of the sprite which
         will be drawn, the size of which the background will be rendered in the game, and the path
         to the sprites location on the server.
 
@@ -52,27 +52,27 @@
         - Location of the sprite image on the server.
     */
 
-    MocuGame.MocuBackground = function (point, spriteSize, actualSize, spritePath) {
-        MocuGame.MocuSprite.call(this, point, actualSize, spritePath);
+    mocu.Background = function (point, spriteSize, actualSize, spritePath) {
+        mocu.MocuSprite.call(this, point, actualSize, spritePath);
         this.spriteSize = spriteSize;
-        this.scrollVelocity = new MocuGame.Point(0, 0);
-        this.scrollPosition = new MocuGame.Point(0, 0);
+        this.scrollVelocity = new mocu.Point(0, 0);
+        this.scrollPosition = new mocu.Point(0, 0);
 
-        if (MocuGame.isWindows81) {
-            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_BACKGROUND_FRAGMENT_SHADER);
+        if (mocu.isWindows81) {
+            this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_BACKGROUND_FRAGMENT_SHADER);
         }
     }
-    MocuGame.MocuBackground.prototype = new MocuGame.MocuSprite(new MocuGame.Point, MocuGame.Point);
-    MocuGame.MocuBackground.constructor = MocuGame.MocuBackground;
+    mocu.Background.prototype = new mocu.MocuSprite(new mocu.Point, mocu.Point);
+    mocu.Background.constructor = mocu.Background;
 
-    MocuGame.MocuBackground.EXTENSION_METHODS = [];
+    mocu.Background.EXTENSION_METHODS = [];
 
 
-    MocuGame.MocuBackground.prototype.runExtensionMethods = function() {
-        MocuGame.MocuSprite.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < MocuGame.MocuBackground.EXTENSION_METHODS.length; i++)
+    mocu.Background.prototype.runExtensionMethods = function() {
+        mocu.MocuSprite.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < mocu.Background.EXTENSION_METHODS.length; i++)
         {
-            MocuGame.MocuBackground.EXTENSION_METHODS[i].call(this);
+            mocu.Background.EXTENSION_METHODS[i].call(this);
         }
     }
 
@@ -85,8 +85,8 @@
         - The amount of time elapsed since the last update call.
     */
 
-    MocuGame.MocuBackground.prototype.update = function (deltaT) {
-        MocuGame.MocuSprite.prototype.update.call(this, deltaT);
+    mocu.Background.prototype.update = function (deltaT) {
+        mocu.MocuSprite.prototype.update.call(this, deltaT);
         this.scrollPosition.x += this.scrollVelocity.x * deltaT;
         this.scrollPosition.y += this.scrollVelocity.y * deltaT;
         while (this.scrollPosition.x >= this.spriteSize.x)
@@ -99,12 +99,12 @@
             this.scrollPosition.y += this.spriteSize.y;
     }
 
-    MocuGame.MocuBackground.prototype.preDrawGl = function (gl, displacement) {
-        var program = MocuGame.MocuSprite.prototype.preDrawGl.call(this, gl, displacement);
+    mocu.Background.prototype.preDrawGl = function (gl, displacement) {
+        var program = mocu.MocuSprite.prototype.preDrawGl.call(this, gl, displacement);
 
         var scrollPositionLocation = gl.getUniformLocation(program, "u_scrollPosition");
 
-        var absScrollPosition = new MocuGame.Point(this.scrollPosition.x / this.spriteSize.x, this.scrollPosition.y / this.spriteSize.y);
+        var absScrollPosition = new mocu.Point(this.scrollPosition.x / this.spriteSize.x, this.scrollPosition.y / this.spriteSize.y);
         gl.uniform2fv(scrollPositionLocation, new Float32Array([absScrollPosition.x, absScrollPosition.y]));
 
         return program;
@@ -112,14 +112,14 @@
 
 
 
-    MocuGame.MocuBackground.prototype.drawGl = function (gl, displacement) {
+    mocu.Background.prototype.drawGl = function (gl, displacement) {
         var program = this.preDrawGl(gl, displacement);
 
         var texture = gl.createTexture();
-        this.prepareTexture(gl, texture, program, MocuGame.MocuObject.prototype.getTextureCoordinateArray.call(this));
+        this.prepareTexture(gl, texture, program, mocu.MocuObject.prototype.getTextureCoordinateArray.call(this));
 
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         blankContext.globalCompositeOperation = "source-over";
 
@@ -149,13 +149,13 @@
         texture = this.applyEffects(gl, texture);
         this.prepareTexture(gl, texture, program);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
     /*
-        draw is a function inherited from MocuSprite which draws the MocuBackground on to the game
+        draw is a function inherited from MocuSprite which draws the Background on to the game
         canvas, using a displacement based off its parent object.
 
         Parameters:
@@ -165,20 +165,20 @@
         - The displacement the background will have from its own position.
     */
 
-    MocuGame.MocuBackground.prototype.draw = function (context, displacement) {
+    mocu.Background.prototype.draw = function (context, displacement) {
 
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
             return;
         }
 
-        context.translate((this.x + displacement.x) * MocuGame.uniscale, (this.y + displacement.y) * MocuGame.uniscale);
+        context.translate((this.x + displacement.x) * mocu.uniscale, (this.y + displacement.y) * mocu.uniscale);
         context.globalAlpha = 1;
-        primBlitSize = new MocuGame.Point(this.spriteSize.x - this.scrollPosition.x,
+        primBlitSize = new mocu.Point(this.spriteSize.x - this.scrollPosition.x,
             this.spriteSize.y - this.scrollPosition.y);
-        secondBlitSize = new MocuGame.Point(this.spriteSize.x - primBlitSize.x, this.spriteSize.y - primBlitSize.y);
-        context.scale(this.flip.x*this.scale.x*MocuGame.uniscale, this.flip.y*this.scale.y*MocuGame.uniscale);
+        secondBlitSize = new mocu.Point(this.spriteSize.x - primBlitSize.x, this.spriteSize.y - primBlitSize.y);
+        context.scale(this.flip.x*this.scale.x*mocu.uniscale, this.flip.y*this.scale.y*mocu.uniscale);
         context.rotate((this.angle * 3.14159265359) / 180);
 
         //Apply Clipping
@@ -205,8 +205,8 @@
         }
         //Restore previous settings
         context.restore();
-        context.scale(this.flip.x / this.scale.x / MocuGame.uniscale, this.flip.y / this.scale.y / MocuGame.uniscale);
+        context.scale(this.flip.x / this.scale.x / mocu.uniscale, this.flip.y / this.scale.y / mocu.uniscale);
         context.rotate(-(this.angle * 3.14159265359) / 180);
-        context.translate(-(this.x + displacement.x) * MocuGame.uniscale, -(this.y + displacement.y) * MocuGame.uniscale);
+        context.translate(-(this.x + displacement.x) * mocu.uniscale, -(this.y + displacement.y) * mocu.uniscale);
     }
 })();

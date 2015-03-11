@@ -1,30 +1,30 @@
-﻿(function () {
-    MocuGame.MocuPatch = function (pos, size, spritePath,  spriteSize, centerPatchPosition, centerPatchSize) {
-        MocuGame.MocuSprite.call(this, pos, size, spritePath);
+(function () {
+    mocu.MocuPatch = function (pos, size, spritePath,  spriteSize, centerPatchPosition, centerPatchSize) {
+        mocu.MocuSprite.call(this, pos, size, spritePath);
         this.centerPatchPosition = centerPatchPosition;
         this.centerPatchSize = centerPatchSize;
         this.spritePath = spritePath;
         this.spriteSize = spriteSize;
         
     };
-    MocuGame.MocuPatch.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuPatch.constructor = MocuGame.MocuPatch;
+    mocu.MocuPatch.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
+    mocu.MocuPatch.constructor = mocu.MocuPatch;
 
 
-    MocuGame.MocuPatch.EXTENSION_METHODS = [];
+    mocu.MocuPatch.EXTENSION_METHODS = [];
 
 
-    MocuGame.MocuPatch.prototype.runExtensionMethods = function() {
-        MocuGame.MocuSprite.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < MocuGame.MocuPatch.EXTENSION_METHODS.length; i++)
+    mocu.MocuPatch.prototype.runExtensionMethods = function() {
+        mocu.MocuSprite.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < mocu.MocuPatch.EXTENSION_METHODS.length; i++)
         {
-            MocuGame.MocuPatch.EXTENSION_METHODS[i].call(this);
+            mocu.MocuPatch.EXTENSION_METHODS[i].call(this);
         }
     }
 
-    MocuGame.MocuPatch.prototype.blankCanvasDraw = function () {
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+    mocu.MocuPatch.prototype.blankCanvasDraw = function () {
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
         blankCanvas.width = this.width;
         blankCanvas.height = this.height;
         blankContext.globalCompositeOperation = "source-over";
@@ -121,29 +121,29 @@
         }
     }
 
-    MocuGame.MocuPatch.prototype.colorEffect = function (context, displacement) {
+    mocu.MocuPatch.prototype.colorEffect = function (context, displacement) {
         this.blankCanvasDraw();
 
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         context.globalAlpha = this.alpha;
         context.globalCompositeOperation = this.drawmode;
         context.drawImage(blankCanvas, 0, 0, (this.width > blankCanvas.width) ? blankCanvas.width : this.width, (this.height > blankCanvas.height) ? blankCanvas.height : this.height,
-                 (-(this.width / 2) * this.scale.x) * MocuGame.uniscale,
-                (-(this.height / 2) * this.scale.y) * MocuGame.uniscale,
-                ((this.width) * this.scale.x) * MocuGame.uniscale,
-                ((this.height) * this.scale.y) * MocuGame.uniscale);
+                 (-(this.width / 2) * this.scale.x) * mocu.uniscale,
+                (-(this.height / 2) * this.scale.y) * mocu.uniscale,
+                ((this.width) * this.scale.x) * mocu.uniscale,
+                ((this.height) * this.scale.y) * mocu.uniscale);
         blankContext.clearRect(0, 0, blankCanvas.width, blankCanvas.height);
     }
 
-    MocuGame.MocuPatch.prototype.drawGl = function (gl, displacement) {
+    mocu.MocuPatch.prototype.drawGl = function (gl, displacement) {
         this.blankCanvasDraw();
 
         var program = this.preDrawGl(gl, displacement);
 
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
 
@@ -183,16 +183,16 @@
 
         texture = this.applyEffects(gl, texture);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-    MocuGame.MocuPatch.prototype.draw = function (context, displacement) {
+    mocu.MocuPatch.prototype.draw = function (context, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined')
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
 
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
             return;
@@ -202,7 +202,7 @@
             return;
         }
 
-        context.translate(((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
+        context.translate(((this.x + displacement.x) + (this.width / 2)) * mocu.uniscale, ((this.y + this.height / 2) + displacement.y) * mocu.uniscale);
         context.scale(this.flip.x, this.flip.y);
         context.rotate((this.angle * 3.14159265359) / 180);
 
@@ -214,7 +214,7 @@
         context.rotate(-(this.angle * 3.14159265359) / 180);
         context.scale(this.flip.x, this.flip.y);
 
-        context.translate((-((this.x + this.width / 2) + displacement.x)) * MocuGame.uniscale, (-((this.y + this.height / 2) + displacement.y)) * MocuGame.uniscale);
+        context.translate((-((this.x + this.width / 2) + displacement.x)) * mocu.uniscale, (-((this.y + this.height / 2) + displacement.y)) * mocu.uniscale);
         context.globalCompositeOperation = "source-over";
         //Draw top edge
 

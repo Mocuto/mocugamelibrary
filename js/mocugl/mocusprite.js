@@ -1,10 +1,10 @@
 (function() {
-	MocuGame.MocuSprite.prototype.composeTextureCoordinateProperty = function() {
+	mocu.Sprite.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			MocuGame.MocuSprite.prototype.getTextureCoordinateArray, 
+			mocu.Sprite.prototype.getTextureCoordinateArray, 
 			function() {
 		        var hasChanged = (
 		        	this.lastTexCoordWidth !== this.width || 
@@ -22,7 +22,7 @@
 		)
 	}
 
-   MocuGame.MocuSprite.prototype.getTextureCoordinateArray = function () {
+   mocu.Sprite.prototype.getTextureCoordinateArray = function () {
         if (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x) 
         {
@@ -45,7 +45,7 @@
     };
 
 
-    /*MocuGame.MocuSprite.prototype.getGlProperties = function () {
+    /*mocu.Sprite.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
         var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x);
@@ -58,7 +58,7 @@
         var fade = [];
         var alpha = [];
 
-        var scrollRate = new MocuGame.Point(0.0, 0.0);
+        var scrollRate = new mocu.Point(0.0, 0.0);
         if (this.cameraTraits != null) {
             scrollRate = this.cameraTraits.scrollRate
         }
@@ -68,14 +68,14 @@
             }
         }
 
-        translation.push((this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x));
-        translation.push((this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y));
+        translation.push((this.x + this.width / 2) + (-mocu.camera.x * scrollRate.x));
+        translation.push((this.y + this.height / 2) + (-mocu.camera.y * scrollRate.y));
 
-        rotation.push(Math.cos(MocuGame.deg2rad(this.angle)));
-        rotation.push(Math.sin(MocuGame.deg2rad(this.angle)));
+        rotation.push(Math.cos(mocu.deg2rad(this.angle)));
+        rotation.push(Math.sin(mocu.deg2rad(this.angle)));
 
-        scale.push(this.scale.x * MocuGame.camera.zoom);
-        scale.push(this.scale.y * MocuGame.camera.zoom);
+        scale.push(this.scale.x * mocu.camera.zoom);
+        scale.push(this.scale.y * mocu.camera.zoom);
 
         fade.push(this.fade.r);
         fade.push(this.fade.g);
@@ -118,28 +118,28 @@
 
     }*/
 
-    MocuGame.MocuSprite.prototype.getTexture = function (gl) {
+    mocu.Sprite.prototype.getTexture = function (gl) {
         if (this.img.complete == true && this.texture == null) {
-            this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+            this.texture = mocu.renderer.getCachedTexture(gl, this.img);
         }
 
         return this.texture;
     }
 
-    MocuGame.MocuSprite.prototype.preDrawGl = function (gl, displacement) {
-        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
+    mocu.Sprite.prototype.preDrawGl = function (gl, displacement) {
+        var program = mocu.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
         if (this.texture == null || typeof this.texture === "undefined")
         {
             if (this.img.complete == true) {
-                this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+                this.texture = mocu.renderer.getCachedTexture(gl, this.img);
             }
         }
 
         return program;
     };
 
-    MocuGame.MocuSprite.prototype.drawGl = function (gl, displacement) {
+    mocu.Sprite.prototype.drawGl = function (gl, displacement) {
 
         if (this.animates) {
             this.animate(deltaT);
@@ -159,8 +159,8 @@
 
         this.prepareTexture(gl, this.texture, program);
 
-        /*var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        /*var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
 
         blankContext.globalCompositeOperation = "source-over";
@@ -192,7 +192,7 @@
 
         texture = this.applyEffects(gl, texture);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };

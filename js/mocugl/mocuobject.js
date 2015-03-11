@@ -1,11 +1,11 @@
 (function() {
 
-	MocuGame.MocuObject.EXTENSION_METHODS.push(function() {
-		if(typeof MocuGame.renderer === "undefined") {
+	mocu.Object.EXTENSION_METHODS.push(function() {
+		if(typeof mocu.renderer === "undefined") {
 			return;
 		}
         this.primitives = 1;
-        var gl = MocuGame.renderer.gl;
+        var gl = mocu.renderer.gl;
         this.texture = null;
         this.effects = [];
         this.lastGlParent = null;
@@ -26,19 +26,19 @@
         this.lastGlAlpha = {};
 	})
 
-	if(typeof MocuGame.MocuObject.old === "undefined") {
-		MocuGame.MocuObject.old = {};
-		MocuGame.MocuObject.old.constructor = MocuGame.MocuObject.constructor;
-		MocuGame.MocuObject.old.prototype = MocuGame.MocuObject.prototype;
+	if(typeof mocu.Object.old === "undefined") {
+		mocu.Object.old = {};
+		mocu.Object.old.constructor = mocu.Object.constructor;
+		mocu.Object.old.prototype = mocu.Object.prototype;
 	}
 
-	    MocuGame.MocuObject.prototype.getRenderingSize = function () {
-        return new MocuGame.Point(this.width * this.scale.x * MocuGame.uniscale, this.height * this.scale.y * MocuGame.uniscale);
+	    mocu.Object.prototype.getRenderingSize = function () {
+        return new mocu.Point(this.width * this.scale.x * mocu.uniscale, this.height * this.scale.y * mocu.uniscale);
     }
 
-    MocuGame.MocuObject.prototype.getCoordinateArray = function () {
-        var absWidth = (this.width / 2) * MocuGame.uniscale;
-        var absHeight = (this.height / 2) * MocuGame.uniscale;
+    mocu.Object.prototype.getCoordinateArray = function () {
+        var absWidth = (this.width / 2) * mocu.uniscale;
+        var absHeight = (this.height / 2) * mocu.uniscale;
 
         return [
             -absWidth, -absHeight,
@@ -50,7 +50,7 @@
         ];
     };
 
-    MocuGame.MocuObject.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
+    mocu.Object.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
         if (typeof coordinateArray === "undefined") {
             coordinateArray = this.getCoordinateArray();
         }
@@ -84,39 +84,39 @@
 
     };
 
-    MocuGame.MocuObject.prototype.setResolutionUniform = function (gl, program, resolution) {
+    mocu.Object.prototype.setResolutionUniform = function (gl, program, resolution) {
         var resolutionLocation = (typeof this.resolutionLocation == "undefined") ? gl.getUniformLocation(program, "u_resolution") : this.resolutionLocation;
         this.resolutionLocation = resolutionLocation;
 
-        MocuGame.renderer.resolution = resolution;
-        if (MocuGame.renderer.lastResolution != resolution)
+        mocu.renderer.resolution = resolution;
+        if (mocu.renderer.lastResolution != resolution)
         {
             gl.uniform2fv(resolutionLocation, new Float32Array([resolution.x, resolution.y]));
-            MocuGame.renderer.lastResolution = resolution;
+            mocu.renderer.lastResolution = resolution;
         }
     }
 
-    MocuGame.MocuObject.prototype.setScaleUniform = function (gl, program) {
+    mocu.Object.prototype.setScaleUniform = function (gl, program) {
         //Provide location of the scale uniform
         var scaleLocation = (typeof this.scaleLocation == "undefined") ? gl.getUniformLocation(program, "u_scale") : this.scaleLocation;
         this.scaleLocation = scaleLocation;
         gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
     }
 
-    MocuGame.MocuObject.prototype.setRotationUniform = function (gl, program) {
+    mocu.Object.prototype.setRotationUniform = function (gl, program) {
         //Provide locaiton of the rotation uniform
         var rotateLocation = (typeof this.rotateLocation == "undefined") ? gl.getUniformLocation(program, "u_rotate") : this.rotateLocation;
         this.rotateLocation = rotateLocation;
 
-        if (MocuGame.renderer.currentRotation != this.angle) {
+        if (mocu.renderer.currentRotation != this.angle) {
             gl.uniform2fv(rotateLocation, new Float32Array([
-                Math.cos(MocuGame.deg2rad(this.angle)), Math.sin(MocuGame.deg2rad(this.angle)) //Set the rotation uniform
+                Math.cos(mocu.deg2rad(this.angle)), Math.sin(mocu.deg2rad(this.angle)) //Set the rotation uniform
             ]))
-            MocuGame.renderer.currentRotation = this.angle;
+            mocu.renderer.currentRotation = this.angle;
         }
     }
 
-    MocuGame.MocuObject.prototype.setTranslationUniform = function (gl, program, displacement) {
+    mocu.Object.prototype.setTranslationUniform = function (gl, program, displacement) {
         //Provide location of the translate uniform
         if (this.__proto__.__proto__ == null) {
             return;
@@ -124,20 +124,20 @@
         var translateLocation = (typeof this.translateLocation == "undefined") ? gl.getUniformLocation(program, "u_translate") : this.translateLocation;
         this.translateLocation = translateLocation;
         var translate = new Float32Array([
-            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, ((this.y + displacement.y) + (this.height / 2)) * MocuGame.uniscale
+            ((this.x + displacement.x) + (this.width / 2)) * mocu.uniscale, ((this.y + displacement.y) + (this.height / 2)) * mocu.uniscale
         ]);
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
     };
 
-    MocuGame.MocuObject.prototype.setAlphaUniform = function (gl, program) {
+    mocu.Object.prototype.setAlphaUniform = function (gl, program) {
         var alphaLocation = (typeof this.alphaLocation == "undefined") ? gl.getUniformLocation(program, "u_alpha") : this.alphaLocation;
         this.alphaLocaiton = alphaLocation;
 
         gl.uniform1f(alphaLocation, this.alpha);
     };
 
-    MocuGame.MocuObject.prototype.setCameraTranslationUniform = function (gl, program) {
-        var scrollRate = new MocuGame.Point(0.0, 0.0);
+    mocu.Object.prototype.setCameraTranslationUniform = function (gl, program) {
+        var scrollRate = new mocu.Point(0.0, 0.0);
         if (this.cameraTraits != null) {
             scrollRate = this.cameraTraits.scrollRate
         }
@@ -150,21 +150,21 @@
 
         var cameraTranslateLocation = (typeof this.cameraTranslateLocation == "undefined") ? gl.getUniformLocation(program, "u_cameraTranslate") : this.cameraTranslateLocation;
         this.cameraTranslateLocation = cameraTranslateLocation;
-        if (MocuGame.renderer.currentCameraTranslate != new MocuGame.Point(-MocuGame.camera.x * scrollRate.x, -MocuGame.camera.y * scrollRate.y)) {
+        if (mocu.renderer.currentCameraTranslate != new mocu.Point(-mocu.camera.x * scrollRate.x, -mocu.camera.y * scrollRate.y)) {
             var cameraTranslate = new Float32Array([
-                -MocuGame.camera.x * scrollRate.x, -MocuGame.camera.y * scrollRate.y
+                -mocu.camera.x * scrollRate.x, -mocu.camera.y * scrollRate.y
             ]);
             gl.uniform2fv(cameraTranslateLocation, cameraTranslate);
         }
     };
 
-    MocuGame.MocuObject.prototype.setCameraZoomUniform = function (gl, program) {
+    mocu.Object.prototype.setCameraZoomUniform = function (gl, program) {
         var cameraZoomLocation = (typeof this.cameraZoomLocation == "undefined") ? gl.getUniformLocation(program, "u_cameraZoom") : this.cameraZoomLocation;
         this.cameraZoomLocation = cameraZoomLocation;
-        gl.uniform1f(cameraZoomLocation, MocuGame.camera.zoom);
+        gl.uniform1f(cameraZoomLocation, mocu.camera.zoom);
     };
 
-    MocuGame.MocuObject.prototype.getTextureCoordinateArray = function () {
+    mocu.Object.prototype.getTextureCoordinateArray = function () {
         var texWidth = 1.0;
         var texHeight = 1.0;
 
@@ -178,11 +178,11 @@
         ]);
     };
 
-    MocuGame.MocuObject.prototype.getTexture = function(gl) {
-        return MocuGame.renderer.getCachedTexture(gl, {src : MocuGame.OBJECT_TEXTURE_SRC})
+    mocu.Object.prototype.getTexture = function(gl) {
+        return mocu.renderer.getCachedTexture(gl, {src : mocu.OBJECT_TEXTURE_SRC})
     }
 
-    MocuGame.MocuObject.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
+    mocu.Object.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
         // provide texture coordinates for the rectangle.
         if (typeof textureCoordinateArray === "undefined") {
             textureCoordinateArray = this.getTextureCoordinateArray();
@@ -193,7 +193,7 @@
             var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
         }
 
-        var texCoordBuffer = MocuGame.renderer.getCachedTextureBuffer(gl, textureCoordinateArray);
+        var texCoordBuffer = mocu.renderer.getCachedTextureBuffer(gl, textureCoordinateArray);
 
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
@@ -205,7 +205,7 @@
         return texture;
     };
 
-    MocuGame.MocuObject.prototype.setTextureParameters = function (gl) {
+    mocu.Object.prototype.setTextureParameters = function (gl) {
         //Set the parameters so we can render any size image.
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -213,7 +213,7 @@
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     };
 
-    MocuGame.MocuObject.prototype.preDrawGl = function (gl, displacement) {
+    mocu.Object.prototype.preDrawGl = function (gl, displacement) {
         //Extend in child classes
 
         var localProgram = this.program;
@@ -226,8 +226,8 @@
             }
         }
 
-        var program = (localProgram == null) ? MocuGame.renderer.defaultProgram : localProgram;
-        MocuGame.renderer.useProgram(program);
+        var program = (localProgram == null) ? mocu.renderer.defaultProgram : localProgram;
+        mocu.renderer.useProgram(program);
 
         /*this.setTranslationUniform(gl, program, displacement);
 
@@ -246,10 +246,10 @@
         return program;
     };
 
-    MocuGame.MocuObject.prototype.drawGl = function (gl, displacement) {
+    mocu.Object.prototype.drawGl = function (gl, displacement) {
 
         if (typeof displacement == null || typeof displacement == 'undefined') {
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
         }
 
         var program = this.preDrawGl(gl, displacement);
@@ -263,28 +263,28 @@
 
         texture = this.applyEffects(gl, texture);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
 
-	MocuGame.MocuObject.prototype.composeProperty = function(name, glslName, components, constructorFunc, hasChangedFunc) {
+	mocu.Object.prototype.composeProperty = function(name, glslName, components, constructorFunc, hasChangedFunc) {
 		//var property = {};
 		//property["value"] = constructorFunc.call(this);
 		//property["hasChanged"] = hasChangedFunc.call(this);
         var values = constructorFunc.call(this);
-        var property = new MocuGame.MocuGlProperty(name, glslName, components, hasChangedFunc.call(this));
+        var property = new mocu.MocuGlProperty(name, glslName, components, hasChangedFunc.call(this));
         property.values = values;
 
 		return property;
 	}
 
-	MocuGame.MocuObject.prototype.composePositionProperty = function() {
+	mocu.Object.prototype.composePositionProperty = function() {
 		return this.composeProperty(
             "position",
             "a_position",
             2,
-			MocuGame.MocuObject.prototype.getCoordinateArray, 
+			mocu.Object.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight) ;
 				this.lastGlWidth = this.width;
@@ -294,18 +294,18 @@
 		);
 	}
 
-	MocuGame.MocuObject.prototype.composeTranslationProperty = function() {
-        var displacement = (MocuGame.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new MocuGame.Point(0,0) :
+	mocu.Object.prototype.composeTranslationProperty = function() {
+        var displacement = (mocu.Object.prototype.isPrototypeOf(this.parent) == false) ? new mocu.Point(0,0) :
             this.parent.getWorldPoint();
 		return this.composeProperty(
             "translation", //TODO:Redefine this as constants
             "a_translation",
             2,
 			function() {
-				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
+				var scrollRate = (this.cameraTraits == null) ? new mocu.Point(1, 1) : this.cameraTraits.scrollRate;
 				return [
-					displacement.x + (this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
-					displacement.y + (this.y + this.height / 2) + (-MocuGame.camera.y * scrollRate.y)
+					displacement.x + (this.x + this.width / 2) + (-mocu.camera.x * scrollRate.x),
+					displacement.y + (this.y + this.height / 2) + (-mocu.camera.y * scrollRate.y)
 				]
 			}, function() {
 				var hasChanged = (this.lastGlX != this.getWorldPoint().x || this.lastGlY != this.getWorldPoint().y);
@@ -316,15 +316,15 @@
 		)
 	}
 
-	MocuGame.MocuObject.prototype.composeRotationProperty = function() {
+	mocu.Object.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
             "rotation",
             "a_rotation",
             2,
 			function() {
 				return [
-			        Math.cos(MocuGame.deg2rad(this.angle)),
-        			Math.sin(MocuGame.deg2rad(this.angle))
+			        Math.cos(mocu.deg2rad(this.angle)),
+        			Math.sin(mocu.deg2rad(this.angle))
 				]
 			}, function() {
 				var hasChanged = (this.lastGlRotation != this.angle)
@@ -334,15 +334,15 @@
 		)
 	}
 
-	MocuGame.MocuObject.prototype.composeScaleProperty = function() {
+	mocu.Object.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
             "scale",
             "a_scale",
             2,
 			function() {
 		        return [
-			       	this.scale.x * MocuGame.camera.zoom,
-	        		this.scale.y * MocuGame.camera.zoom
+			       	this.scale.x * mocu.camera.zoom,
+	        		this.scale.y * mocu.camera.zoom
         		]
 			}, function() {
 				var hasChanged = (this.lastGlScaleX != this.scale.x || this.lastGlScaleY != this.scale.y)
@@ -353,7 +353,7 @@
 		)
 	}
 
-	MocuGame.MocuObject.prototype.composeFadeProperty = function() {
+	mocu.Object.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
             "fade",
             "a_fade",
@@ -383,7 +383,7 @@
 		)
 	}
 
-	MocuGame.MocuObject.prototype.composeAlphaProperty = function() {
+	mocu.Object.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
             "alpha",
             "a_alpha",
@@ -398,12 +398,12 @@
 		)
 	}
 
-	MocuGame.MocuObject.prototype.composeTextureCoordinateProperty = function() {
+	mocu.Object.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			MocuGame.MocuObject.prototype.getCoordinateArray, 
+			mocu.Object.prototype.getCoordinateArray, 
 			function() {
 		        var hasChanged = this.hasTexCoordChanged
         		this.hasTexCoordChanged = false;
@@ -412,7 +412,7 @@
 		)		
 	}
 
-	MocuGame.MocuObject.prototype.getGlProperties = function() {
+	mocu.Object.prototype.getGlProperties = function() {
 
 		return {
             "position" : this.composePositionProperty(),
@@ -426,7 +426,7 @@
 		
 	};
 
-    MocuGame.MocuObject.prototype.getAdditionalGlProperties = function() {
+    mocu.Object.prototype.getAdditionalGlProperties = function() {
         return {};
     }
 })();

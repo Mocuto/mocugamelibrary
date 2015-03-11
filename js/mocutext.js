@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocutext.js
 
     Object derived from MocuSprite. Renders text onto the screen. Has support for different fonts and colors.
@@ -48,8 +48,8 @@
         - The text of the MocuText.
     */
 
-    MocuGame.MocuText = function (point, size, text) {
-        MocuGame.MocuSprite.call(this, point, size);
+    mocu.MocuText = function (point, size, text) {
+        mocu.MocuSprite.call(this, point, size);
         this.text = text;
         this.font = "10pt Helvetica";
         this.fade.r = 0;
@@ -57,20 +57,20 @@
         this.fade.b = 0;
         this.align = "left";
         this.doesStroke = false;
-        this.strokeColor = new MocuGame.RGBA(0, 0, 0, 0);
+        this.strokeColor = new mocu.RGBA(0, 0, 0, 0);
         this.strokeWidth = 1;
         this.numberOfLines = 1;
     };
-    MocuGame.MocuText.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuText.constructor = MocuGame.MocuText;
+    mocu.MocuText.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
+    mocu.MocuText.constructor = mocu.MocuText;
 
-    MocuGame.MocuText.EXTENSION_METHODS = [];
+    mocu.MocuText.EXTENSION_METHODS = [];
 
-    MocuGame.MocuText.prototype.runExtensionMethods = function() {
-        MocuGame.MocuObject.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < MocuGame.MocuText.EXTENSION_METHODS.length; i++)
+    mocu.MocuText.prototype.runExtensionMethods = function() {
+        mocu.MocuObject.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < mocu.MocuText.EXTENSION_METHODS.length; i++)
         {
-            MocuGame.MocuText.EXTENSION_METHODS[i].call(this);
+            mocu.MocuText.EXTENSION_METHODS[i].call(this);
         }
     }
 
@@ -84,18 +84,18 @@
         - The offset of which the text is drawn.
     */
 
-    MocuGame.MocuText.prototype.getRenderingSize = function () {
-        return new MocuGame.Point(this.width * this.scale.x * MocuGame.uniscale, this.height * this.getNumberOfLines() * this.scale.y * MocuGame.uniscale);
+    mocu.MocuText.prototype.getRenderingSize = function () {
+        return new mocu.Point(this.width * this.scale.x * mocu.uniscale, this.height * this.getNumberOfLines() * this.scale.y * mocu.uniscale);
     }
 
-    MocuGame.MocuText.prototype.getNumberOfLines = function () {
+    mocu.MocuText.prototype.getNumberOfLines = function () {
 
         //Set the font and color and alignment
-        MocuGame.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
-        MocuGame.blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
-        MocuGame.blankContext.lineWidth = this.strokeWidth;
-        MocuGame.blankContext.font = this.font;
-        MocuGame.blankContext.textAlign = this.align;
+        mocu.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        mocu.blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        mocu.blankContext.lineWidth = this.strokeWidth;
+        mocu.blankContext.font = this.font;
+        mocu.blankContext.textAlign = this.align;
 
         var currentLine = '';
         var words = this.text.split(' ');
@@ -103,7 +103,7 @@
         var numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
             testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
-            if (MocuGame.blankContext.measureText(testLine).width >= this.width / 2) {
+            if (mocu.blankContext.measureText(testLine).width >= this.width / 2) {
                 currentLine = words[i] + ' ';
                 numberOfLines++;
             }
@@ -114,12 +114,12 @@
         return numberOfLines
     }
 
-    MocuGame.MocuText.prototype.draw = function (context, displacement) {
+    mocu.MocuText.prototype.draw = function (context, displacement) {
         if (typeof this.text == "undefined") {
             return;
         }
 
-        if (MocuGame.isWindows81 == true)
+        if (mocu.isWindows81 == true)
         {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
@@ -132,15 +132,15 @@
         }
 
         if (typeof displacement == null || typeof displacement == 'undefined' ) {
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
         }
 
 
-        context.translate(((this.x + displacement.x)) * MocuGame.uniscale, ((this.y + this.height / 2) + displacement.y) * MocuGame.uniscale);
+        context.translate(((this.x + displacement.x)) * mocu.uniscale, ((this.y + this.height / 2) + displacement.y) * mocu.uniscale);
         if (this.align == "center" || this.align == "start")
-            context.translate((this.width / 2) * MocuGame.uniscale, 0);
+            context.translate((this.width / 2) * mocu.uniscale, 0);
 
-        context.scale(this.flip.x * this.scale.x * (MocuGame.uniscale * 2), this.flip.y * this.scale.y * (MocuGame.uniscale * 2));
+        context.scale(this.flip.x * this.scale.x * (mocu.uniscale * 2), this.flip.y * this.scale.y * (mocu.uniscale * 2));
         context.rotate((this.angle * 3.14159265359) / 180);
 
         context.globalCompositeOperation = this.drawmode;
@@ -181,11 +181,11 @@
 
 
         context.rotate(-(this.angle * 3.14159265359) / 180);
-        context.scale(this.flip.x / this.scale.x / (MocuGame.uniscale * 2), this.flip.y / this.scale.y / (MocuGame.uniscale * 2));
+        context.scale(this.flip.x / this.scale.x / (mocu.uniscale * 2), this.flip.y / this.scale.y / (mocu.uniscale * 2));
         //console.log(this.img.src + "/" + this.frame.x + "/" + this.frame.y);
-        context.translate((-((this.x) + displacement.x)) * MocuGame.uniscale, (-((this.y + this.height / 2) + displacement.y)) * MocuGame.uniscale);
+        context.translate((-((this.x) + displacement.x)) * mocu.uniscale, (-((this.y + this.height / 2) + displacement.y)) * mocu.uniscale);
         if (this.align == "center" || this.align == "start") {
-            context.translate(-(this.width / 2) * MocuGame.uniscale, 0);
+            context.translate(-(this.width / 2) * mocu.uniscale, 0);
         }
         context.globalCompositeOperation = "source-over";
     };
@@ -193,7 +193,7 @@
     /*
         animate is a function inherited from MocuSprite, overriden to do nothing.
     */
-    MocuGame.MocuText.prototype.animate = function () {
+    mocu.MocuText.prototype.animate = function () {
         //Do nothing
     };
 })();

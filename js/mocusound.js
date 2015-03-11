@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocusound.js
 
     Sound effect object.
@@ -43,7 +43,7 @@
         - Path to the audio file
         volume (Number)
     */
-    MocuGame.MocuSound = function (location, volume) {
+    mocu.MocuSound = function (location, volume) {
         volume = (typeof volume == 'undefined' || typeof volume == null) ? 1 : volume;
 
         this.src = location;
@@ -58,7 +58,7 @@
     /*
         play is a function which plays the MocuSound's audio data
     */
-    MocuGame.MocuSound.prototype.play = function () {
+    mocu.MocuSound.prototype.play = function () {
         this.audio.play();
         if (this.audio.audio.currentTime > 0) {
             this.audio.audio.pause();

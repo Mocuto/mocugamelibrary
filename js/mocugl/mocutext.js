@@ -1,5 +1,5 @@
 (function() {
-	MocuGame.MocuText.EXTENSION_METHODS.push(function() {
+	mocu.Text.EXTENSION_METHODS.push(function() {
 		this.lastGlText = null;
 		this.lastGlAlign = null;
 		this.lastGlFont = null;
@@ -8,14 +8,14 @@
 		this.needsNewTexture = true;
 	})
 
-    MocuGame.MocuText.prototype.getNumberOfLines = function () {
+    mocu.Text.prototype.getNumberOfLines = function () {
 
         //Set the font and color and alignment
-        MocuGame.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
-        MocuGame.blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
-        MocuGame.blankContext.lineWidth = this.strokeWidth;
-        MocuGame.blankContext.font = this.font;
-        MocuGame.blankContext.textAlign = this.align;
+        mocu.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        mocu.blankContext.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        mocu.blankContext.lineWidth = this.strokeWidth;
+        mocu.blankContext.font = this.font;
+        mocu.blankContext.textAlign = this.align;
 
         var currentLine = '';
         var words = this.text.split(' ');
@@ -23,7 +23,7 @@
         var numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
             testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
-            if (MocuGame.blankContext.measureText(testLine).width >= this.width) {
+            if (mocu.blankContext.measureText(testLine).width >= this.width) {
                 currentLine = words[i] + ' ';
                 numberOfLines++;
             }
@@ -34,21 +34,21 @@
         return numberOfLines
     }
 
-	MocuGame.MocuText.prototype.getTextureCoordinateArray = MocuGame.MocuObject.prototype.getTextureCoordinateArray;
+	mocu.Text.prototype.getTextureCoordinateArray = mocu.MocuObject.prototype.getTextureCoordinateArray;
 
-	MocuGame.MocuText.prototype.getTexture = function(gl) {
+	mocu.Text.prototype.getTexture = function(gl) {
 		if(this.needsNewTexture == true) {
-	        var program = MocuGame.renderer.defaultProgram
+	        var program = mocu.renderer.defaultProgram
 
-	        var blankCanvas = MocuGame.blankCanvas;
-	        var blankContext = MocuGame.blankContext;
+	        var blankCanvas = mocu.blankCanvas;
+	        var blankContext = mocu.blankContext;
 
-	        var texture = MocuGame.renderer.createAndSetupTexture(gl);
+	        var texture = mocu.renderer.createAndSetupTexture(gl);
 
-	        blankCanvas.width = this.width * MocuGame.uniscale;
-	        blankCanvas.height = this.height * MocuGame.uniscale * this.getNumberOfLines();
+	        blankCanvas.width = this.width * mocu.uniscale;
+	        blankCanvas.height = this.height * mocu.uniscale * this.getNumberOfLines();
 
-	        blankContext.scale(this.flip.x * (MocuGame.uniscale), this.flip.y * (MocuGame.uniscale));
+	        blankContext.scale(this.flip.x * (mocu.uniscale), this.flip.y * (mocu.uniscale));
 
 	        //Set the font and color and alignment
 	        blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
@@ -106,18 +106,18 @@
 
 	        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-	        blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
-	        blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
+	        blankContext.scale(this.flip.x / (mocu.uniscale), this.flip.y / (mocu.uniscale));
+	        blankContext.clearRect(0, 0, this.width * mocu.uniscale, this.height * mocu.uniscale * this.getNumberOfLines());
 	        this.texture = texture;
 	        this.textureSrc = this.text + " " + this.font + " " + this.align;
 
-	        MocuGame.renderer.cacheTextTexture(this.texture, this.textureSrc);
+	        mocu.renderer.cacheTextTexture(this.texture, this.textureSrc);
 	        this.needsNewTexture = false;
     	}
     	return this.texture;
 	}
 
-	MocuGame.MocuText.prototype.getHasChanged = function() {
+	mocu.Text.prototype.getHasChanged = function() {
 		var test = this.lastGlText !== this.text ;
 		var hasChanged = (test || this.lastGlFont !== this.lastGlFont || this.lastGlAlign !== this.align)
 		if(hasChanged == true) {
@@ -127,40 +127,40 @@
 		return hasChanged;
 	}
 
-	MocuGame.MocuText.prototype.composePositionProperty = function() {
+	mocu.Text.prototype.composePositionProperty = function() {
 		return this.composeProperty(
             "position",
             "a_position",
             2,
-			MocuGame.MocuObject.prototype.getCoordinateArray, 
+			mocu.MocuObject.prototype.getCoordinateArray, 
 			function() {
 				return this.getHasChanged();
 			}
 		);
 	}
 
-	MocuGame.MocuText.prototype.composeTextureCoordinateProperty = function() {
+	mocu.Text.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			MocuGame.MocuObject.prototype.getTextureCoordinateArray, 
+			mocu.MocuObject.prototype.getTextureCoordinateArray, 
 			function() {
 				return this.getHasChanged(); 
 			}
 		)
 	}
 
-	MocuGame.MocuText.prototype.composeTranslationProperty = function() {
+	mocu.Text.prototype.composeTranslationProperty = function() {
 		return this.composeProperty(
             "translation",
             "a_translation",
             2,
 			function() {
-				var scrollRate = (this.cameraTraits == null) ? new MocuGame.Point(1, 1) : this.cameraTraits.scrollRate;
+				var scrollRate = (this.cameraTraits == null) ? new mocu.Point(1, 1) : this.cameraTraits.scrollRate;
 				return [
-					(this.x + this.width / 2) + (-MocuGame.camera.x * scrollRate.x),
-					(this.y + (this.height * this.getNumberOfLines()) / 2) + (-MocuGame.camera.y * scrollRate.y)
+					(this.x + this.width / 2) + (-mocu.camera.x * scrollRate.x),
+					(this.y + (this.height * this.getNumberOfLines()) / 2) + (-mocu.camera.y * scrollRate.y)
 				]
 			}, function() {
 				return this.getHasChanged();
@@ -169,9 +169,9 @@
 	}
 
 
-    MocuGame.MocuText.prototype.getCoordinateArray = function () {
-        var absWidth = (this.width / 2) * MocuGame.uniscale;
-        var absHeight = ((this.height * this.getNumberOfLines()) / 2) * MocuGame.uniscale;
+    mocu.Text.prototype.getCoordinateArray = function () {
+        var absWidth = (this.width / 2) * mocu.uniscale;
+        var absHeight = ((this.height * this.getNumberOfLines()) / 2) * mocu.uniscale;
 
         return new Float32Array([
                                 -absWidth, -absHeight,
@@ -182,25 +182,25 @@
                                 absWidth, absHeight]);
     };
 
-    MocuGame.MocuText.prototype.setTranslationUniform = function (gl, program, displacement) {
+    mocu.Text.prototype.setTranslationUniform = function (gl, program, displacement) {
         //Provide location of the translate uniform
         var translateLocation = gl.getUniformLocation(program, "u_translate");
         var translate = new Float32Array([
-            ((this.x + displacement.x) + (this.width / 2)) * MocuGame.uniscale, (this.y + (this.height * this.getNumberOfLines() / 2)) * MocuGame.uniscale
+            ((this.x + displacement.x) + (this.width / 2)) * mocu.uniscale, (this.y + (this.height * this.getNumberOfLines() / 2)) * mocu.uniscale
         ]);
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
     };
 
-    MocuGame.MocuText.prototype.getGlProperties = function(gl) {
-    	var properties = MocuGame.MocuObject.prototype.getGlProperties.call(this, gl);
+    mocu.Text.prototype.getGlProperties = function(gl) {
+    	var properties = mocu.MocuObject.prototype.getGlProperties.call(this, gl);
     	this.lastGlText = this.text;
 		this.lastGlFont = this.font
 		this.lastGlAlign = this.align;
 		return properties;
     }
 
-    MocuGame.MocuText.prototype.preDrawGl = function (gl, displacement) {
-        var program = MocuGame.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
+    mocu.Text.prototype.preDrawGl = function (gl, displacement) {
+        var program = mocu.MocuObject.prototype.preDrawGl.call(this, gl, displacement);
 
 /*        this.setTranslationUniform(gl, program, displacement);
 
@@ -215,24 +215,24 @@
         return program;
     }
 
-    MocuGame.MocuText.prototype.drawGl = function (gl, displacement) {
+    mocu.Text.prototype.drawGl = function (gl, displacement) {
 
         if (typeof displacement == null || typeof displacement == 'undefined') {
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
         }
 
         var program = this.preDrawGl(gl, displacement);
 
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         var texture = gl.createTexture();
         this.prepareTexture(gl, texture, program);
 
-        blankCanvas.width = this.width * MocuGame.uniscale;
-        blankCanvas.height = this.height * MocuGame.uniscale * this.getNumberOfLines();
+        blankCanvas.width = this.width * mocu.uniscale;
+        blankCanvas.height = this.height * mocu.uniscale * this.getNumberOfLines();
 
-        blankContext.scale(this.flip.x * (MocuGame.uniscale), this.flip.y * (MocuGame.uniscale));
+        blankContext.scale(this.flip.x * (mocu.uniscale), this.flip.y * (mocu.uniscale));
 
         //Set the font and color and alignment
         blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
@@ -270,12 +270,12 @@
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-        blankContext.scale(this.flip.x / (MocuGame.uniscale), this.flip.y / (MocuGame.uniscale));
-        blankContext.clearRect(0, 0, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale * this.getNumberOfLines());
+        blankContext.scale(this.flip.x / (mocu.uniscale), this.flip.y / (mocu.uniscale));
+        blankContext.clearRect(0, 0, this.width * mocu.uniscale, this.height * mocu.uniscale * this.getNumberOfLines());
 
         texture = this.applyEffects(gl, texture);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         //TODO: Use framebuffers and multiple shaders here
         gl.drawArrays(gl.TRIANGLES, 0, 6);

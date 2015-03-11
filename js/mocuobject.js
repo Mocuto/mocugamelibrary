@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocuobject.js
 
     The base object of which all others are derived.
@@ -45,16 +45,16 @@
         size (Point)
         - The dimensions of the object.
     */
-    MocuGame.MocuObject = function (point, size) {
-        point = (typeof point == 'undefined' || typeof point == null) ? new MocuGame.Point(0, 0) : point;
-        size = (typeof size == 'undefined' || typeof size == null) ? new MocuGame.Point(0, 0) : size;
+    mocu.MocuObject = function (point, size) {
+        point = (typeof point == 'undefined' || typeof point == null) ? new mocu.Point(0, 0) : point;
+        size = (typeof size == 'undefined' || typeof size == null) ? new mocu.Point(0, 0) : size;
         this.name = "";
 
         this.x = point.x;
         this.y = point.y;
 
-        this.velocity = new MocuGame.Point(0, 0);
-        this.acceleration = new MocuGame.Point(0, 0);
+        this.velocity = new mocu.Point(0, 0);
+        this.acceleration = new mocu.Point(0, 0);
 
         this.angle = 0
         this.angularvelocity = 0;
@@ -64,7 +64,7 @@
         this.width = size.x;
         this.height = size.y;
 
-        this.worldPoint = new MocuGame.Point(0, 0);
+        this.worldPoint = new mocu.Point(0, 0);
 
         this.exists = true;
         this.active = true;
@@ -74,8 +74,8 @@
             this.visible = true;
         this.density = true;
         this.parent = null;
-        this.timeline = new MocuGame.Timeline();
-        this.scale = new MocuGame.Point(1, 1);
+        this.timeline = new mocu.Timeline();
+        this.scale = new mocu.Point(1, 1);
         this.dying = false;
         this.life = 0;
         this.fillStyle = 'blue';
@@ -83,16 +83,16 @@
         this.lineWidth = 4;
         this.alpha = 1;
         this.usesFade = false;
-        this.fade = new MocuGame.RGBA(1, 0, 0, 0);
+        this.fade = new mocu.RGBA(1, 0, 0, 0);
 
         this.restitution = 0.0;
         
-        this.cameraTraits = new MocuGame.MocuCameraTraits(new MocuGame.Point(1, 1), true, true);
+        this.cameraTraits = new mocu.MocuCameraTraits(new mocu.Point(1, 1), true, true);
 
         this.isWorldPointRight = false;
 
-        if (MocuGame.isWindows81) {
-            //this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER)
+        if (mocu.isWindows81) {
+            //this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_FRAGMENT_SHADER)
             this.useParentEffects = false;
             this.effects = [];
             this.lastCoordinateArray = null;
@@ -102,14 +102,14 @@
         this.runExtensionMethods()
     };
 
-    MocuGame.MocuObject.constructor = MocuGame.MocuObject;
+    mocu.MocuObject.constructor = mocu.MocuObject;
 
-    MocuGame.MocuObject.EXTENSION_METHODS = [];
+    mocu.MocuObject.EXTENSION_METHODS = [];
 
-    MocuGame.MocuObject.prototype.runExtensionMethods = function() {
-        for(var i = 0; i < MocuGame.MocuObject.EXTENSION_METHODS.length; i++)
+    mocu.MocuObject.prototype.runExtensionMethods = function() {
+        for(var i = 0; i < mocu.MocuObject.EXTENSION_METHODS.length; i++)
         {
-            MocuGame.MocuObject.EXTENSION_METHODS[i].call(this);
+            mocu.MocuObject.EXTENSION_METHODS[i].call(this);
         }
     }
 
@@ -121,15 +121,15 @@
         - Elapsed time since last update call.
     */
 
-    MocuGame.MocuObject.prototype.update = function (deltaT) {
+    mocu.MocuObject.prototype.update = function (deltaT) {
         if (typeof deltaT == 'undefined')
             deltaT = 0;
         if (this.isMovementPolar == true) {
-            this.velocity.x += this.acceleration.x * Math.cos(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
-            this.velocity.y += this.acceleration.x * Math.sin(MocuGame.deg2rad(this.acceleration.y)) * deltaT;
+            this.velocity.x += this.acceleration.x * Math.cos(mocu.deg2rad(this.acceleration.y)) * deltaT;
+            this.velocity.y += this.acceleration.x * Math.sin(mocu.deg2rad(this.acceleration.y)) * deltaT;
             
-            this.x += this.velocity.x * Math.cos(MocuGame.deg2rad(this.velocity.y)) * deltaT;
-            this.y += this.velocity.x * Math.sin(MocuGame.deg2rad(this.velocity.y)) * deltaT;
+            this.x += this.velocity.x * Math.cos(mocu.deg2rad(this.velocity.y)) * deltaT;
+            this.y += this.velocity.x * Math.sin(mocu.deg2rad(this.velocity.y)) * deltaT;
         }
         else {
             this.velocity.x += this.acceleration.x * deltaT;
@@ -172,13 +172,13 @@
         - The offset of the object's rendering based off its parent.
     */
 
-    MocuGame.MocuObject.prototype.draw = function (context, displacement) {
+    mocu.MocuObject.prototype.draw = function (context, displacement) {
         if (this.isOnScreen() == false) //Object is off screen
         {
             return;
         }
 
-        if (MocuGame.isWindows81) {
+        if (mocu.isWindows81) {
             this.drawGl(context, displacement);
             this.draw = this.drawGl;
             return;
@@ -187,9 +187,9 @@
 
         context.globalAlpha = this.alpha;
         if (typeof displacement  == 'null' || typeof displacement == 'undefined')
-            displacement = new MocuGame.Point(0, 0);
+            displacement = new mocu.Point(0, 0);
         context.beginPath();
-        context.rect((this.x + displacement.x) * MocuGame.uniscale, (this.y + displacement.y) * MocuGame.uniscale, this.width * MocuGame.uniscale, this.height * MocuGame.uniscale);
+        context.rect((this.x + displacement.x) * mocu.uniscale, (this.y + displacement.y) * mocu.uniscale, this.width * mocu.uniscale, this.height * mocu.uniscale);
         if (this.usesFade) {
             context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
             context.globalAlpha = this.fade.a;
@@ -217,9 +217,9 @@
         - The object's position on the canvas.
     */
 
-    MocuGame.MocuObject.prototype.getWorldPoint = function () {
+    mocu.MocuObject.prototype.getWorldPoint = function () {
         if(typeof this.parent === "undefined" || this.parent == null) {
-            return new MocuGame.Point(0,0);
+            return new mocu.Point(0,0);
         }
         this.parent.getWorldPoint();
         this.worldPoint.x = this.parent.worldPoint.x + this.x;
@@ -231,17 +231,17 @@
         
     */
 
-    MocuGame.MocuObject.prototype.collidesWithGroup = function (group) {
+    mocu.MocuObject.prototype.collidesWithGroup = function (group) {
         var result = new Array();
         for (var i = 0; i < group.objects.length; i++) {
             var object = group.objects[i];
 
-            if (MocuGame.MocuTilemap.prototype.isPrototypeOf(object)) {
+            if (mocu.MocuTilemap.prototype.isPrototypeOf(object)) {
                 var val = this.collidesWithTilemap(object);
                 result.push.apply(result, val);
             }
 
-            else if(MocuGame.MocuGroup.prototype.isPrototypeOf(object))
+            else if(mocu.MocuGroup.prototype.isPrototypeOf(object))
             {
                 var val = this.collidesWithGroup(object);
                 result.push.apply(result, val);
@@ -268,14 +268,14 @@
         - List of all objects in group which collide with the caller.
     */
 
-    MocuGame.MocuObject.prototype.getOverlapsInGroup = function (group) {
+    mocu.MocuObject.prototype.getOverlapsInGroup = function (group) {
         var returnGroup = new Array();
         returnGroup.setParent = false;
         if (!group.exists) {
             return returnGroup;
         }
-        //console.log(" X is " + MocuGame.MocuGroup.prototype.isPrototypeOf(MObj));
-        if (MocuGame.MocuGroup.prototype.isPrototypeOf(group)) {
+        //console.log(" X is " + mocu.MocuGroup.prototype.isPrototypeOf(MObj));
+        if (mocu.MocuGroup.prototype.isPrototypeOf(group)) {
             for (var i = 0; i < group.objects.length; ++i) {
                 var obj = group.objects[i];
                 if (obj.exists) {
@@ -302,7 +302,7 @@
 
     */
 
-    MocuGame.MocuObject.prototype.overlapsWith = function (object) {
+    mocu.MocuObject.prototype.overlapsWith = function (object) {
         var pos1 = this.getWorldPoint();
         var pos2 = object.getWorldPoint();
         if (object.exists == false) {
@@ -321,7 +321,7 @@
         
     };
 
-    MocuGame.MocuObject.prototype.willOverlapWith = function (object) {
+    mocu.MocuObject.prototype.willOverlapWith = function (object) {
         var pos1 = this.getWorldPoint();
         pos1.x += this.velocity.x;
         pos1.y += this.velocity.y;
@@ -354,10 +354,10 @@
         Array - List of the collision types that occured with the given object and the caller.
     */
 
-    MocuGame.MocuObject.prototype.collidesWith = function (object) {
+    mocu.MocuObject.prototype.collidesWith = function (object) {
         if (this.overlapsWith(object) == true && object.density == true && this.density == true) {
             var collisionTypes = this.getCollionTypes(object);
-            if (collisionTypes.indexOf(MocuGame.RIGHT) != -1) {
+            if (collisionTypes.indexOf(mocu.RIGHT) != -1) {
                 this.x = object.getWorldPoint().x - this.width - 1;
                 if (this.isMovementPolar) {
                 }
@@ -369,7 +369,7 @@
                     return collisionTypes;
                 }
             }
-            if (collisionTypes.indexOf(MocuGame.LEFT) != -1) {
+            if (collisionTypes.indexOf(mocu.LEFT) != -1) {
                 this.x = object.getWorldPoint().x + object.width;
                 if (this.isMovementPolar) {
                 }
@@ -380,7 +380,7 @@
                     return collisionTypes;
                 }
             }
-            if (collisionTypes.indexOf(MocuGame.TOP) != -1) {
+            if (collisionTypes.indexOf(mocu.TOP) != -1) {
                 this.y = object.getWorldPoint().y + object.height;
                 if (this.isMovementPolar) {
                 }
@@ -391,7 +391,7 @@
                     return collisionTypes;
                 }
             }
-            if (collisionTypes.indexOf(MocuGame.BOTTOM) != -1) {
+            if (collisionTypes.indexOf(mocu.BOTTOM) != -1) {
                 this.y = object.getWorldPoint().y - this.height;
                 if (this.isMovementPolar) {
                 }
@@ -407,11 +407,11 @@
         return new Array();
     };
 
-    MocuGame.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
+    mocu.MocuObject.prototype.collidesWithTilemap = function (tilemap) {
         var result = new Array();
         if (this.overlapsWith(tilemap)) {
-            var start = new MocuGame.Point(this.getWorldPoint().x - 1, this.getWorldPoint().y - 1);
-            var size = new MocuGame.Point(this.width + 1, this.height + 1);
+            var start = new mocu.Point(this.getWorldPoint().x - 1, this.getWorldPoint().y - 1);
+            var size = new mocu.Point(this.width + 1, this.height + 1);
             if (this.velocity.x > 0)
             {
                 size.x += this.velocity.x;
@@ -438,7 +438,7 @@
         return result;
     };
 
-    MocuGame.MocuObject.prototype.getCollionTypes = function (object) {
+    mocu.MocuObject.prototype.getCollionTypes = function (object) {
         //Check for right side, relative to caller
 
         var pos = this.getWorldPoint();
@@ -446,10 +446,10 @@
 
         var margin = 10;
         
-        var topRight = new MocuGame.Point((pos.x + this.width), pos.y);
-        var bottomRight = new MocuGame.Point((pos.x + this.width), (pos.y + this.height));
-        var topLeft = new MocuGame.Point(pos.x , pos.y);
-        var bottomLeft = new MocuGame.Point(pos.x, (pos.y + this.height));
+        var topRight = new mocu.Point((pos.x + this.width), pos.y);
+        var bottomRight = new mocu.Point((pos.x + this.width), (pos.y + this.height));
+        var topLeft = new mocu.Point(pos.x , pos.y);
+        var bottomLeft = new mocu.Point(pos.x, (pos.y + this.height));
         
         if (object.containsLine(topRight, bottomRight)) {
             //If there is a rightward collision, see if there would be a collision if it had not been for the velocity
@@ -461,13 +461,13 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topRight.x - this.velocity.x - margin, topRight.y - margin);
-                newEndPoint = new MocuGame.Point(bottomRight.x - this.velocity.x - margin, bottomRight.y + margin);
+                newStartPoint = new mocu.Point(topRight.x - this.velocity.x - margin, topRight.y - margin);
+                newEndPoint = new mocu.Point(bottomRight.x - this.velocity.x - margin, bottomRight.y + margin);
             }
             
             if(!object.containsLine(newStartPoint, newEndPoint))
             {
-	            collisionTypes.push(MocuGame.RIGHT);
+	            collisionTypes.push(mocu.RIGHT);
             }
         }
         //Chceck for left side
@@ -477,13 +477,13 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topLeft.x - this.velocity.x + margin, topLeft.y - margin);
-                newEndPoint = new MocuGame.Point(bottomLeft.x - this.velocity.x + margin, bottomLeft.y + margin);
+                newStartPoint = new mocu.Point(topLeft.x - this.velocity.x + margin, topLeft.y - margin);
+                newEndPoint = new mocu.Point(bottomLeft.x - this.velocity.x + margin, bottomLeft.y + margin);
             }
         	
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
-            	collisionTypes.push(MocuGame.LEFT);
+            	collisionTypes.push(mocu.LEFT);
             }
         }
         //Chceck for ceiling side
@@ -493,13 +493,13 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(topLeft.x - margin, topLeft.y - this.velocity.y + margin);
-                newEndPoint = new MocuGame.Point(topRight.x + margin, topRight.y - this.velocity.y + margin);
+                newStartPoint = new mocu.Point(topLeft.x - margin, topLeft.y - this.velocity.y + margin);
+                newEndPoint = new mocu.Point(topRight.x + margin, topRight.y - this.velocity.y + margin);
             }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
-            	collisionTypes.push(MocuGame.TOP);
+            	collisionTypes.push(mocu.TOP);
             }
         }
         //Chceck for floor side
@@ -509,13 +509,13 @@
             if (this.isMovementPolar) {
             }
             else {
-                newStartPoint = new MocuGame.Point(bottomLeft.x - margin, bottomLeft.y - this.velocity.y - margin);
-                newEndPoint = new MocuGame.Point(bottomRight.x + margin, bottomRight.y - this.velocity.y - margin);
+                newStartPoint = new mocu.Point(bottomLeft.x - margin, bottomLeft.y - this.velocity.y - margin);
+                newEndPoint = new mocu.Point(bottomRight.x + margin, bottomRight.y - this.velocity.y - margin);
             }
             
         	if(!object.containsLine(newStartPoint, newEndPoint))
             {
-            	collisionTypes.push(MocuGame.BOTTOM);
+            	collisionTypes.push(mocu.BOTTOM);
             }
         }
         return collisionTypes;
@@ -533,7 +533,7 @@
         Boolean - Whether the point is within the bounds of the object.
     */
 
-    MocuGame.MocuObject.prototype.containsPoint = function (point) {
+    mocu.MocuObject.prototype.containsPoint = function (point) {
         var pos = this.getWorldPoint();
         if (point.x < pos.x + this.width && point.x > pos.x
             && point.y < pos.y + this.height && point.y > pos.y)
@@ -555,7 +555,7 @@
         Boolean - Whether the line segment intersects the object.
     */
 
-    MocuGame.MocuObject.prototype.containsLine = function (startPoint, endPoint) {
+    mocu.MocuObject.prototype.containsLine = function (startPoint, endPoint) {
         //Check to see if there is horizontal overlap
         var pos = this.getWorldPoint();
         if((startPoint.x > (pos.x + this.width)) && (endPoint.x > (pos.x + this.width)) ||
@@ -576,11 +576,11 @@
     /*
     */
 
-    MocuGame.MocuObject.prototype.getScreenPoint = function () {
-        if (MocuGame.camera == null) {
+    mocu.MocuObject.prototype.getScreenPoint = function () {
+        if (mocu.camera == null) {
             return this.getWorldPoint();
         }
-        var displacement = new MocuGame.Point(0, 0);
+        var displacement = new mocu.Point(0, 0);
         if (this.parent != null) {
             displacement = this.parent.getWorldPoint();
         }
@@ -595,17 +595,17 @@
         }
         var scrollX = (cameraTraits == null) ? 0 : cameraTraits.scrollRate.x;
         var scrollY = (cameraTraits == null) ? 0 : cameraTraits.scrollRate.y;
-        var drawnX = -(MocuGame.camera.x * scrollX) + (this.x + displacement.x);
-        var drawnY = -(MocuGame.camera.y * scrollY) + (this.y + displacement.y);
-        return new MocuGame.Point(drawnX, drawnY);
+        var drawnX = -(mocu.camera.x * scrollX) + (this.x + displacement.x);
+        var drawnY = -(mocu.camera.y * scrollY) + (this.y + displacement.y);
+        return new mocu.Point(drawnX, drawnY);
     }
     /*
     */
 
-    MocuGame.MocuObject.prototype.isOnScreen = function () {
+    mocu.MocuObject.prototype.isOnScreen = function () {
         var drawnPoint = this.getScreenPoint();
 
-       if (drawnPoint.x > MocuGame.resolution.x || drawnPoint.y > + MocuGame.resolution.y ||
+       if (drawnPoint.x > mocu.resolution.x || drawnPoint.y > + mocu.resolution.y ||
             drawnPoint.x + this.width  < 0 || drawnPoint.y + this.height < 0) //Object is off screen
         {
             return false;
@@ -616,7 +616,7 @@
     /*
         kill is a function which sets the MocuObject to no longer exist
     */
-    MocuGame.MocuObject.prototype.kill = function () {
+    mocu.MocuObject.prototype.kill = function () {
         this.exists = false;
     };
 
@@ -624,7 +624,7 @@
         killAndRemove is a function which sets the MocuObject to no longer exist, then removes it from its parent.
     */
 
-    MocuGame.MocuObject.prototype.killAndRemove = function () {
+    mocu.MocuObject.prototype.killAndRemove = function () {
         this.kill();
         if (this.parent != null) {
             this.parent.remove(this);

@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocustate.js
 
     Object derived from MocuGroup. Controls the current state of the game.
@@ -42,8 +42,8 @@
         fps (Number)
         - The target fps rate.
     */
-    MocuGame.MocuState = function (fps) {
-        MocuGame.MocuGroup.call(this);
+    mocu.MocuState = function (fps) {
+        mocu.MocuGroup.call(this);
         this.intendedFps = fps;
         this.d = new Date();
         this.lastRun = this.d.getTime();
@@ -54,14 +54,14 @@
         
         this.timeAccumulator = 0;        
     };
-    MocuGame.MocuState.prototype = new MocuGame.MocuGroup;
-    MocuGame.MocuState.constructor = MocuGame.MocuState;
+    mocu.MocuState.prototype = new mocu.MocuGroup;
+    mocu.MocuState.constructor = mocu.MocuState;
 
     /*
         init is a function which marks the state as initialized;
     */
 
-    MocuGame.MocuState.prototype.init = function () {
+    mocu.MocuState.prototype.init = function () {
         
         this.initialized = true;
     };
@@ -71,7 +71,7 @@
         within the state.
 
     */
-    MocuGame.MocuState.prototype.update = function () {
+    mocu.MocuState.prototype.update = function () {
         if (!this.initialized)
             return;
         this.d = new Date();
@@ -87,7 +87,7 @@
         }
         while(this.timeAccumulator > (1000 / this.intendedFps))
         {
-        	MocuGame.MocuGroup.prototype.update.call(this, 1);
+        	mocu.MocuGroup.prototype.update.call(this, 1);
 	        this.fadeRect.update(1);
         	this.timeAccumulator -= (1000 / this.intendedFps);
         }
@@ -101,8 +101,8 @@
         getWorldPoint is a function inherited from MocuObject which gives the objects position relative to the state.
     */
 
-    MocuGame.MocuState.prototype.getWorldPoint = function () {
-        return new MocuGame.Point(this.x, this.y);
+    mocu.MocuState.prototype.getWorldPoint = function () {
+        return new mocu.Point(this.x, this.y);
     }
 
     /*
@@ -116,8 +116,8 @@
         - The displacement given to the objects it renders
     */
 
-    MocuGame.MocuState.prototype.draw = function (context, point) {
-        MocuGame.MocuGroup.prototype.draw.call(this, context, point);
+    mocu.MocuState.prototype.draw = function (context, point) {
+        mocu.MocuGroup.prototype.draw.call(this, context, point);
         if (typeof this.fadeRect != "undefined") {
             this.fadeRect.visible = true;
             //this.fadeRect.draw(context, point);
@@ -132,7 +132,7 @@
         - The pointer corresponding to the touch event.
     */
 
-    MocuGame.MocuState.prototype.onTouch = function (pointer) {
+    mocu.MocuState.prototype.onTouch = function (pointer) {
         //Nothing for now
     };
 
@@ -144,7 +144,7 @@
         - The pointer corresponding to the mouse event.
     */
 
-    MocuGame.MocuState.prototype.onMouse = function (pointer) {
+    mocu.MocuState.prototype.onMouse = function (pointer) {
         //Nothing for now
     };
 
@@ -156,7 +156,7 @@
         - The pointer corresponding to the pen event.
     */
 
-    MocuGame.MocuState.prototype.onPen = function (pointer) {
+    mocu.MocuState.prototype.onPen = function (pointer) {
         //Nothing for now
     };
 
@@ -164,7 +164,7 @@
         endState is a function which clears all objects from the MocuState.
     */
 
-    MocuGame.MocuState.prototype.endState = function () {
+    mocu.MocuState.prototype.endState = function () {
         this.objects.splice(0, this.objects.length);
     };
 

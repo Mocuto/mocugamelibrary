@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocumusic.js
 
     An object that allows for easily playing background music.
@@ -53,8 +53,8 @@
         - Default is the end of the audio file.
     */
 
-    MocuGame.MocuMusic = function (loc, loop, autoplay, loopStart, loopEnd) {
-        this.audio = MocuGame.preload.getResult(loc);
+    mocu.MocuMusic = function (loc, loop, autoplay, loopStart, loopEnd) {
+        this.audio = mocu.preload.getResult(loc);
 
         if (this.audio == null) {
             this.audio = new Audio(loc);
@@ -73,7 +73,7 @@
         this.isPlaying = false;
         this.canFade = false;
     };
-    MocuGame.MocuMusic.DEFAULT_VOLUME = 0.8;
+    mocu.MocuMusic.DEFAULT_VOLUME = 0.8;
 
     /*
         play is a function which plays the MocuMusic object.
@@ -83,14 +83,14 @@
         - Whether the MocuMusic object should overlap with the currently playing music or cut it off.
         - Default true.
     */
-    MocuGame.MocuMusic.prototype.play = function (overlap) {
+    mocu.MocuMusic.prototype.play = function (overlap) {
         if (typeof overlap == "undefined")
             overlap = false;
-        if (MocuGame.currentMusic != null && !overlap) MocuGame.currentMusic.stop();
+        if (mocu.currentMusic != null && !overlap) mocu.currentMusic.stop();
         this.audio.play();
-        MocuGame.currentMusic = this;
-        if (MocuGame.currentState != null) {
-            MocuGame.currentState.currentMusic = this;
+        mocu.currentMusic = this;
+        if (mocu.currentState != null) {
+            mocu.currentState.currentMusic = this;
             this.canFade = true;
         }
         this.isPlaying = true;
@@ -100,7 +100,7 @@
         stop is a function which stops the MocuMusic object's audio.
     */
 
-    MocuGame.MocuMusic.prototype.stop = function () {
+    mocu.MocuMusic.prototype.stop = function () {
         this.audio.pause();
         this.audio.currentTime = 0;
     };
@@ -109,7 +109,7 @@
         pause is a function which pauses the MocuMusic object's audio.
     */
 
-    MocuGame.MocuMusic.prototype.pause = function () {
+    mocu.MocuMusic.prototype.pause = function () {
         this.audio.pause();
     };
 
@@ -118,7 +118,7 @@
         its loopEnd and loopStart values.
     */
 
-    MocuGame.MocuMusic.prototype.checkLoop = function () {
+    mocu.MocuMusic.prototype.checkLoop = function () {
         if (!this.loop) {
         	return;
     	}
@@ -139,24 +139,24 @@
         - The "this" object of the callback function.
     */
 
-    MocuGame.MocuMusic.prototype.fadeOut = function (duration, callback, caller) {
+    mocu.MocuMusic.prototype.fadeOut = function (duration, callback, caller) {
         if ((this.isPlaying == false) || (this.canFade == false)) {
             return;
         }
-        var slot = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(this, "audio.volume", "current", 0.005, duration));
+        var slot = new mocu.TimeSlot(mocu.currentState.timeline.currentTime + 1);
+        slot.addEvent(new mocu.Event(this, "audio.volume", "current", 0.005, duration));
 
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + duration + 1);
-        slot2.addEvent(new MocuGame.Action(MocuGame.MocuMusic.prototype.stop, this));
+        var slot2 = new mocu.TimeSlot(mocu.currentState.timeline.currentTime + duration + 1);
+        slot2.addEvent(new mocu.Action(mocu.MocuMusic.prototype.stop, this));
 
         if (callback != null) {
-            slot.addEvent(new MocuGame.Action(callback, caller));
+            slot.addEvent(new mocu.Action(callback, caller));
         }
         
 
-        MocuGame.currentState.timeline.addSlot(slot);
-        MocuGame.currentState.timeline.addSlot(slot2);
+        mocu.currentState.timeline.addSlot(slot);
+        mocu.currentState.timeline.addSlot(slot2);
     };
 
     /*
@@ -171,7 +171,7 @@
         - The "this" object of the callback function.
     */
 
-    MocuGame.MocuMusic.prototype.fadeIn = function (duration, callback, caller) {
+    mocu.MocuMusic.prototype.fadeIn = function (duration, callback, caller) {
         if (this.isPlaying == false) {
             this.play(true);
         }
@@ -180,15 +180,15 @@
             return;
         }
 
-        var slot = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(this, "audio.volume", 0, MocuGame.MocuMusic.DEFAULT_VOLUME, duration));
+        var slot = new mocu.TimeSlot(mocu.currentState.timeline.currentTime + 1);
+        slot.addEvent(new mocu.Event(this, "audio.volume", 0, mocu.MocuMusic.DEFAULT_VOLUME, duration));
 
-        var slot2 = new MocuGame.TimeSlot(MocuGame.currentState.timeline.currentTime + duration + 1);
+        var slot2 = new mocu.TimeSlot(mocu.currentState.timeline.currentTime + duration + 1);
         if (callback != null) {
-            slot.addEvent(new MocuGame.Action(callback, caller));
+            slot.addEvent(new mocu.Action(callback, caller));
         }
 
-        MocuGame.currentState.timeline.addSlot(slot);
-        MocuGame.currentState.timeline.addSlot(slot2);
+        mocu.currentState.timeline.addSlot(slot);
+        mocu.currentState.timeline.addSlot(slot2);
     };
 })();

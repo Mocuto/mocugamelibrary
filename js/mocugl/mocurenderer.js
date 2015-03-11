@@ -1,8 +1,8 @@
 ﻿(function () {
-    MocuGame.MocuRenderer = function (gl) {
+    mocu.WebGL = function (gl) {
         this.gl = gl;
         this.ext = gl.getExtension("ANGLE_instanced_arrays"); 
-        this.translate = new MocuGame.Point(0, 0);
+        this.translate = new mocu.Point(0, 0);
 
         this.programCache = {};
         this.textureCache = {};
@@ -13,7 +13,7 @@
 
         this.bufferCache = {};
 
-        this.defaultProgram = this.loadProgram(gl, MocuGame.DEFAULT_VERTEX_SHADER, MocuGame.DEFAULT_FRAGMENT_SHADER);
+        this.defaultProgram = this.loadProgram(gl, mocu.DEFAULT_VERTEX_SHADER, mocu.DEFAULT_FRAGMENT_SHADER);
 
         this.useProgram(this.defaultProgram);
 
@@ -22,7 +22,7 @@
 
         gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-        gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
+        gl.viewport(0, 0, mocu.resolution.x + 1, mocu.resolution.y + 1);
 
         this.framebuffers = [];
         this.framebufferTextures = [];
@@ -42,13 +42,13 @@
         };
 
         this.properties = [
-            new MocuGame.MocuGlProperty("position", "a_position", 2, false),
-            new MocuGame.MocuGlProperty("translation", "a_translation", 2, false),
-            new MocuGame.MocuGlProperty("texCoord", "a_texCoord", 2, false),
-            new MocuGame.MocuGlProperty("scale", "a_scale", 2, false),
-            new MocuGame.MocuGlProperty("rotation", "a_rotation", 2, false),
-            new MocuGame.MocuGlProperty("fade", "a_fade", 4, false),
-            new MocuGame.MocuGlProperty("alpha", "a_alpha", 1, false)
+            new mocu.GlProperty("position", "a_position", 2, false),
+            new mocu.GlProperty("translation", "a_translation", 2, false),
+            new mocu.GlProperty("texCoord", "a_texCoord", 2, false),
+            new mocu.GlProperty("scale", "a_scale", 2, false),
+            new mocu.GlProperty("rotation", "a_rotation", 2, false),
+            new mocu.GlProperty("fade", "a_fade", 4, false),
+            new mocu.GlProperty("alpha", "a_alpha", 1, false)
         ]
 
         this.additionalProperties = [];
@@ -56,17 +56,17 @@
         this.setupObjectTexture(gl, this.defaultProgram);
 
     };
-    MocuGame.MocuRenderer.constructor = MocuGame.MocuRenderer;
+    mocu.WebGL.constructor = mocu.WebGL;
  
 
-    MocuGame.MocuRenderer.prototype.isProgramCached = function (gl, mocuVertexShader, mocuFragmentShader) {
+    mocu.WebGL.prototype.isProgramCached = function (gl, mocuVertexShader, mocuFragmentShader) {
         if (this.programCache.hasOwnProperty([mocuVertexShader.src, mocuFragmentShader.src])) {
             return true;
         }
         return false;
     }
 
-    MocuGame.MocuRenderer.prototype.loadProgram = function (gl, mocuVertexShader, mocuFragmentShader) {
+    mocu.WebGL.prototype.loadProgram = function (gl, mocuVertexShader, mocuFragmentShader) {
         //Check to make sure teh program isn't already chached
         if (this.isProgramCached(gl, mocuVertexShader, mocuFragmentShader) == true) {
             var program = this.programCache[[mocuVertexShader.src, mocuFragmentShader.src]];
@@ -102,7 +102,7 @@
         return program;
     };
 
-    MocuGame.MocuRenderer.prototype.useProgram = function (program) {
+    mocu.WebGL.prototype.useProgram = function (program) {
         if (this.program == program)
         {
             return;
@@ -112,13 +112,13 @@
         this.program = program;
 
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        gl.uniform2fv(resolutionLocation, new Float32Array([MocuGame.resolution.x, MocuGame.resolution.y]));
+        gl.uniform2fv(resolutionLocation, new Float32Array([mocu.resolution.x, mocu.resolution.y]));
 
         var globalTranslateLocation = gl.getUniformLocation(program, "u_globalTranslate");
         gl.uniform2fv(globalTranslateLocation, new Float32Array([this.translate.x, this.translate.y]));
     }
 
-    MocuGame.MocuRenderer.prototype.compileShader = function (gl, mocuShader) {
+    mocu.WebGL.prototype.compileShader = function (gl, mocuShader) {
 
         if (mocuShader.isCompiled === true) {
             return mocuShader.compiledObject;
@@ -127,11 +127,11 @@
         var shaderType = mocuShader.type;
         var shader = null;
 
-        if(shaderType == MocuGame.SHADER_TYPE_FRAGMENT) //Create approriate shader based off of type
+        if(shaderType == mocu.SHADER_TYPE_FRAGMENT) //Create approriate shader based off of type
         {
             shader = gl.createShader(gl.FRAGMENT_SHADER);
         }
-        else if (shaderType == MocuGame.SHADER_TYPE_VERTEX)
+        else if (shaderType == mocu.SHADER_TYPE_VERTEX)
         {
             shader = gl.createShader(gl.VERTEX_SHADER);
         }
@@ -159,7 +159,7 @@
     }
 
 
-    MocuGame.MocuRenderer.prototype.setupFramebuffers = function (gl) {
+    mocu.WebGL.prototype.setupFramebuffers = function (gl) {
 
         for (var i = 0; i < 2; i++) {
 
@@ -182,7 +182,7 @@
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
 
-    MocuGame.MocuRenderer.prototype.createAndSetupTexture = function (gl) {
+    mocu.WebGL.prototype.createAndSetupTexture = function (gl) {
         var texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -196,10 +196,10 @@
         return texture;
     };
 
-    MocuGame.MocuRenderer.prototype.setupObjectTexture = function (gl, program) {
+    mocu.WebGL.prototype.setupObjectTexture = function (gl, program) {
         var texture = this.createAndSetupTexture(gl);
-        var blankCanvas = MocuGame.blankCanvas;
-        var blankContext = MocuGame.blankContext;
+        var blankCanvas = mocu.blankCanvas;
+        var blankContext = mocu.blankContext;
 
         var texture = this.createAndSetupTexture(gl);
 
@@ -212,10 +212,10 @@
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, blankCanvas);
 
-        this.textureCache[MocuGame.OBJECT_TEXTURE_SRC] = texture;
+        this.textureCache[mocu.OBJECT_TEXTURE_SRC] = texture;
     }
 
-    MocuGame.MocuRenderer.prototype.getSourceForTexture = function (texture) {
+    mocu.WebGL.prototype.getSourceForTexture = function (texture) {
         for (imageSrc in this.textureCache) {
             if (this.textureCache[imageSrc] == texture) {
                 return imageSrc;
@@ -224,7 +224,7 @@
         return null;
     }
 
-    MocuGame.MocuRenderer.prototype.getCachedTexture = function (gl, image) {
+    mocu.WebGL.prototype.getCachedTexture = function (gl, image) {
         if ((image.src in this.textureCache) == false)
         {
             var texture = this.createAndSetupTexture(gl);
@@ -235,25 +235,25 @@
         return this.textureCache[image.src];
     }
 
-    MocuGame.MocuRenderer.prototype.cacheTextTexture = function(texture, textureSrc) {
+    mocu.WebGL.prototype.cacheTextTexture = function(texture, textureSrc) {
         this.textureCache[textureSrc] = texture;
     }
 
-    MocuGame.MocuRenderer.prototype.getCachedLocation = function (gl, program, name) {
+    mocu.WebGL.prototype.getCachedLocation = function (gl, program, name) {
         if ((name in this.locationCache) == false) {
             this.locationCache[name] = gl.getAttribLocation(program, name);
         }
         return this.locationCache[name];
     }
 
-    MocuGame.MocuRenderer.prototype.getCachedUniformLocation = function (gl, program, name) {
+    mocu.WebGL.prototype.getCachedUniformLocation = function (gl, program, name) {
         if ((name in this.uniformLocationCache) == false) {
             this.uniformLocationCache[name] = gl.getUniformLocation(program, name);
         }
         return this.uniformLocationCache[name];
     }
 
-    MocuGame.MocuRenderer.prototype.getBufferForAttribute = function(gl, attributeName) {
+    mocu.WebGL.prototype.getBufferForAttribute = function(gl, attributeName) {
         //if((attributeName in this.bufferCache) == false) 
         {
             var buffer = gl.createBuffer();
@@ -263,7 +263,7 @@
         return this.bufferCache[attributeName];
     }
 
-    MocuGame.MocuRenderer.prototype.setAttribute = function (gl, program, attributeName, attributeValue, componentsPerAttribute) {
+    mocu.WebGL.prototype.setAttribute = function (gl, program, attributeName, attributeValue, componentsPerAttribute) {
 
 
         var buffer = this.getBufferForAttribute(gl, attributeName);
@@ -283,14 +283,14 @@
         gl.vertexAttribPointer(location, componentsPerAttribute, gl.FLOAT, false, 0, 0);
     }
 
-    MocuGame.MocuRenderer.prototype.setAttributeInstanced = function(gl, program, attributeName, attributeValue, componentsPerAttribute, divisor) {
+    mocu.WebGL.prototype.setAttributeInstanced = function(gl, program, attributeName, attributeValue, componentsPerAttribute, divisor) {
         this.setAttribute(gl, program, attributeName, attributeValue, componentsPerAttribute);
         var location = this.getCachedLocation(gl, program, attributeName);
 
         this.ext.vertexAttribDivisorANGLE(location, divisor);
     }
 
-    MocuGame.MocuRenderer.prototype.setResolutionUniform = function (gl, program, resolution) {
+    mocu.WebGL.prototype.setResolutionUniform = function (gl, program, resolution) {
         var location = this.getCachedUniformLocation(gl, program, "u_resolution");
 
         if (this.lastResolution != resolution) {
@@ -299,7 +299,7 @@
         }
     }
 
-    MocuGame.MocuRenderer.prototype.getCachedTextureBuffer = function (gl, textureCoordinateArray) {
+    mocu.WebGL.prototype.getCachedTextureBuffer = function (gl, textureCoordinateArray) {
         var key = Array.prototype.map.call(textureCoordinateArray, function (item) {
             return String(item);
         }).join();
@@ -318,7 +318,7 @@
         return this.textureBufferCache[key];
     }
 
-    MocuGame.MocuRenderer.prototype.setFramebufferForObject = function(gl, oldTexture, width, height)
+    mocu.WebGL.prototype.setFramebufferForObject = function(gl, oldTexture, width, height)
     {
         var framebuffer = this.framebuffers[this.framebufferIndex];
         var texture = this.framebufferTextures[this.framebufferIndex];
@@ -346,7 +346,7 @@
     }
 
 
-    MocuGame.MocuRenderer.prototype.advanceFramebufferTexture = function (gl) {
+    mocu.WebGL.prototype.advanceFramebufferTexture = function (gl) {
         var textureIndex = this.framebufferIndex == 0 ? 1 : 0
         var texture = this.framebufferTextures[textureIndex];
 
@@ -355,32 +355,32 @@
         return texture;
     };
 
-    MocuGame.MocuRenderer.prototype.finishFramebufferEffects = function (gl) {
+    mocu.WebGL.prototype.finishFramebufferEffects = function (gl) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, MocuGame.resolution.x + 1, MocuGame.resolution.y + 1);
+        gl.viewport(0, 0, mocu.resolution.x + 1, mocu.resolution.y + 1);
         this.framebufferIndex = 0;
     };
 
-    MocuGame.MocuRenderer.prototype.generateBatchKey = function(textureSrc) {
+    mocu.WebGL.prototype.generateBatchKey = function(textureSrc) {
         return textureSrc;
     }
 
-    MocuGame.MocuRenderer.prototype.generatePropertySet = function() {
+    mocu.WebGL.prototype.generatePropertySet = function() {
         var result = [];
         for (var i = 0; i < this.properties.length; i ++) {
             var prop = this.properties[i];
-            var clone = MocuGame.cloneObject(prop);
+            var clone = mocu.cloneObject(prop);
             result.push(clone);
         }
         for (var i = 0; i < this.additionalProperties.length; i++) {
             var prop = this.additionalProperties[i];
-            var clone = MocuGame.cloneObject(prop);
+            var clone = mocu.cloneObject(prop);
             result.push(clone);            
         }
         return result;
     }
 
-    MocuGame.MocuRenderer.prototype.generateCoordinateSquare = function(left, right, top, bottom) {
+    mocu.WebGL.prototype.generateCoordinateSquare = function(left, right, top, bottom) {
         return [
                 left, top,
                 right, top,
@@ -391,7 +391,7 @@
             ];
     }
 
-    MocuGame.MocuRenderer.prototype.draw = function(gl) {
+    mocu.WebGL.prototype.draw = function(gl) {
         var program = this.preDrawGl(gl, displacement);
         var objectsForTexture = {};
         var positionsForTexture = {};
@@ -407,7 +407,7 @@
         var groupsToDraw = [];
 
         var ownProperties = this.getGlProperties();
-        var startPosition = new MocuGame.Point(displacement.x + this.x, displacement.y + this.y)
+        var startPosition = new mocu.Point(displacement.x + this.x, displacement.y + this.y)
 
         function updateProperty(property, valueArray, startIndex, endIndex) {
             if(property == null) {
@@ -422,22 +422,22 @@
         }
 
         function getPropertyStartIndex(index, components, primitives) {
-            return index * MocuGame.VERTICES_PER_OBJECT * components * primitives;
+            return index * mocu.VERTICES_PER_OBJECT * components * primitives;
         }
 
         function getPropertyEndIndex(index, components, primitives) {
-            return getPropertyStartIndex(index, components, primitives) + (MocuGame.VERTICES_PER_OBJECT * components * primitives);
+            return getPropertyStartIndex(index, components, primitives) + (mocu.VERTICES_PER_OBJECT * components * primitives);
         }
 
         for (var i = 0; i < this.objects.length; i++) {
             var object = this.objects[i];
-            if (MocuGame.MocuGroup.prototype.isPrototypeOf(object)) {
+            if (mocu.MocuGroup.prototype.isPrototypeOf(object)) {
                 groupsToDraw.push(object);
             }
-            else if (MocuGame.MocuSprite.prototype.isPrototypeOf(object)) {
+            else if (mocu.MocuSprite.prototype.isPrototypeOf(object)) {
                 var sprite = object;
                 texture = sprite.getTexture(gl);
-                var textureSrc = MocuGame.renderer.getSourceForTexture(texture);
+                var textureSrc = mocu.renderer.getSourceForTexture(texture);
 
                 if(sprite.animates) {
                     sprite.animate();
@@ -571,7 +571,7 @@
 
         for (textureSrc in objectsForTexture)
         {
-            var texture = MocuGame.renderer.textureCache[textureSrc]
+            var texture = mocu.renderer.textureCache[textureSrc]
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.setTextureParameters(gl);
@@ -584,21 +584,21 @@
             }
             //Here, load all of the properties
             //TODO: Find way to open up this code to external shader properties
-            var ext = MocuGame.renderer.ext;
+            var ext = mocu.renderer.ext;
 
-            MocuGame.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[textureSrc]), 2);
-            MocuGame.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[textureSrc]), 4);
-            MocuGame.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[textureSrc]), 1);
+            mocu.renderer.setAttribute(gl, program, "a_texCoord", new Float32Array(this.texCoordsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_position", new Float32Array(this.positionsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_translation", new Float32Array(this.translationsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_rotation", new Float32Array(this.rotationsForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_scale", new Float32Array(this.scalesForTexture[textureSrc]), 2);
+            mocu.renderer.setAttribute(gl, program, "a_fade", new Float32Array(this.fadesForTexture[textureSrc]), 4);
+            mocu.renderer.setAttribute(gl, program, "a_alpha", new Float32Array(this.alphasForTexture[textureSrc]), 1);
 
-            MocuGame.renderer.setResolutionUniform(gl, program, MocuGame.resolution);
+            mocu.renderer.setResolutionUniform(gl, program, mocu.resolution);
 
             var numberOfObjects = objectsForTexture[textureSrc].length;
 
-            gl.drawArrays(gl.TRIANGLES, 0, MocuGame.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
+            gl.drawArrays(gl.TRIANGLES, 0, mocu.VERTICES_PER_OBJECT * (this.alphasForTexture[textureSrc].length / 6));
         }
         for(var i = 0; i < groupsToDraw.length; i++) {
             groupsToDraw[i].drawGl(gl, startPosition);

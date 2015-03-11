@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocutilemap.js
 
     MocuTilemap, a class derived from MocuGroup, is an object which allows for the easy construction of 2D tilemaps, with configurable sizes,
@@ -50,13 +50,13 @@
         tileSheetLocation (String) - Path to the tile sheet used for the tilemap's tiles.
         tileSheetSize (String) - The dimensions of the tile sheet used for the tiles.
     */
-    MocuGame.MocuTilemap = function (position, size, tileSize, tilemapString, tileSheetLocation, tileSheetSize) {
-        MocuGame.MocuGroup.call(this, position, size);
+    mocu.MocuTilemap = function (position, size, tileSize, tilemapString, tileSheetLocation, tileSheetSize) {
+        mocu.MocuGroup.call(this, position, size);
         this.tileSize = tileSize;
         this.tileSheetLocation = tileSheetLocation;
         this.widthInTiles = Math.floor(this.width / this.tileSize.x);
         this.heightInTiles = Math.floor(this.height / this.tileSize.y);
-        this.tileArray = MocuGame.createArray(this.widthInTiles, this.heightInTiles);
+        this.tileArray = mocu.createArray(this.widthInTiles, this.heightInTiles);
         this.tileSheetSize = tileSheetSize;
         this.collisionStartingIndex = 0;
 
@@ -69,7 +69,7 @@
             else if (tokens[i][0] == "(") {
                 var subtokens = tokens[i].substring(1, tokens[i].length - 1).split(" ");
                 //Create animated tile
-                var tile = new MocuGame.MocuTile(new MocuGame.Point((i % this.widthInTiles) * tileSize.x,
+                var tile = new mocu.MocuTile(new mocu.Point((i % this.widthInTiles) * tileSize.x,
                     Math.floor(i / this.widthInTiles) * tileSize.y),
                     tileSize, this.tileSheetLocation, this);
                 var pointString = "";
@@ -94,7 +94,7 @@
             }
             else { //Create normal tile
                 var tileNum = new Number(tokens[i]);
-                var tile = new MocuGame.MocuTile(new MocuGame.Point((i % this.widthInTiles) * tileSize.x,
+                var tile = new mocu.MocuTile(new mocu.Point((i % this.widthInTiles) * tileSize.x,
                     Math.floor(i / this.widthInTiles) * tileSize.y),
                     tileSize, this.tileSheetLocation, this);
 
@@ -111,12 +111,12 @@
             }
         }
 
-        if (MocuGame.isWindows81) {
-            this.program = MocuGame.renderer.loadProgram(MocuGame.renderer.gl, MocuGame.DEFAULT_SPRITE_VERTEX_SHADER, MocuGame.DEFAULT_SPRITE_FRAGMENT_SHADER);
+        if (mocu.isWindows81) {
+            this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_SPRITE_FRAGMENT_SHADER);
         }
     };
-    MocuGame.MocuTilemap.prototype = new MocuGame.MocuGroup(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuTilemap.constructor = MocuGame.MocuTilemap;
+    mocu.MocuTilemap.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
+    mocu.MocuTilemap.constructor = mocu.MocuTilemap;
 
 
     /*
@@ -126,13 +126,13 @@
         (MocuTile) The tile at that 
     */
 
-    MocuGame.MocuTilemap.prototype.getTileAtPoint = function (point) {
+    mocu.MocuTilemap.prototype.getTileAtPoint = function (point) {
         if (!this.containsPoint(point)) {
             return;
         }
         var pos = this.getWorldPoint();
-        var positionInTilemap = new MocuGame.Point(point.x - pos.x, point.y - pos.y);
-        var tilemapPoint = new MocuGame.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
+        var positionInTilemap = new mocu.Point(point.x - pos.x, point.y - pos.y);
+        var tilemapPoint = new mocu.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
             Math.floor(positionInTilemap.y / this.tileSize.y));
 
         return this.tileArray[tilemapPoint.x][tilemapPoint.y];
@@ -149,13 +149,13 @@
         (Array) an array of the tiles that exist in the range.
     */
 
-    MocuGame.MocuTilemap.prototype.getTilesInRange = function (position, size) {
+    mocu.MocuTilemap.prototype.getTilesInRange = function (position, size) {
         var pos = this.getWorldPoint();
-        var positionInTilemap = new MocuGame.Point(point.x - pos.x, point.y - pos.y);
-        var tilemapPoint = new MocuGame.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
+        var positionInTilemap = new mocu.Point(point.x - pos.x, point.y - pos.y);
+        var tilemapPoint = new mocu.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
             Math.floor(positionInTilemap.y / this.tileSize.y));
 
-        var tilemapSize = new MocuGame.Point(Math.ceil(size.x / this.tileSize.x),
+        var tilemapSize = new mocu.Point(Math.ceil(size.x / this.tileSize.x),
             Math.ceil(positionInTilemap.y / this.size.y));
 
         var returnTiles = new Array();
@@ -181,16 +181,16 @@
         (Array) an array of the tiles that exist in the range.
     */
 
-    MocuGame.MocuTilemap.prototype.getDenseTilesInRange = function (position, size) {
+    mocu.MocuTilemap.prototype.getDenseTilesInRange = function (position, size) {
         var pos = this.getWorldPoint();
-        var positionInTilemap = new MocuGame.Point(position.x - pos.x, position.y - pos.y);
-        var tilemapPoint = new MocuGame.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
+        var positionInTilemap = new mocu.Point(position.x - pos.x, position.y - pos.y);
+        var tilemapPoint = new mocu.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
             Math.floor(positionInTilemap.y / this.tileSize.y));
 
-        var tilemapPoint2 = new MocuGame.Point(Math.ceil((positionInTilemap.x + size.x) / this.tileSize.x),
+        var tilemapPoint2 = new mocu.Point(Math.ceil((positionInTilemap.x + size.x) / this.tileSize.x),
             Math.ceil((positionInTilemap.y + size.y) / this.tileSize.y));
 
-        var tilemapSize = new MocuGame.Point(tilemapPoint2.x - tilemapPoint.x, tilemapPoint2.y - tilemapPoint.y);
+        var tilemapSize = new mocu.Point(tilemapPoint2.x - tilemapPoint.x, tilemapPoint2.y - tilemapPoint.y);
 
         var returnTiles = new Array();
 

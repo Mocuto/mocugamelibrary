@@ -1,4 +1,4 @@
-﻿/*
+/*
     timeline.js
 
     Object that store TimeSlots. Handles the animation of values.
@@ -40,7 +40,7 @@
         TimeLine constructor. 
     */
 
-    MocuGame.Timeline = function () {
+    mocu.Timeline = function () {
         this.slots = new Array();
         this.currentTime = 0;
     };
@@ -53,7 +53,7 @@
         - The time elapsed since the last update call.
     */
 
-    MocuGame.Timeline.prototype.update = function (deltaT) {
+    mocu.Timeline.prototype.update = function (deltaT) {
         this.currentTime += 1 * deltaT;
         for(var i = 0; i < this.slots.length; i += 1)
         {
@@ -73,19 +73,23 @@
         - The time interval between each repeat of the slot.
     */
 
-    MocuGame.Timeline.prototype.addSlot = function (slot, repeat, repeatInterval) {
+    mocu.Timeline.prototype.addSlot = function (slot, repeat, repeatInterval) {
         this.slots.push(slot);
         repeat = (typeof repeat == 'undefined') ? 0 : repeat;
         repeatInterval = (typeof repeatInterval == 'undefined') ? 0 : repeatInterval;
         for (var i = 0; i < repeat; i += 1) {
-            var newslot = new MocuGame.TimeSlot(slot.time + repeatInterval * (i + 1));
+            var newslot = new mocu.TimeSlot(slot.time + repeatInterval * (i + 1));
 
             for (var n = 0; n < slot.events.length; n += 1) {
                 var event = slot.events[n];
-                if (MocuGame.Action.prototype.isPrototypeOf(event))
-                    newslot.addEvent(new MocuGame.Action(event.callback, event.obj));
+                if (mocu.Action.prototype.isPrototypeOf(event))
+                {
+                    newslot.addEvent(new mocu.Action(event.callback, event.obj));
+                }
                 else
-                    newslot.addEvent(new MocuGame.Event(event.object, event.original_varname, event.startval, event.endval, event.operation_time));
+                {
+                    newslot.addEvent(new mocu.Event(event.object, event.original_varname, event.startval, event.endval, event.operation_time));
+                }
             }
             this.slots.push(newslot);
         }
@@ -95,7 +99,7 @@
         restart is a function which restarts the Timeline and its respective slots.
     */
 
-    MocuGame.Timeline.prototype.restart = function () {
+    mocu.Timeline.prototype.restart = function () {
         for (var i = 0; i < this.slots.length; i += 1) {
             this.slots[i].restart();
         }

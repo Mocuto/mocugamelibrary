@@ -37,7 +37,7 @@
 (function () {
 
     /*
-        MocuMenuItem constructor. Initializes the menuitem with its position, size, parentMenu,
+        MenuItem constructor. Initializes the menuitem with its position, size, parentMenu,
         and adjacent menuitems
 
         Parameters:
@@ -47,23 +47,23 @@
         - The object's dimensions.
         menu (MocuMenu)
         - The object's parent menu.
-        leftItem (MocuMenuItem) (optional)
+        leftItem (MenuItem) (optional)
         - The menu item to the left of the object in the menu.
-        rightItem (MocuMenuItem) (optional)
+        rightItem (MenuItem) (optional)
         - The menu item to the right of the object in the menu.
-        topItem (MocuMenuItem) (optional)
+        topItem (MenuItem) (optional)
         - The menu item to the top of the object in the menu.
-        bottomItem (MocuMenuItem) (optional)
+        bottomItem (MenuItem) (optional)
         - The menu item to the bottom of the object in the menu.
     */
 
-    MocuGame.MocuMenuItem = function (pos, size, menu, leftItem, rightItem, topItem, bottomItem) {
-        MocuGame.MocuGroup.call(this, pos, size);
+    mocu.MenuItem = function (pos, size, menu, leftItem, rightItem, topItem, bottomItem) {
+        mocu.MocuGroup.call(this, pos, size);
         this.adjacentItems = { "left": leftItem, "right": rightItem, "top": topItem, "bottom": bottomItem };
         this.parentMenu = menu;
     };
-    MocuGame.MocuMenuItem.prototype = new MocuGame.MocuGroup();
-    MocuGame.MocuMenuItem.constructor = MocuGame.MocuMenuItem;
+    mocu.MenuItem.prototype = new mocu.MocuGroup();
+    mocu.MenuItem.constructor = mocu.MenuItem;
     
 
     /*
@@ -75,7 +75,7 @@
         - the String representation of the button pressed, declared in parentMenu's keyMap.
     */
 
-    MocuGame.MocuMenuItem.prototype.advance = function (direction) {
+    mocu.MenuItem.prototype.advance = function (direction) {
         if (direction === "select") 
             this.parentMenu.select(this);
     
@@ -88,7 +88,7 @@
         onSelected is a callback which is called when the menu item is selected.
     */
 
-    MocuGame.MocuMenuItem.prototype.onSelected = function () {
+    mocu.MenuItem.prototype.onSelected = function () {
 
     };
 
@@ -96,7 +96,7 @@
         onFocused is a callback which is called when the menu item is focused.
     */
 
-    MocuGame.MocuMenuItem.prototype.onFocused = function () {
+    mocu.MenuItem.prototype.onFocused = function () {
 
     };
 
@@ -104,7 +104,7 @@
         onUnFocused is a callback which is called when the menu item is unfocused.
     */
 
-    MocuGame.MocuMenuItem.prototype.onUnfocused = function () {
+    mocu.MenuItem.prototype.onUnfocused = function () {
 
     };
 })();

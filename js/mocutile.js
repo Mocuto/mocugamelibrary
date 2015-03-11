@@ -1,4 +1,4 @@
-﻿/*
+/*
     mocutile.js
 
     Derived from the MocuSprite object, this object is used by the MocuTilemap to render its underlying tiles and allow support for dynamic,
@@ -46,8 +46,8 @@
         spriteLocation (String) - The path of the image used for the tile.
         parentTilemap (MocuTilemap) - The tilemap in which this tile will reside;
     */
-    MocuGame.MocuTile = function (position, size, spriteLocation, parentTilemap) {
-        MocuGame.MocuSprite.call(this, position, size, spriteLocation);
+    mocu.MocuTile = function (position, size, spriteLocation, parentTilemap) {
+        mocu.MocuSprite.call(this, position, size, spriteLocation);
 
         this.parentTilemap = parentTilemap;
         this.animates = false;
@@ -61,10 +61,10 @@
 
         this.tileID = -1;
     };
-    MocuGame.MocuTile.prototype = new MocuGame.MocuSprite(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.MocuTile.constructor = MocuGame.MocuTile;
+    mocu.MocuTile.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
+    mocu.MocuTile.constructor = mocu.MocuTile;
 
-    MocuGame.MocuTile.prototype.preDrawGl = function (gl, displacement) {
+    mocu.MocuTile.prototype.preDrawGl = function (gl, displacement) {
         var localProgram = this.program;
         if (this.useParentEffects == true) {
             if (this.parent != null) {
@@ -74,8 +74,8 @@
             }
         }
 
-        var program = (localProgram == null) ? MocuGame.renderer.defaultProgram : localProgram;
-        MocuGame.renderer.useProgram(program);
+        var program = (localProgram == null) ? mocu.renderer.defaultProgram : localProgram;
+        mocu.renderer.useProgram(program);
 
         this.setTranslationUniform(gl, program, displacement);
         this.setPositionAttribute(gl, program);
@@ -96,7 +96,7 @@
 
         if (this.texture == null || typeof this.texture === "undefined") {
             if (this.img.complete == true) {
-                this.texture = MocuGame.renderer.getCachedTexture(gl, this.img);
+                this.texture = mocu.renderer.getCachedTexture(gl, this.img);
                 //this.texture = gl.createTexture();
                 //this.prepareTexture(gl, this.texture, program);
                 //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
@@ -106,7 +106,7 @@
         return program;
     }
 
-    MocuGame.MocuTile.prototype.drawGl = function (gl, displacement) {
+    mocu.MocuTile.prototype.drawGl = function (gl, displacement) {
         if (this.animates) {
             this.animate(deltaT);
         }
@@ -129,7 +129,7 @@
 
         texture = this.applyEffects(gl, texture);
 
-        MocuGame.renderer.useProgram(program);
+        mocu.renderer.useProgram(program);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }

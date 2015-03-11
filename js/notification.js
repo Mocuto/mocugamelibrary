@@ -1,4 +1,4 @@
-﻿/*
+/*
     notification.js
 
     Object derived from MocuText. Renders scrolling text onto the screen.
@@ -50,16 +50,16 @@
         - Delay before adding next character to scrolling text.
     */
 
-    MocuGame.Notification = function (point, size, text, delay) {
-        MocuGame.MocuText.call(this, point, size, "");
+    mocu.Notification = function (point, size, text, delay) {
+        mocu.MocuText.call(this, point, size, "");
         this.max_delay = delay;
         this.fulltext = text;
         this.showtext = "";
         this.delay = this.max_delay;
         this.charloc = 0;
     };
-    MocuGame.Notification.prototype = new MocuGame.MocuText(new MocuGame.Point, new MocuGame.Point);
-    MocuGame.Notification.constructor = MocuGame.Notification;
+    mocu.Notification.prototype = new mocu.MocuText(new mocu.Point, new mocu.Point);
+    mocu.Notification.constructor = mocu.Notification;
 
     /*
         update is a function inherited from MocuText, which updates the scrolling text and adds characters.
@@ -69,8 +69,8 @@
         - Time elapsed since last update call.
     */
 
-    MocuGame.Notification.prototype.update = function (deltaT) {
-        MocuGame.MocuText.prototype.update.call(this, deltaT);
+    mocu.Notification.prototype.update = function (deltaT) {
+        mocu.MocuText.prototype.update.call(this, deltaT);
         if (this.charloc <= this.fulltext.length) {
             this.delay -= 1*deltaT;
             if (this.delay <= 0) {
@@ -90,20 +90,20 @@
         - The text the notification will scroll to
     */
 
-    MocuGame.Notification.prototype.restart = function (text) {
+    mocu.Notification.prototype.restart = function (text) {
         this.charloc = 0;
         this.fulltext = text;
         this.showtext = "";
         this.text = "";
     };
 
-    MocuGame.Notification.prototype.getNumberOfLinesForFullText = function () {
+    mocu.Notification.prototype.getNumberOfLinesForFullText = function () {
         //Set the font and color and alignment
-        MocuGame.context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
-        MocuGame.context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
-        MocuGame.context.lineWidth = this.strokeWidth;
-        MocuGame.context.font = this.font;
-        MocuGame.context.textAlign = this.align;
+        mocu.context.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
+        mocu.context.strokeStyle = "rgb( " + Math.ceil(this.strokeColor.r * 255) + ", " + Math.ceil(this.strokeColor.g * 255) + ", " + Math.ceil(this.strokeColor.b * 255) + ")";
+        mocu.context.lineWidth = this.strokeWidth;
+        mocu.context.font = this.font;
+        mocu.context.textAlign = this.align;
 
         var currentLine = '';
         var words = this.fulltext.split(' ');
@@ -111,7 +111,7 @@
         var numberOfLines = 1;
         for (var i = 0; i < words.length; i += 1) {
             testLine = (currentLine.length > 0 ? (currentLine + ' ') : '') + words[i] + ' ';
-            if (MocuGame.context.measureText(testLine).width >= this.width / 2) {
+            if (mocu.context.measureText(testLine).width >= this.width / 2) {
                 currentLine = words[i] + ' ';
                 numberOfLines++;
             }

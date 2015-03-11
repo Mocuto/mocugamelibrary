@@ -1,5 +1,5 @@
 ﻿/*
-    mocugame.js
+    mocu.js
 
     MocuGame is the core of the MocuGame library. Is the main MocuGroup as well as containing references
     to the canvas object, context object, and blank canvas object.
@@ -39,20 +39,20 @@
 
 (function () {
 
-    MocuGame.objects = [];
+    mocu.objects = [];
 
-    MocuGame.worldPoint = new MocuGame.Point(0, 0);
+    mocu.worldPoint = new mocu.Point(0, 0);
 
-    MocuGame.currentState = null;
-    MocuGame.currentMusic = null;
+    mocu.currentState = null;
+    mocu.currentMusic = null;
 
-    MocuGame.Key = Key;
+    mocu.Key = Key;
 
-    MocuGame.camera = null;
+    mocu.camera = null;
 
-    MocuGame.MainTimeline = new MocuGame.Timeline();
+    mocu.MainTimeline = new mocu.Timeline();
 
-    MocuGame.targetResolutionWidth = 1920;
+    mocu.targetResolutionWidth = 1920;
 
 
     /*
@@ -77,8 +77,8 @@
         - The MocuObject to add
     */
 
-    MocuGame.add = function (object) {
-        MocuGame.objects.push(object);
+    mocu.add = function (object) {
+        mocu.objects.push(object);
         object.parent = this;
     };
 
@@ -93,7 +93,7 @@
         (Number) the angle in degrees.
     */
 
-    MocuGame.deg2rad = function (num) {
+    mocu.deg2rad = function (num) {
         return num * Math.PI / 180;
     };
 
@@ -108,7 +108,7 @@
         (Number) the angle in radians.
     */
 
-    MocuGame.rad2deg = function (num) {
+    mocu.rad2deg = function (num) {
         return num * 180 / Math.PI;
     };
 
@@ -125,8 +125,8 @@
         (Number) The angle between "obj1" and "obj2" in degrees.
     */
 
-    MocuGame.angleTo = function (obj1, obj2) {
-        return MocuGame.rad2deg(Math.atan2((obj2.y + obj2.height / 2) - (obj1.y + obj1.height/2), (obj2.x + obj2.width / 2) - (obj1.x + obj1.width / 2))); //in radians
+    mocu.angleTo = function (obj1, obj2) {
+        return mocu.rad2deg(Math.atan2((obj2.y + obj2.height / 2) - (obj1.y + obj1.height/2), (obj2.x + obj2.width / 2) - (obj1.x + obj1.width / 2))); //in radians
     };
 
     /*
@@ -142,7 +142,7 @@
         (Number) The distance between the two objects.
     */
 
-    MocuGame.distanceTo = function (obj1, obj2) {
+    mocu.distanceTo = function (obj1, obj2) {
         return Math.sqrt(Math.pow(((obj2.y + obj2.height/2) - (obj1.y + obj1.height/2)), 2) + Math.pow(((obj2.x + obj2.width/2) - (obj1.x + obj1.width/2)), 2));
     };
 
@@ -157,21 +157,23 @@
         (Object) Newly created clone.
 
     */
-    MocuGame.cloneObject = function (object) {
+    mocu.cloneObject = function (object) {
         if (object == null || typeof object != 'object') {
             return object;
         }
-        try {
-        var temp = new object.constructor(); // give temp the original obj's constructor
-        for (var key in object) {
+        try
+        {
+            var temp = new object.constructor(); // give temp the original obj's constructor
+            for (var key in object)
+            {
            
                 switch(key)
                 {
                     case "parent":
-                        {
-                            temp.parent = object.parent;
-                        }
-                        break;
+                    {
+                        temp.parent = object.parent;
+                    }
+                    break;
                     case "img":
                     {
                         temp.img = object.img;
@@ -181,14 +183,15 @@
                         break;
                     default:
                     {
-                        temp[key] = MocuGame.cloneObject(object[key]);
+                        temp[key] = mocu.cloneObject(object[key]);
                        
                     }
                     break;
                 }
             }
         }
-        catch (err) {
+        catch (err)
+        {
             console.log("Error caught: " + err.message);
             console.log("Key is: " + key);
         }
@@ -206,89 +209,89 @@
         (Array) new array.
     */
 
-    MocuGame.createArray = function (length) {
+    mocu.createArray = function (length) {
         var arr = new Array(length || 0),
             i = length;
 
         if (arguments.length > 1) {
             var args = Array.prototype.slice.call(arguments, 1);
-            while (i--) arr[length - 1 - i] = MocuGame.createArray.apply(this, args);
+            while (i--) arr[length - 1 - i] = mocu.createArray.apply(this, args);
         }
 
         return arr;
     };
 
-    MocuGame.prepareCanvasForWindows8 = function (canvasId, gameBounds, resolution) {
+    mocu.prepareCanvasForWindows8 = function (canvasId, gameBounds, resolution) {
         var body = document.body;
         var canvas = document.getElementById(canvasId);
         var context = canvas.getContext('2d');
         context.canvas.width = resolution.x;
         context.canvas.height = resolution.y;
         context.imageSmoothingEnabled = false;
-        MocuGame.canvas = canvas;
-        MocuGame.context = context;
+        mocu.canvas = canvas;
+        mocu.context = context;
 
         var blankCanvas = document.createElement("canvas");
         blankCanvas.id = "blankCanvas";
         blankCanvas.width = context.canvas.width;
         blankCanvas.height = context.canvas.height;
-        MocuGame.blankCanvas = blankCanvas;
-        MocuGame.blankContext = blankCanvas.getContext('2d');
+        mocu.blankCanvas = blankCanvas;
+        mocu.blankContext = blankCanvas.getContext('2d');
 
-        MocuGame.resolution = resolution;
-        MocuGame.gameBounds = gameBounds;
-        MocuGame.gameWidth = gameBounds.x;
-        MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
+        mocu.resolution = resolution;
+        mocu.gameBounds = gameBounds;
+        mocu.gameWidth = gameBounds.x;
+        mocu.gameHeight = gameBounds.y;
+        mocu.uniscale = Math.ceil((mocu.resolution.x / mocu.targetResolutionWidth) * 10) / 10;
 
-        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
 
-        MocuGame.touchEnabled = false;
-        MocuGame.isWindows8 = true;
+        mocu.touchEnabled = false;
+        mocu.isWindows8 = true;
         if (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1) {
-            MocuGame.touchEnabled = true;
-            body.addEventListener("MSPointerDown", MocuGame.onPointerDown, false);
-            body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
-            body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
+            mocu.touchEnabled = true;
+            body.addEventListener("MSPointerDown", mocu.onPointerDown, false);
+            body.addEventListener("MSPointerUp", mocu.onPointerUp, false);
+            body.addEventListener("MSPointerMove", mocu.onPointerMove, false);
         }
     };
 
-    MocuGame.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
-        MocuGame.isWindows8 = true;
-        MocuGame.isWindows81 = true;
+    mocu.prepareCanvasForWindows81 = function (canvasId, gameBounds, resolution) {
+        mocu.isWindows8 = true;
+        mocu.isWindows81 = true;
 
         var body = document.body;
         var canvas = document.getElementById(canvasId);
         var context = canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true, premultipliedAlpha: true});
         context.canvas.width = resolution.x + 1;
         context.canvas.height = resolution.y + 1;
-        MocuGame.canvas = canvas;
-        MocuGame.context = context;
+        mocu.canvas = canvas;
+        mocu.context = context;
 
         var blankCanvas = document.createElement("canvas");
         blankCanvas.id = "blankCanvas";
         blankCanvas.width = context.canvas.width;
         blankCanvas.height = context.canvas.height;
-        MocuGame.blankCanvas = blankCanvas;
-        MocuGame.blankContext = blankCanvas.getContext('2d');
+        mocu.blankCanvas = blankCanvas;
+        mocu.blankContext = blankCanvas.getContext('2d');
 
-        MocuGame.resolution = resolution;
-        MocuGame.gameBounds = gameBounds;
-        MocuGame.gameWidth = gameBounds.x;
-        MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = Math.ceil((MocuGame.resolution.x / MocuGame.targetResolutionWidth) * 10) / 10;
+        mocu.resolution = resolution;
+        mocu.gameBounds = gameBounds;
+        mocu.gameWidth = gameBounds.x;
+        mocu.gameHeight = gameBounds.y;
+        mocu.uniscale = Math.ceil((mocu.resolution.x / mocu.targetResolutionWidth) * 10) / 10;
 
-        MocuGame.renderer = new MocuGame.MocuRenderer(context);
+        mocu.renderer = new mocu.MocuRenderer(context);
 
-        MocuGame.touchEnabled = false;
+        mocu.touchEnabled = false;
 
         if (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1) {
-            MocuGame.touchEnabled = true;
-            document.body.addEventListener("MSPointerDown", MocuGame.onPointerDown, false);
-            document.body.addEventListener("MSPointerUp", MocuGame.onPointerUp, false);
-            document.body.addEventListener("MSPointerMove", MocuGame.onPointerMove, false);
+            mocu.touchEnabled = true;
+            document.body.addEventListener("MSPointerDown", mocu.onPointerDown, false);
+            document.body.addEventListener("MSPointerUp", mocu.onPointerUp, false);
+            document.body.addEventListener("MSPointerMove", mocu.onPointerMove, false);
         }
-        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
     };
 
     /*
@@ -304,28 +307,28 @@
         - The dimensions of the canvas, x = width, y = height.
     */
 
-    MocuGame.prepareCanvas = function (canvasId, gameBounds, resolution) {
+    mocu.prepareCanvas = function (canvasId, gameBounds, resolution) {
         var canvas = document.getElementById(canvasId);
         var context = canvas.getContext('2d');
         context.canvas.width = resolution.x;
         context.canvas.height = resolution.y;
-        MocuGame.canvas = canvas;
-        MocuGame.context = context;
+        mocu.canvas = canvas;
+        mocu.context = context;
 
         var blankCanvas = document.createElement("canvas");
         blankCanvas.id = "blankCanvas";
         blankCanvas.width = context.canvas.width;
         blankCanvas.height = context.canvas.height;
-        MocuGame.blankCanvas = blankCanvas;
-        MocuGame.blankContext = blankCanvas.getContext('2d');
+        mocu.blankCanvas = blankCanvas;
+        mocu.blankContext = blankCanvas.getContext('2d');
 
-        MocuGame.resolution = resolution;
-        MocuGame.gameBounds = gameBounds;
-        MocuGame.gameWidth = gameBounds.x;
-        MocuGame.gameHeight = gameBounds.y;
-        MocuGame.uniscale = (MocuGame.resolution.x / MocuGame.targetResolutionWidth);
+        mocu.resolution = resolution;
+        mocu.gameBounds = gameBounds;
+        mocu.gameWidth = gameBounds.x;
+        mocu.gameHeight = gameBounds.y;
+        mocu.uniscale = (mocu.resolution.x / mocu.targetResolutionWidth);
 
-        MocuGame.camera = new MocuGame.MocuCamera(new MocuGame.Point(0, 0));
+        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
     };
 
     /*
@@ -333,7 +336,7 @@
         are completely loaded. Preferabbly is overriden.
     */
 
-    MocuGame.onLoaded = function () {
+    mocu.onLoaded = function () {
         console.log("Resources loaded");
     };
 
@@ -342,7 +345,7 @@
         have made progress. Preferabby is overriden.
     */
 
-    MocuGame.onProgress = function () {
+    mocu.onProgress = function () {
 
     };
 
@@ -358,24 +361,24 @@
         - The function to be called when loading is completed.
     */
 
-    MocuGame.loadManifests = function(manifest, progressCallback, completeCallback)
+    mocu.loadManifests = function(manifest, progressCallback, completeCallback)
     {
         if (typeof manifest == "undefined") {
             return;
         }
-        MocuGame.preload.removeAllEventListeners();
+        mocu.preload.removeAllEventListeners();
 
-        MocuGame.preload.loadManifest(manifest);
+        mocu.preload.loadManifest(manifest);
 
         if (typeof completeCallback != "undefined") {
-            MocuGame.preload.addEventListener("complete", completeCallback);
+            mocu.preload.addEventListener("complete", completeCallback);
         }
         if (typeof progresCallback != "undefined")
         {
-            MocuGame.preload.addEventListener("progress", progresCallback);
+            mocu.preload.addEventListener("progress", progresCallback);
         }
 
-        MocuGame.preload.load();
+        mocu.preload.load();
     };
 
     /*
@@ -394,27 +397,27 @@
         - The list of sound files to load.
     */
 
-    MocuGame.init = function (state, imageManifest, musicManifest, soundManifest, shaderManifest) {
+    mocu.init = function (state, imageManifest, musicManifest, soundManifest, shaderManifest) {
 
-        MocuGame.switchState(state);
-        MocuGame.pointers = new Array();
+        mocu.switchState(state);
+        mocu.pointers = new Array();
         if (typeof imageManifest != "undefined") {
-            MocuGame.preload.loadManifest(imageManifest, false);
+            mocu.preload.loadManifest(imageManifest, false);
         }
         if (typeof musicManifest != "undefined") {
-            MocuGame.preload.loadManifest(musicManifest, false);
+            mocu.preload.loadManifest(musicManifest, false);
         }
         if (typeof soundManifest != "undefined") {
-            MocuGame.preload.loadManifest(soundManifest, false);
+            mocu.preload.loadManifest(soundManifest, false);
         }
 
         if (typeof shaderManifest != "undefined") {
-            MocuGame.preload.loadManifest(shaderManifest, false);
+            mocu.preload.loadManifest(shaderManifest, false);
         }
-        MocuGame.preload.addEventListener("complete", MocuGame.onLoaded);
-        MocuGame.preload.addEventListener("progress", function (event) { MocuGame.preloadPercent = Math.floor(event.loaded * 100); });
-        MocuGame.preload.load();
-        MocuGame.animate();
+        mocu.preload.addEventListener("complete", mocu.onLoaded);
+        mocu.preload.addEventListener("progress", function (event) { mocu.preloadPercent = Math.floor(event.loaded * 100); });
+        mocu.preload.load();
+        mocu.animate();
     };
 
     /*
@@ -426,18 +429,18 @@
         - The MocuState to switch to.
     */
 
-    MocuGame.switchState = function (state, autoInit) {
-        MocuGame.objects.length = 0;
+    mocu.switchState = function (state, autoInit) {
+        mocu.objects.length = 0;
 
-        if (MocuGame.currentState != null) {
-            MocuGame.currentState.objects.length = 0;
+        if (mocu.currentState != null) {
+            mocu.currentState.objects.length = 0;
         }
-        MocuGame.add(state);
-        MocuGame.currentState = state;
-        MocuGame.currentState.fadeRect = MocuGame.camera.fadeRect;
+        mocu.add(state);
+        mocu.currentState = state;
+        mocu.currentState.fadeRect = mocu.camera.fadeRect;
 
         if ((autoInit == true) || (typeof autoInit === "undefined")) {
-            MocuGame.currentState.init();
+            mocu.currentState.init();
         }
     };
 
@@ -456,30 +459,30 @@
         - The "this" argument given to the "callback" function.
     */
 
-    MocuGame.fadeTo = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + 1);
-        slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", 0, rgba.a, time));
+    mocu.fadeTo = function (rgba, time, callback, caller) {
+        var slot = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime + 1);
+        slot.addEvent(new mocu.Event(mocu.camera.fadeRect.fade, "a", 0, rgba.a, time));
 
         if (callback != null) {
-            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-            slot2.addEvent(new MocuGame.Action(callback, caller));
-            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+            var slot2 = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new mocu.Action(callback, caller));
+            mocu.camera.fadeRect.timeline.addSlot(slot2);
         }
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
-        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
+        var slot3 = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime + time + 1);
+        slot3.addEvent(new mocu.Event(mocu.camera.fadeRect, "active", true, false, 1));
 
-        MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot3);
+        mocu.camera.fadeRect.timeline.addSlot(slot);
+        mocu.camera.fadeRect.timeline.addSlot(slot3);
 
-        MocuGame.camera.fadeRect.fade.r = rgba.r;
-        MocuGame.camera.fadeRect.fade.g = rgba.g;
-        MocuGame.camera.fadeRect.fade.b = rgba.b;
+        mocu.camera.fadeRect.fade.r = rgba.r;
+        mocu.camera.fadeRect.fade.g = rgba.g;
+        mocu.camera.fadeRect.fade.b = rgba.b;
 
-        MocuGame.camera.fadeRect.width = MocuGame.gameBounds.x;
-        MocuGame.camera.fadeRect.height = MocuGame.gameBounds.y;
-        MocuGame.camera.fadeRect.visible = true;
-        MocuGame.camera.fadeRect.active = true;
+        mocu.camera.fadeRect.width = mocu.gameBounds.x;
+        mocu.camera.fadeRect.height = mocu.gameBounds.y;
+        mocu.camera.fadeRect.visible = true;
+        mocu.camera.fadeRect.active = true;
     };
 
     /*
@@ -497,52 +500,52 @@
         - The "this" argument given to the "callback" function.
     */
 
-    MocuGame.fadeFrom = function (rgba, time, callback, caller) {
-        var slot = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime);
-        slot.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect.fade, "a", rgba.a, 0, time));
+    mocu.fadeFrom = function (rgba, time, callback, caller) {
+        var slot = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime);
+        slot.addEvent(new mocu.Event(mocu.camera.fadeRect.fade, "a", rgba.a, 0, time));
 
         if (callback != null && typeof callback !=="undefined") {
-            var slot2 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time);
-            slot2.addEvent(new MocuGame.Action(callback, caller));
-            MocuGame.camera.fadeRect.timeline.addSlot(slot2);
+            var slot2 = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime + time);
+            slot2.addEvent(new mocu.Action(callback, caller));
+            mocu.camera.fadeRect.timeline.addSlot(slot2);
         }
 
-        var slot3 = new MocuGame.TimeSlot(MocuGame.camera.fadeRect.timeline.currentTime + time + 1);
-        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "active", true, false, 1));
-        slot3.addEvent(new MocuGame.Event(MocuGame.camera.fadeRect, "visible", true, false, 1));
+        var slot3 = new mocu.TimeSlot(mocu.camera.fadeRect.timeline.currentTime + time + 1);
+        slot3.addEvent(new mocu.Event(mocu.camera.fadeRect, "active", true, false, 1));
+        slot3.addEvent(new mocu.Event(mocu.camera.fadeRect, "visible", true, false, 1));
 
-        MocuGame.camera.fadeRect.timeline.addSlot(slot);
-        MocuGame.camera.fadeRect.timeline.addSlot(slot3);
+        mocu.camera.fadeRect.timeline.addSlot(slot);
+        mocu.camera.fadeRect.timeline.addSlot(slot3);
 
-        MocuGame.camera.fadeRect.fade.r = rgba.r;
-        MocuGame.camera.fadeRect.fade.g = rgba.g;
-        MocuGame.camera.fadeRect.fade.b = rgba.b;
+        mocu.camera.fadeRect.fade.r = rgba.r;
+        mocu.camera.fadeRect.fade.g = rgba.g;
+        mocu.camera.fadeRect.fade.b = rgba.b;
 
-        MocuGame.camera.fadeRect.width = MocuGame.gameWidth;
-        MocuGame.camera.fadeRect.height = MocuGame.gameHeight;
-        MocuGame.camera.fadeRect.visible = true;
-        MocuGame.camera.fadeRect.active = true;
+        mocu.camera.fadeRect.width = mocu.gameWidth;
+        mocu.camera.fadeRect.height = mocu.gameHeight;
+        mocu.camera.fadeRect.visible = true;
+        mocu.camera.fadeRect.active = true;
     };
 
-    MocuGame.clearContext = function (context) {
-        if(MocuGame.isWindows81 == true)
+    mocu.clearContext = function (context) {
+        if(mocu.isWindows81 == true)
         {
             context.clearColor(0.0, 0.0, 0.0, 0.0);
             context.clear(context.COLOR_BUFFER_BIT);
         }
         else {
-            context.clearRect(0, 0, MocuGame.canvas.width, MocuGame.canvas.height);
-            MocuGame.blankContext.clearRect(0, 0, MocuGame.blankCanvas.width, MocuGame.blankCanvas.height);
+            context.clearRect(0, 0, mocu.canvas.width, mocu.canvas.height);
+            mocu.blankContext.clearRect(0, 0, mocu.blankCanvas.width, mocu.blankCanvas.height);
         }
     }
 
-    MocuGame.draw = function(context, blankContext) {
-        for (var i = 0; i < MocuGame.objects.length; i++) {
-            if (MocuGame.objects[i].exists) {
-                if (MocuGame.objects[i].visible) {
-                    //MocuGame.camera.preDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
-                    MocuGame.objects[i].draw(context, new MocuGame.Point(0, 0));
-                    //MocuGame.camera.postDraw(context, new MocuGame.Point(0, 0), MocuGame.objects[i].cameraTraits);
+    mocu.draw = function(context, blankContext) {
+        for (var i = 0; i < mocu.objects.length; i++) {
+            if (mocu.objects[i].exists) {
+                if (mocu.objects[i].visible) {
+                    //mocu.camera.preDraw(context, new mocu.Point(0, 0), mocu.objects[i].cameraTraits);
+                    mocu.objects[i].draw(context, new mocu.Point(0, 0));
+                    //mocu.camera.postDraw(context, new mocu.Point(0, 0), mocu.objects[i].cameraTraits);
                     
                 }
             }
@@ -556,29 +559,29 @@
         This function is the powerhouse of the game.
     */
 
-    MocuGame.animate = function () {
+    mocu.animate = function () {
         // clear
-        var context = MocuGame.context;
-        var blankContext = MocuGame.blankContext;
-        MocuGame.clearContext(context);
-        for (var i = 0; i < MocuGame.objects.length; i++) {
-            if (MocuGame.objects[i].exists) {
-                if (MocuGame.objects[i].active) {
-                    MocuGame.objects[i].update();
+        var context = mocu.context;
+        var blankContext = mocu.blankContext;
+        mocu.clearContext(context);
+        for (var i = 0; i < mocu.objects.length; i++) {
+            if (mocu.objects[i].exists) {
+                if (mocu.objects[i].active) {
+                    mocu.objects[i].update();
                 }
             }
         }
-        MocuGame.camera.update(MocuGame.currentState.lastDeltaT);
+        mocu.camera.update(mocu.currentState.lastDeltaT);
 
-        MocuGame.draw(context, blankContext);
+        mocu.draw(context, blankContext);
 
-        if (MocuGame.currentMusic != null) {
-            MocuGame.currentMusic.checkLoop();
+        if (mocu.currentMusic != null) {
+            mocu.currentMusic.checkLoop();
         }
 
         // request new frame
         requestAnimFrame(function () {
-            MocuGame.animate();
+            mocu.animate();
         });
     };
     
@@ -599,52 +602,52 @@
         - True if the pointer is down.
     */
 
-    MocuGame.updatePointers = function(e, down)
+    mocu.updatePointers = function(e, down)
     {
-        if (MocuGame.currentState == null) {
+        if (mocu.currentState == null) {
             return;
         }
         var found = 0;
-        for (var i = 0; i < MocuGame.pointers.length; i += 1) {
-            if (MocuGame.pointers[i].ID == e.pointerId) {
-                MocuGame.pointers[i].updatePosition(e, down);
+        for (var i = 0; i < mocu.pointers.length; i += 1) {
+            if (mocu.pointers[i].ID == e.pointerId) {
+                mocu.pointers[i].updatePosition(e, down);
                 found = i;
             }
         }
 
         var pointer;
         if (!found) {
-            pointer = new MocuGame.Pointer(e, down);
-            MocuGame.pointers.push(pointer);
+            pointer = new mocu.Pointer(e, down);
+            mocu.pointers.push(pointer);
         }
         else {
-            pointer = MocuGame.pointers[found];
+            pointer = mocu.pointers[found];
         }
-        if (MocuGame.isWindows81)
+        if (mocu.isWindows81)
         {
             switch(e.pointerType)
             {
                 case "touch":
-                    MocuGame.currentState.onTouch(pointer);
+                    mocu.currentState.onTouch(pointer);
                     break;
                 case "pen":
-                    MocuGame.currentState.onPen(pointer);
+                    mocu.currentState.onPen(pointer);
                     break;
                 case "mouse":
-                    MocuGame.currentState.onMouse(pointer);
+                    mocu.currentState.onMouse(pointer);
                     break;
             }
         }
         else {
             switch (e.pointerType) {
                 case e.MSPOINTER_TYPE_TOUCH:
-                    MocuGame.currentState.onTouch(pointer);
+                    mocu.currentState.onTouch(pointer);
                     break;
                 case e.MSPOINTER_TYPE_PEN:
-                    MocuGame.currentState.onPen(pointer);
+                    mocu.currentState.onPen(pointer);
                     break;
                 case e.MSPOINTERTYPE_MOUSE:
-                    MocuGame.currentState.onMouse(pointer);
+                    mocu.currentState.onMouse(pointer);
                     break;
             }
         }
@@ -659,8 +662,8 @@
         - The event in which the pointer is stored
     */
 
-    MocuGame.onPointerDown = function (e) {
-        MocuGame.updatePointers(e, true);
+    mocu.onPointerDown = function (e) {
+        mocu.updatePointers(e, true);
     };
 
     /*
@@ -672,8 +675,8 @@
         - The event in which the pointer is stored
     */
 
-    MocuGame.onPointerUp = function (e) {
-        MocuGame.updatePointers(e, false);
+    mocu.onPointerUp = function (e) {
+        mocu.updatePointers(e, false);
     };
 
     /*
@@ -685,8 +688,8 @@
         - The event in which the pointer is stored
     */
 
-    MocuGame.onPointerMove = function (e) {
-        MocuGame.updatePointers(e, true);
+    mocu.onPointerMove = function (e) {
+        mocu.updatePointers(e, true);
     };
 
     /*
@@ -707,8 +710,8 @@
         - the "this" argument given to the "callback" function
     */
 
-    MocuGame.saveLocalData = function (name, data, callback, caller) {
-        if (MocuGame.isWindows8 == true) {
+    mocu.saveLocalData = function (name, data, callback, caller) {
+        if (mocu.isWindows8 == true) {
             var local = Windows.Storage.ApplicationData.current.localFolder;
             local.createFileAsync(name, Windows.Storage.CreationCollisionOption.replaceExisting).then(function (file) {
                 Windows.Storage.FileIO.writeTextAsync(file, data);
@@ -745,8 +748,8 @@
 
     */
 
-    MocuGame.loadLocalData = function (name, callback, caller, alwaysCallback) {
-        if (MocuGame.isWindows8 == true) {
+    mocu.loadLocalData = function (name, callback, caller, alwaysCallback) {
+        if (mocu.isWindows8 == true) {
             var local = Windows.Storage.ApplicationData.current.localFolder;
             local.getFileAsync(name).then(function (file) {
 
@@ -787,7 +790,7 @@
         }
     };
 
-    MocuGame.loadServerFile = function (url, data, callback, errorCallback) {
+    mocu.loadServerFile = function (url, data, callback, errorCallback) {
         // Set up an asynchronous request
         var request = new XMLHttpRequest();
         request.open('GET', url, false);

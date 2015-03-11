@@ -37,7 +37,7 @@
 (function () {
 
     /*
-        MocuCameraTraits constructor. Initializes the instance with its scroll rate, whether it zooms, and whether it rotates.
+        CameraTraits constructor. Initializes the instance with its scroll rate, whether it zooms, and whether it rotates.
 
         Paramaters:
         scrollRate (Point) - The rate at which the camera should translate based off its position.
@@ -45,7 +45,7 @@
         doesRotate (Boolean) - Whether the camera should apply rotation based off its angle.
     */
 
-    MocuGame.MocuCameraTraits = function (scrollRate, doesZoom, doesRotate) {
+    mocu.CameraTraits = function (scrollRate, doesZoom, doesRotate) {
         this.scrollRate = scrollRate;
         this.doesZoom = doesZoom;
         this.doesRotate = doesRotate;

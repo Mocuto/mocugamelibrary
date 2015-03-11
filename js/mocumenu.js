@@ -1,7 +1,7 @@
 ﻿/*
     mocumenu.js
 
-    Object inherited from MocuGroup. Object allows for easy creation of in game menus.
+    Object inherited from Group. Object allows for easy creation of in game menus.
 
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
 
@@ -48,8 +48,8 @@
         - The menu's dimensions.
     */
 
-    MocuGame.MocuMenu = function (pos, size, state) {
-        MocuGame.MocuGroup.call(this, pos, size);
+    mocu.Menu = function (pos, size, state) {
+        mocu.Group.call(this, pos, size);
         this.selectedItem = null;
         this.locked = false;
         this.keyMap = {"left": Key.LEFT, "right": Key.RIGHT, "top": Key.UP, "bottom": Key.DOWN, "select": Key.ENTER };
@@ -57,19 +57,19 @@
         this.isTouching = true;
         this.parentState = state;
     };
-    MocuGame.MocuMenu.prototype = new MocuGame.MocuGroup;
-    MocuGame.MocuMenu.constructor = MocuGame.MocuMenu;
+    mocu.Menu.prototype = new mocu.Group;
+    mocu.Menu.constructor = mocu.Menu;
 
     /*
-        update is a function which is inherited from MocuGroup. Advances to the next MocuMenuItem based off of the current key state.
+        update is a function which is inherited from Group. Advances to the next MenuItem based off of the current key state.
 
         Parameters:
         deltaT (Number).
         - Time elapsed since last update call.
     */
     
-    MocuGame.MocuMenu.prototype.update = function (deltaT) {
-        MocuGame.MocuGroup.prototype.update.call(this, deltaT);
+    mocu.Menu.prototype.update = function (deltaT) {
+        mocu.Group.prototype.update.call(this, deltaT);
         for (var key in this.keyMap) {
             if(Key.isDown(this.keyMap[key]))
             {
@@ -84,7 +84,7 @@
     };
 
     /*
-        add is a function which is inherited from MocuGroup. Adds obj. If the obj is a MocuMenuItem and the MocuMenu has no selectedItem, it
+        add is a function which is inherited from Group. Adds obj. If the obj is a MenuItem and the Menu has no selectedItem, it
         will select the obj.
 
         Parameters:
@@ -92,9 +92,9 @@
         - The object to add and/or select.
     */
 
-    MocuGame.MocuMenu.prototype.add = function (object) {
-        MocuGame.MocuGroup.prototype.add.call(this, object);
-        if (this.selectedItem == null && MocuGame.MocuMenuItem.prototype.isPrototypeOf(object)) {
+    mocu.Menu.prototype.add = function (object) {
+        mocu.Group.prototype.add.call(this, object);
+        if (this.selectedItem == null && mocu.MenuItem.prototype.isPrototypeOf(object)) {
             this.changeFocus(object);
         }
     };
@@ -103,23 +103,23 @@
         select is a function which selects the given obj.
 
         Parameters:
-        obj (MocuMenuItem)
-        - The MocuMenuItem to select.
+        obj (MenuItem)
+        - The MenuItem to select.
     */
 
-    MocuGame.MocuMenu.prototype.select = function (object) {
+    mocu.Menu.prototype.select = function (object) {
         object.onSelected();
     };
 
     /*
-        changeFocus is a function which changes the focused MocuMenuItem to the given obj.
+        changeFocus is a function which changes the focused MenuItem to the given obj.
 
         Parameters:
-        obj (MocuMenuItem)
-        - the MocuMenuItem to focus on.
+        obj (MenuItem)
+        - the MenuItem to focus on.
     */
 
-    MocuGame.MocuMenu.prototype.changeFocus = function (object) {
+    mocu.Menu.prototype.changeFocus = function (object) {
         if (this.selectedItem != null) {
             this.selectedItem.onUnfocused();
         }
@@ -132,11 +132,11 @@
         onFocusChange is callbck which is called when the focus of an object has been changed.
 
         Parameters:
-        obj (MocuMenuItem)
-        - The MocuMenuItem that is now in focus.
+        obj (MenuItem)
+        - The MenuItem that is now in focus.
     */
 
-    MocuGame.MocuMenu.prototype.onFocusChanged = function (obj) {
+    mocu.Menu.prototype.onFocusChanged = function (obj) {
         //Nothing for now
     };
 
@@ -144,7 +144,7 @@
 
     */
 
-    MocuGame.MocuMenu.prototype.onSelectionEntered = function (obj) {
+    mocu.Menu.prototype.onSelectionEntered = function (obj) {
         //Nothing for now
     }
 
@@ -157,16 +157,16 @@
     */
 
 
-    MocuGame.MocuMenu.prototype.touch = function (pointer) {
+    mocu.Menu.prototype.touch = function (pointer) {
         if (!pointer.isDown || this.isTouching) {
             this.isTouching = pointer.isDown;
             return;
         }
 
-        var point = new MocuGame.Point(pointer.position.x, pointer.position.y);
+        var point = new mocu.Point(pointer.position.x, pointer.position.y);
         for (var i = 0; i < this.objects.length; ++i) {
             var object = this.objects[i];
-            if (!MocuGame.MocuMenuItem.prototype.isPrototypeOf(object)) {
+            if (!mocu.MenuItem.prototype.isPrototypeOf(object)) {
                 continue;
             }
             else if (object.containsPoint(point)) {

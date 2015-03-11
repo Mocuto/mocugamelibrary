@@ -1,4 +1,4 @@
-﻿/*
+/*
     point.js
 
     Object with an x and y component. Also contains helper functions.
@@ -45,7 +45,7 @@
         b (Number)
         - The y coordinate.
     */
-    MocuGame.Point = function (a, b) {
+    mocu.Point = function (a, b) {
         this.x = a;
         if (typeof b === 'undefined')
             b = a;
@@ -63,7 +63,7 @@
         - Direction of the vector in degrees.
     */
 
-    MocuGame.Point.prototype.setPolar = function (mag, dir) {
+    mocu.Point.prototype.setPolar = function (mag, dir) {
         this.x = Math.cos((dir*Math.PI)/180) * mag;
         this.y = Math.sin((dir*Math.PI)/180) * mag;
     };
@@ -76,7 +76,7 @@
         (Array) Index 0: Magnitude of vector; Index 1: Direction of vector.
     */
 
-    MocuGame.Point.prototype.getPolar = function () {
-        return new Array(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), MocuGame.rad2deg(Math.atan(this.y / this.x) ));
+    mocu.Point.prototype.getPolar = function () {
+        return new Array(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), mocu.rad2deg(Math.atan(this.y / this.x) ));
     };
 })();
