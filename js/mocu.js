@@ -28,7 +28,7 @@
 	This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
 */
 
-MocuGame = {};
+mocu = {};
 
 mocu.preload = new createjs.LoadQueue();
 mocu.LEFT = "LEFT";

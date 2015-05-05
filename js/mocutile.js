@@ -1,7 +1,7 @@
 /*
     mocutile.js
 
-    Derived from the MocuSprite object, this object is used by the MocuTilemap to render its underlying tiles and allow support for dynamic,
+    Derived from the Sprite object, this object is used by the Tilemap to render its underlying tiles and allow support for dynamic,
     and animated tiles.
 
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
@@ -38,16 +38,16 @@
 (function () {
 
     /*
-        MocuTile constructor. Initializes the object with its position, size, spriteLocation, and a reference to its parent tilemap.
+        Tile constructor. Initializes the object with its position, size, spriteLocation, and a reference to its parent tilemap.
 
         Parameters:
         position (Point) - the tile's position.
         size (Point) - The tile's dimensions.
         spriteLocation (String) - The path of the image used for the tile.
-        parentTilemap (MocuTilemap) - The tilemap in which this tile will reside;
+        parentTilemap (Tilemap) - The tilemap in which this tile will reside;
     */
-    mocu.MocuTile = function (position, size, spriteLocation, parentTilemap) {
-        mocu.MocuSprite.call(this, position, size, spriteLocation);
+    mocu.Tile = function (position, size, spriteLocation, parentTilemap) {
+        mocu.Sprite.call(this, position, size, spriteLocation);
 
         this.parentTilemap = parentTilemap;
         this.animates = false;
@@ -61,10 +61,10 @@
 
         this.tileID = -1;
     };
-    mocu.MocuTile.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
-    mocu.MocuTile.constructor = mocu.MocuTile;
+    mocu.Tile.prototype = new mocu.Sprite(new mocu.Point, new mocu.Point);
+    mocu.Tile.constructor = mocu.Tile;
 
-    mocu.MocuTile.prototype.preDrawGl = function (gl, displacement) {
+    mocu.Tile.prototype.preDrawGl = function (gl, displacement) {
         var localProgram = this.program;
         if (this.useParentEffects == true) {
             if (this.parent != null) {
@@ -106,7 +106,7 @@
         return program;
     }
 
-    mocu.MocuTile.prototype.drawGl = function (gl, displacement) {
+    mocu.Tile.prototype.drawGl = function (gl, displacement) {
         if (this.animates) {
             this.animate(deltaT);
         }

@@ -1,11 +1,11 @@
 (function() {
-	mocu.MocuBackground.EXTENSION_METHODS.push(function() {
+	mocu.Background.EXTENSION_METHODS.push(function() {
 	    this.lastScrollPositionX = null;
 	    this.lastScrollPositionY = null; 
         this.primitives = 0;
 	});
 
-    mocu.MocuBackground.prototype.getCoordinateArray = function () {
+    mocu.Background.prototype.getCoordinateArray = function () {
 
         var numOfTiles = this.numOfTiles;
 
@@ -87,7 +87,7 @@
         return coords;
     }
 
-    mocu.MocuBackground.prototype.getTextureCoordinateArray = function () {
+    mocu.Background.prototype.getTextureCoordinateArray = function () {
         var coords = [];
 
         for (var x = 0; x < this.width; x += this.spriteSize.x) {
@@ -164,12 +164,12 @@
         return coords;
     }
 
-	mocu.MocuBackground.prototype.composePositionProperty = function() {
+	mocu.Background.prototype.composePositionProperty = function() {
 		return this.composeProperty(
             "position",
             "a_position",
             2,
-			mocu.MocuBackground.prototype.getCoordinateArray, 
+			mocu.Background.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight ||
                     this.lastScrollPositionX != this.scrollPosition.x || this.lastScrollPositionY != this.scrollPosition.y);
@@ -180,7 +180,7 @@
 		);
 	}
 
-	mocu.MocuBackground.prototype.composeTranslationProperty = function() {
+	mocu.Background.prototype.composeTranslationProperty = function() {
         var displacement = (mocu.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new mocu.Point(0,0) :
             this.parent.getWorldPoint();
 		return this.composeProperty(
@@ -204,7 +204,7 @@
 		)
 	}
 
-	mocu.MocuBackground.prototype.composeRotationProperty = function() {
+	mocu.Background.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
             "rotation",
             "a_rotation",
@@ -224,7 +224,7 @@
 		)
 	}
 
-	mocu.MocuBackground.prototype.composeScaleProperty = function() {
+	mocu.Background.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
             "scale",
             "a_scale",
@@ -245,7 +245,7 @@
 		)
 	}
 
-	mocu.MocuBackground.prototype.composeFadeProperty = function() {
+	mocu.Background.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
             "fade",
             "a_fade",
@@ -278,7 +278,7 @@
 		)
 	}
 
-	mocu.MocuBackground.prototype.composeAlphaProperty = function() {
+	mocu.Background.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
             "alpha",
             "a_alpha",
@@ -297,12 +297,12 @@
 		)
 	}
 
-	mocu.MocuBackground.prototype.composeTextureCoordinateProperty = function() {
+	mocu.Background.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			mocu.MocuBackground.prototype.getTextureCoordinateArray, 
+			mocu.Background.prototype.getTextureCoordinateArray, 
 			function() {
 		        var hasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             		this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||
@@ -315,15 +315,15 @@
 		)		
 	}
 
-    mocu.MocuBackground.prototype.getGlProperties = function() {
+    mocu.Background.prototype.getGlProperties = function() {
         this.numOfTiles = new mocu.Point(this.width / this.spriteSize.x, this.height / this.spriteSize.y);
 
         this.primitives = Math.ceil(this.numOfTiles.x) * Math.ceil(this.numOfTiles.y) * 4;
 
-        return mocu.MocuSprite.prototype.getGlProperties.call(this);
+        return mocu.Sprite.prototype.getGlProperties.call(this);
     }
 
-    /*mocu.MocuBackground.prototype.getGlProperties = function () {
+    /*mocu.Background.prototype.getGlProperties = function () {
         var position = this.getCoordinateArray();
         var texCoordHasChanged = (this.lastTexCoordWidth != this.width || this.lastTexCoordHeight != this.height ||
             this.lastTexCoordFrameY != this.frame.y || this.lastTexCoordFrameX != this.frame.x ||

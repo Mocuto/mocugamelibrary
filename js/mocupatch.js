@@ -1,28 +1,28 @@
 (function () {
-    mocu.MocuPatch = function (pos, size, spritePath,  spriteSize, centerPatchPosition, centerPatchSize) {
-        mocu.MocuSprite.call(this, pos, size, spritePath);
+    mocu.Patch = function (pos, size, spritePath,  spriteSize, centerPatchPosition, centerPatchSize) {
+        mocu.Sprite.call(this, pos, size, spritePath);
         this.centerPatchPosition = centerPatchPosition;
         this.centerPatchSize = centerPatchSize;
         this.spritePath = spritePath;
         this.spriteSize = spriteSize;
         
     };
-    mocu.MocuPatch.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
-    mocu.MocuPatch.constructor = mocu.MocuPatch;
+    mocu.Patch.prototype = new mocu.Sprite(new mocu.Point, new mocu.Point);
+    mocu.Patch.constructor = mocu.Patch;
 
 
-    mocu.MocuPatch.EXTENSION_METHODS = [];
+    mocu.Patch.EXTENSION_METHODS = [];
 
 
-    mocu.MocuPatch.prototype.runExtensionMethods = function() {
-        mocu.MocuSprite.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < mocu.MocuPatch.EXTENSION_METHODS.length; i++)
+    mocu.Patch.prototype.runExtensionMethods = function() {
+        mocu.Sprite.prototype.runExtensionMethods.call(this);
+        for(var i = 0; i < mocu.Patch.EXTENSION_METHODS.length; i++)
         {
-            mocu.MocuPatch.EXTENSION_METHODS[i].call(this);
+            mocu.Patch.EXTENSION_METHODS[i].call(this);
         }
     }
 
-    mocu.MocuPatch.prototype.blankCanvasDraw = function () {
+    mocu.Patch.prototype.blankCanvasDraw = function () {
         var blankCanvas = mocu.blankCanvas;
         var blankContext = mocu.blankContext;
         blankCanvas.width = this.width;
@@ -121,7 +121,7 @@
         }
     }
 
-    mocu.MocuPatch.prototype.colorEffect = function (context, displacement) {
+    mocu.Patch.prototype.colorEffect = function (context, displacement) {
         this.blankCanvasDraw();
 
         var blankCanvas = mocu.blankCanvas;
@@ -137,7 +137,7 @@
         blankContext.clearRect(0, 0, blankCanvas.width, blankCanvas.height);
     }
 
-    mocu.MocuPatch.prototype.drawGl = function (gl, displacement) {
+    mocu.Patch.prototype.drawGl = function (gl, displacement) {
         this.blankCanvasDraw();
 
         var program = this.preDrawGl(gl, displacement);
@@ -188,7 +188,7 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-    mocu.MocuPatch.prototype.draw = function (context, displacement) {
+    mocu.Patch.prototype.draw = function (context, displacement) {
         if (typeof displacement == null || typeof displacement == 'undefined')
             displacement = new mocu.Point(0, 0);
 

@@ -1,7 +1,7 @@
 /*
     mocutilemap.js
 
-    MocuTilemap, a class derived from MocuGroup, is an object which allows for the easy construction of 2D tilemaps, with configurable sizes,
+    Tilemap, a class derived from MocuGroup, is an object which allows for the easy construction of 2D tilemaps, with configurable sizes,
     and collision properties.
 
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
@@ -39,7 +39,7 @@
 (function ()
 {
     /*
-        MocuTilemap constructor. Initializes the MocuTilemap with its position, size, tile dimensions, and tiles based off the
+        Tilemap constructor. Initializes the Tilemap with its position, size, tile dimensions, and tiles based off the
         comma separated value (CSV) tilemap string, tilesheet, and the tilesheet dimensions.
 
         Parameters:
@@ -50,7 +50,7 @@
         tileSheetLocation (String) - Path to the tile sheet used for the tilemap's tiles.
         tileSheetSize (String) - The dimensions of the tile sheet used for the tiles.
     */
-    mocu.MocuTilemap = function (position, size, tileSize, tilemapString, tileSheetLocation, tileSheetSize) {
+    mocu.Tilemap = function (position, size, tileSize, tilemapString, tileSheetLocation, tileSheetSize) {
         mocu.MocuGroup.call(this, position, size);
         this.tileSize = tileSize;
         this.tileSheetLocation = tileSheetLocation;
@@ -115,8 +115,8 @@
             this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_SPRITE_FRAGMENT_SHADER);
         }
     };
-    mocu.MocuTilemap.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
-    mocu.MocuTilemap.constructor = mocu.MocuTilemap;
+    mocu.Tilemap.prototype = new mocu.Group(new mocu.Point, new mocu.Point);
+    mocu.Tilemap.constructor = mocu.Tilemap;
 
 
     /*
@@ -126,7 +126,7 @@
         (MocuTile) The tile at that 
     */
 
-    mocu.MocuTilemap.prototype.getTileAtPoint = function (point) {
+    mocu.Tilemap.prototype.getTileAtPoint = function (point) {
         if (!this.containsPoint(point)) {
             return;
         }
@@ -149,7 +149,7 @@
         (Array) an array of the tiles that exist in the range.
     */
 
-    mocu.MocuTilemap.prototype.getTilesInRange = function (position, size) {
+    mocu.Tilemap.prototype.getTilesInRange = function (position, size) {
         var pos = this.getWorldPoint();
         var positionInTilemap = new mocu.Point(point.x - pos.x, point.y - pos.y);
         var tilemapPoint = new mocu.Point(Math.floor(positionInTilemap.x / this.tileSize.x),
@@ -181,7 +181,7 @@
         (Array) an array of the tiles that exist in the range.
     */
 
-    mocu.MocuTilemap.prototype.getDenseTilesInRange = function (position, size) {
+    mocu.Tilemap.prototype.getDenseTilesInRange = function (position, size) {
         var pos = this.getWorldPoint();
         var positionInTilemap = new mocu.Point(position.x - pos.x, position.y - pos.y);
         var tilemapPoint = new mocu.Point(Math.floor(positionInTilemap.x / this.tileSize.x),

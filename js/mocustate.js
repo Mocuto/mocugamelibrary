@@ -1,9 +1,9 @@
 /*
     mocustate.js
 
-    Object derived from MocuGroup. Controls the current state of the game.
+    Object derived from Group. Controls the current state of the game.
 
-    The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
+    The Game Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
 
     Eclipse Public License, Version 1.0 (EPL-1.0) (plain text) THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
 	1. DEFINITIONS
@@ -36,14 +36,14 @@
 
 (function () {
     /*
-        MocuState constructor. Initializes the state with its target frames per second rate.
+        State constructor. Initializes the state with its target frames per second rate.
 
         Parameters:
         fps (Number)
         - The target fps rate.
     */
-    mocu.MocuState = function (fps) {
-        mocu.MocuGroup.call(this);
+    mocu.State = function (fps) {
+        mocu.Group.call(this);
         this.intendedFps = fps;
         this.d = new Date();
         this.lastRun = this.d.getTime();
@@ -54,24 +54,24 @@
         
         this.timeAccumulator = 0;        
     };
-    mocu.MocuState.prototype = new mocu.MocuGroup;
-    mocu.MocuState.constructor = mocu.MocuState;
+    mocu.State.prototype = new mocu.Group;
+    mocu.State.constructor = mocu.State;
 
     /*
         init is a function which marks the state as initialized;
     */
 
-    mocu.MocuState.prototype.init = function () {
+    mocu.State.prototype.init = function () {
         
         this.initialized = true;
     };
 
     /*
-        update is a function inherited from MocuGroup which updates all of the objects contained
+        update is a function inherited from Group which updates all of the objects contained
         within the state.
 
     */
-    mocu.MocuState.prototype.update = function () {
+    mocu.State.prototype.update = function () {
         if (!this.initialized)
             return;
         this.d = new Date();
@@ -87,7 +87,7 @@
         }
         while(this.timeAccumulator > (1000 / this.intendedFps))
         {
-        	mocu.MocuGroup.prototype.update.call(this, 1);
+        	mocu.Group.prototype.update.call(this, 1);
 	        this.fadeRect.update(1);
         	this.timeAccumulator -= (1000 / this.intendedFps);
         }
@@ -101,23 +101,23 @@
         getWorldPoint is a function inherited from MocuObject which gives the objects position relative to the state.
     */
 
-    mocu.MocuState.prototype.getWorldPoint = function () {
+    mocu.State.prototype.getWorldPoint = function () {
         return new mocu.Point(this.x, this.y);
     }
 
     /*
-        draw is a function inherited from MocuGroup which renders all of its contained objects
+        draw is a function inherited from Group which renders all of its contained objects
         onto the canvas.
 
         Parameters:
-        context (Object)
+        context (MocuObject)
         - The canvas context on which the objects will be rendered.
         point (Point)
         - The displacement given to the objects it renders
     */
 
-    mocu.MocuState.prototype.draw = function (context, point) {
-        mocu.MocuGroup.prototype.draw.call(this, context, point);
+    mocu.State.prototype.draw = function (context, point) {
+        mocu.Group.prototype.draw.call(this, context, point);
         if (typeof this.fadeRect != "undefined") {
             this.fadeRect.visible = true;
             //this.fadeRect.draw(context, point);
@@ -125,46 +125,46 @@
     };
 
     /*
-        onTouch is a function which is called by MocuGame when the screen receives a touch event.
+        onTouch is a function which is called by Game when the screen receives a touch event.
 
         Paramaters:
         pointer (Pointer)
         - The pointer corresponding to the touch event.
     */
 
-    mocu.MocuState.prototype.onTouch = function (pointer) {
+    mocu.State.prototype.onTouch = function (pointer) {
         //Nothing for now
     };
 
     /*
-        onMouse is a function which is called by MocuGame when the screen receives a mouse event.
+        onMouse is a function which is called by Game when the screen receives a mouse event.
 
         Paramaters:
         pointer (Pointer)
         - The pointer corresponding to the mouse event.
     */
 
-    mocu.MocuState.prototype.onMouse = function (pointer) {
+    mocu.State.prototype.onMouse = function (pointer) {
         //Nothing for now
     };
 
     /*
-        onPen is a function which is called by MocuGame when the screen receives a mouse event.
+        onPen is a function which is called by Game when the screen receives a mouse event.
 
         Paramaters:
         pointer (Pointer)
         - The pointer corresponding to the pen event.
     */
 
-    mocu.MocuState.prototype.onPen = function (pointer) {
+    mocu.State.prototype.onPen = function (pointer) {
         //Nothing for now
     };
 
     /*
-        endState is a function which clears all objects from the MocuState.
+        endState is a function which clears all objects from the State.
     */
 
-    mocu.MocuState.prototype.endState = function () {
+    mocu.State.prototype.endState = function () {
         this.objects.splice(0, this.objects.length);
     };
 

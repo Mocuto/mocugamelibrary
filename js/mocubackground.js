@@ -53,7 +53,7 @@
     */
 
     mocu.Background = function (point, spriteSize, actualSize, spritePath) {
-        mocu.MocuSprite.call(this, point, actualSize, spritePath);
+        mocu.Sprite.call(this, point, actualSize, spritePath);
         this.spriteSize = spriteSize;
         this.scrollVelocity = new mocu.Point(0, 0);
         this.scrollPosition = new mocu.Point(0, 0);
@@ -62,14 +62,14 @@
             this.program = mocu.renderer.loadProgram(mocu.renderer.gl, mocu.DEFAULT_SPRITE_VERTEX_SHADER, mocu.DEFAULT_BACKGROUND_FRAGMENT_SHADER);
         }
     }
-    mocu.Background.prototype = new mocu.MocuSprite(new mocu.Point, mocu.Point);
+    mocu.Background.prototype = new mocu.Sprite(new mocu.Point, mocu.Point);
     mocu.Background.constructor = mocu.Background;
 
     mocu.Background.EXTENSION_METHODS = [];
 
 
     mocu.Background.prototype.runExtensionMethods = function() {
-        mocu.MocuSprite.prototype.runExtensionMethods.call(this);
+        mocu.Sprite.prototype.runExtensionMethods.call(this);
         for(var i = 0; i < mocu.Background.EXTENSION_METHODS.length; i++)
         {
             mocu.Background.EXTENSION_METHODS[i].call(this);
@@ -86,7 +86,7 @@
     */
 
     mocu.Background.prototype.update = function (deltaT) {
-        mocu.MocuSprite.prototype.update.call(this, deltaT);
+        mocu.Sprite.prototype.update.call(this, deltaT);
         this.scrollPosition.x += this.scrollVelocity.x * deltaT;
         this.scrollPosition.y += this.scrollVelocity.y * deltaT;
         while (this.scrollPosition.x >= this.spriteSize.x)
@@ -100,7 +100,7 @@
     }
 
     mocu.Background.prototype.preDrawGl = function (gl, displacement) {
-        var program = mocu.MocuSprite.prototype.preDrawGl.call(this, gl, displacement);
+        var program = mocu.Sprite.prototype.preDrawGl.call(this, gl, displacement);
 
         var scrollPositionLocation = gl.getUniformLocation(program, "u_scrollPosition");
 
@@ -155,7 +155,7 @@
     }
 
     /*
-        draw is a function inherited from MocuSprite which draws the Background on to the game
+        draw is a function inherited from Sprite which draws the Background on to the game
         canvas, using a displacement based off its parent object.
 
         Parameters:

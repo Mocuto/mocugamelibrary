@@ -1,7 +1,7 @@
 /*
     notification.js
 
-    Object derived from MocuText. Renders scrolling text onto the screen.
+    Object derived from Text. Renders scrolling text onto the screen.
 
     The MocuGame Library is © 2012-2013 Olutobi Akomolede and is made available under the Eclipse Public License
 
@@ -51,18 +51,18 @@
     */
 
     mocu.Notification = function (point, size, text, delay) {
-        mocu.MocuText.call(this, point, size, "");
+        mocu.Text.call(this, point, size, "");
         this.max_delay = delay;
         this.fulltext = text;
         this.showtext = "";
         this.delay = this.max_delay;
         this.charloc = 0;
     };
-    mocu.Notification.prototype = new mocu.MocuText(new mocu.Point, new mocu.Point);
+    mocu.Notification.prototype = new mocu.Text(new mocu.Point, new mocu.Point);
     mocu.Notification.constructor = mocu.Notification;
 
     /*
-        update is a function inherited from MocuText, which updates the scrolling text and adds characters.
+        update is a function inherited from Text, which updates the scrolling text and adds characters.
 
         Parameters:
         deltaT (Number)
@@ -70,7 +70,7 @@
     */
 
     mocu.Notification.prototype.update = function (deltaT) {
-        mocu.MocuText.prototype.update.call(this, deltaT);
+        mocu.Text.prototype.update.call(this, deltaT);
         if (this.charloc <= this.fulltext.length) {
             this.delay -= 1*deltaT;
             if (this.delay <= 0) {

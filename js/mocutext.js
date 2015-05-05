@@ -48,8 +48,8 @@
         - The text of the MocuText.
     */
 
-    mocu.MocuText = function (point, size, text) {
-        mocu.MocuSprite.call(this, point, size);
+    mocu.Text = function (point, size, text) {
+        mocu.Sprite.call(this, point, size);
         this.text = text;
         this.font = "10pt Helvetica";
         this.fade.r = 0;
@@ -61,21 +61,21 @@
         this.strokeWidth = 1;
         this.numberOfLines = 1;
     };
-    mocu.MocuText.prototype = new mocu.MocuSprite(new mocu.Point, new mocu.Point);
-    mocu.MocuText.constructor = mocu.MocuText;
+    mocu.Text.prototype = new mocu.Sprite(new mocu.Point, new mocu.Point);
+    mocu.Text.constructor = mocu.Text;
 
-    mocu.MocuText.EXTENSION_METHODS = [];
+    mocu.Text.EXTENSION_METHODS = [];
 
-    mocu.MocuText.prototype.runExtensionMethods = function() {
+    mocu.Text.prototype.runExtensionMethods = function() {
         mocu.MocuObject.prototype.runExtensionMethods.call(this);
-        for(var i = 0; i < mocu.MocuText.EXTENSION_METHODS.length; i++)
+        for(var i = 0; i < mocu.Text.EXTENSION_METHODS.length; i++)
         {
-            mocu.MocuText.EXTENSION_METHODS[i].call(this);
+            mocu.Text.EXTENSION_METHODS[i].call(this);
         }
     }
 
     /*
-        draw is a function which renders the MocuText onto the canvas.
+        draw is a function which renders the Text onto the canvas.
 
         Paramaters:
         context (Object)
@@ -84,11 +84,11 @@
         - The offset of which the text is drawn.
     */
 
-    mocu.MocuText.prototype.getRenderingSize = function () {
+    mocu.Text.prototype.getRenderingSize = function () {
         return new mocu.Point(this.width * this.scale.x * mocu.uniscale, this.height * this.getNumberOfLines() * this.scale.y * mocu.uniscale);
     }
 
-    mocu.MocuText.prototype.getNumberOfLines = function () {
+    mocu.Text.prototype.getNumberOfLines = function () {
 
         //Set the font and color and alignment
         mocu.blankContext.fillStyle = "rgb( " + Math.ceil(this.fade.r * 255) + ", " + Math.ceil(this.fade.g * 255) + ", " + Math.ceil(this.fade.b * 255) + ")";
@@ -114,7 +114,7 @@
         return numberOfLines
     }
 
-    mocu.MocuText.prototype.draw = function (context, displacement) {
+    mocu.Text.prototype.draw = function (context, displacement) {
         if (typeof this.text == "undefined") {
             return;
         }
@@ -191,9 +191,9 @@
     };
 
     /*
-        animate is a function inherited from MocuSprite, overriden to do nothing.
+        animate is a function inherited from Sprite, overriden to do nothing.
     */
-    mocu.MocuText.prototype.animate = function () {
+    mocu.Text.prototype.animate = function () {
         //Do nothing
     };
 })();

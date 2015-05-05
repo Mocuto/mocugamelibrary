@@ -42,7 +42,7 @@
         position (Point) - The position the camera starts at.
     */
     mocu.Camera = function (position) {
-        mocu.MocuGroup.call(this, position, new mocu.Point(1, 1));
+        mocu.Group.call(this, position, new mocu.Point(1, 1));
         var targetHeight = (mocu.targetResolutionWidth * 9) / 16
         this.centerMarker = new mocu.MocuObject(new mocu.Point(mocu.targetResolutionWidth / 2, targetHeight / 2),
             new mocu.Point(1, 1));
@@ -73,7 +73,7 @@
 
   
     };
-    mocu.Camera.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
+    mocu.Camera.prototype = new mocu.Group(new mocu.Point, new mocu.Point);
     mocu.Camera.constructor = mocu.Camera;
 
     /*
@@ -147,7 +147,7 @@
         deltaT (Number) - The amount of time since the last update call.
     */
     mocu.Camera.prototype.update = function (deltaT) {
-        mocu.MocuGroup.prototype.update.call(this, deltaT);
+        mocu.Group.prototype.update.call(this, deltaT);
         //this.zoom += 0.1;
         if (this.trackingObject != null) {
             this.chaseTracker(deltaT);

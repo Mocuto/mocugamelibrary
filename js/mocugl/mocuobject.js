@@ -1,6 +1,6 @@
 (function() {
 
-	mocu.Object.EXTENSION_METHODS.push(function() {
+	mocu.MocuObject.EXTENSION_METHODS.push(function() {
 		if(typeof mocu.renderer === "undefined") {
 			return;
 		}
@@ -26,17 +26,17 @@
         this.lastGlAlpha = {};
 	})
 
-	if(typeof mocu.Object.old === "undefined") {
-		mocu.Object.old = {};
-		mocu.Object.old.constructor = mocu.Object.constructor;
-		mocu.Object.old.prototype = mocu.Object.prototype;
+	if(typeof mocu.MocuObject.old === "undefined") {
+		mocu.MocuObject.old = {};
+		mocu.MocuObject.old.constructor = mocu.MocuObject.constructor;
+		mocu.MocuObject.old.prototype = mocu.MocuObject.prototype;
 	}
 
-	    mocu.Object.prototype.getRenderingSize = function () {
+	    mocu.MocuObject.prototype.getRenderingSize = function () {
         return new mocu.Point(this.width * this.scale.x * mocu.uniscale, this.height * this.scale.y * mocu.uniscale);
     }
 
-    mocu.Object.prototype.getCoordinateArray = function () {
+    mocu.MocuObject.prototype.getCoordinateArray = function () {
         var absWidth = (this.width / 2) * mocu.uniscale;
         var absHeight = (this.height / 2) * mocu.uniscale;
 
@@ -50,7 +50,7 @@
         ];
     };
 
-    mocu.Object.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
+    mocu.MocuObject.prototype.setPositionAttribute = function (gl, program, coordinateArray) {
         if (typeof coordinateArray === "undefined") {
             coordinateArray = this.getCoordinateArray();
         }
@@ -84,7 +84,7 @@
 
     };
 
-    mocu.Object.prototype.setResolutionUniform = function (gl, program, resolution) {
+    mocu.MocuObject.prototype.setResolutionUniform = function (gl, program, resolution) {
         var resolutionLocation = (typeof this.resolutionLocation == "undefined") ? gl.getUniformLocation(program, "u_resolution") : this.resolutionLocation;
         this.resolutionLocation = resolutionLocation;
 
@@ -96,14 +96,14 @@
         }
     }
 
-    mocu.Object.prototype.setScaleUniform = function (gl, program) {
+    mocu.MocuObject.prototype.setScaleUniform = function (gl, program) {
         //Provide location of the scale uniform
         var scaleLocation = (typeof this.scaleLocation == "undefined") ? gl.getUniformLocation(program, "u_scale") : this.scaleLocation;
         this.scaleLocation = scaleLocation;
         gl.uniform2fv(scaleLocation, new Float32Array([this.scale.x, this.scale.y])); //Set the scake uniform
     }
 
-    mocu.Object.prototype.setRotationUniform = function (gl, program) {
+    mocu.MocuObject.prototype.setRotationUniform = function (gl, program) {
         //Provide locaiton of the rotation uniform
         var rotateLocation = (typeof this.rotateLocation == "undefined") ? gl.getUniformLocation(program, "u_rotate") : this.rotateLocation;
         this.rotateLocation = rotateLocation;
@@ -116,7 +116,7 @@
         }
     }
 
-    mocu.Object.prototype.setTranslationUniform = function (gl, program, displacement) {
+    mocu.MocuObject.prototype.setTranslationUniform = function (gl, program, displacement) {
         //Provide location of the translate uniform
         if (this.__proto__.__proto__ == null) {
             return;
@@ -129,14 +129,14 @@
         gl.uniform2fv(translateLocation, translate); //Set the translate uniform
     };
 
-    mocu.Object.prototype.setAlphaUniform = function (gl, program) {
+    mocu.MocuObject.prototype.setAlphaUniform = function (gl, program) {
         var alphaLocation = (typeof this.alphaLocation == "undefined") ? gl.getUniformLocation(program, "u_alpha") : this.alphaLocation;
         this.alphaLocaiton = alphaLocation;
 
         gl.uniform1f(alphaLocation, this.alpha);
     };
 
-    mocu.Object.prototype.setCameraTranslationUniform = function (gl, program) {
+    mocu.MocuObject.prototype.setCameraTranslationUniform = function (gl, program) {
         var scrollRate = new mocu.Point(0.0, 0.0);
         if (this.cameraTraits != null) {
             scrollRate = this.cameraTraits.scrollRate
@@ -158,13 +158,13 @@
         }
     };
 
-    mocu.Object.prototype.setCameraZoomUniform = function (gl, program) {
+    mocu.MocuObject.prototype.setCameraZoomUniform = function (gl, program) {
         var cameraZoomLocation = (typeof this.cameraZoomLocation == "undefined") ? gl.getUniformLocation(program, "u_cameraZoom") : this.cameraZoomLocation;
         this.cameraZoomLocation = cameraZoomLocation;
         gl.uniform1f(cameraZoomLocation, mocu.camera.zoom);
     };
 
-    mocu.Object.prototype.getTextureCoordinateArray = function () {
+    mocu.MocuObject.prototype.getTextureCoordinateArray = function () {
         var texWidth = 1.0;
         var texHeight = 1.0;
 
@@ -178,11 +178,11 @@
         ]);
     };
 
-    mocu.Object.prototype.getTexture = function(gl) {
+    mocu.MocuObject.prototype.getTexture = function(gl) {
         return mocu.renderer.getCachedTexture(gl, {src : mocu.OBJECT_TEXTURE_SRC})
     }
 
-    mocu.Object.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
+    mocu.MocuObject.prototype.prepareTexture = function (gl, texture, program, textureCoordinateArray) {
         // provide texture coordinates for the rectangle.
         if (typeof textureCoordinateArray === "undefined") {
             textureCoordinateArray = this.getTextureCoordinateArray();
@@ -205,7 +205,7 @@
         return texture;
     };
 
-    mocu.Object.prototype.setTextureParameters = function (gl) {
+    mocu.MocuObject.prototype.setTextureParameters = function (gl) {
         //Set the parameters so we can render any size image.
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -213,7 +213,7 @@
         gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     };
 
-    mocu.Object.prototype.preDrawGl = function (gl, displacement) {
+    mocu.MocuObject.prototype.preDrawGl = function (gl, displacement) {
         //Extend in child classes
 
         var localProgram = this.program;
@@ -246,7 +246,7 @@
         return program;
     };
 
-    mocu.Object.prototype.drawGl = function (gl, displacement) {
+    mocu.MocuObject.prototype.drawGl = function (gl, displacement) {
 
         if (typeof displacement == null || typeof displacement == 'undefined') {
             displacement = new mocu.Point(0, 0);
@@ -268,23 +268,23 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
 
-	mocu.Object.prototype.composeProperty = function(name, glslName, components, constructorFunc, hasChangedFunc) {
+	mocu.MocuObject.prototype.composeProperty = function(name, glslName, components, constructorFunc, hasChangedFunc) {
 		//var property = {};
 		//property["value"] = constructorFunc.call(this);
 		//property["hasChanged"] = hasChangedFunc.call(this);
         var values = constructorFunc.call(this);
-        var property = new mocu.MocuGlProperty(name, glslName, components, hasChangedFunc.call(this));
+        var property = new mocu.GlProperty(name, glslName, components, hasChangedFunc.call(this));
         property.values = values;
 
 		return property;
 	}
 
-	mocu.Object.prototype.composePositionProperty = function() {
+	mocu.MocuObject.prototype.composePositionProperty = function() {
 		return this.composeProperty(
             "position",
             "a_position",
             2,
-			mocu.Object.prototype.getCoordinateArray, 
+			mocu.MocuObject.prototype.getCoordinateArray, 
 			function() {
 				var hasChanged = (this.lastGlWidth != this.width || this.height != this.lastGlHeight) ;
 				this.lastGlWidth = this.width;
@@ -294,8 +294,8 @@
 		);
 	}
 
-	mocu.Object.prototype.composeTranslationProperty = function() {
-        var displacement = (mocu.Object.prototype.isPrototypeOf(this.parent) == false) ? new mocu.Point(0,0) :
+	mocu.MocuObject.prototype.composeTranslationProperty = function() {
+        var displacement = (mocu.MocuObject.prototype.isPrototypeOf(this.parent) == false) ? new mocu.Point(0,0) :
             this.parent.getWorldPoint();
 		return this.composeProperty(
             "translation", //TODO:Redefine this as constants
@@ -316,7 +316,7 @@
 		)
 	}
 
-	mocu.Object.prototype.composeRotationProperty = function() {
+	mocu.MocuObject.prototype.composeRotationProperty = function() {
 		return this.composeProperty(
             "rotation",
             "a_rotation",
@@ -334,7 +334,7 @@
 		)
 	}
 
-	mocu.Object.prototype.composeScaleProperty = function() {
+	mocu.MocuObject.prototype.composeScaleProperty = function() {
 		return this.composeProperty(
             "scale",
             "a_scale",
@@ -353,7 +353,7 @@
 		)
 	}
 
-	mocu.Object.prototype.composeFadeProperty = function() {
+	mocu.MocuObject.prototype.composeFadeProperty = function() {
 		return this.composeProperty(
             "fade",
             "a_fade",
@@ -383,7 +383,7 @@
 		)
 	}
 
-	mocu.Object.prototype.composeAlphaProperty = function() {
+	mocu.MocuObject.prototype.composeAlphaProperty = function() {
 		return this.composeProperty(
             "alpha",
             "a_alpha",
@@ -398,12 +398,12 @@
 		)
 	}
 
-	mocu.Object.prototype.composeTextureCoordinateProperty = function() {
+	mocu.MocuObject.prototype.composeTextureCoordinateProperty = function() {
 		return this.composeProperty(
             "texCoord",
             "a_texCoord",
             2,
-			mocu.Object.prototype.getCoordinateArray, 
+			mocu.MocuObject.prototype.getCoordinateArray, 
 			function() {
 		        var hasChanged = this.hasTexCoordChanged
         		this.hasTexCoordChanged = false;
@@ -412,7 +412,7 @@
 		)		
 	}
 
-	mocu.Object.prototype.getGlProperties = function() {
+	mocu.MocuObject.prototype.getGlProperties = function() {
 
 		return {
             "position" : this.composePositionProperty(),
@@ -426,7 +426,7 @@
 		
 	};
 
-    mocu.Object.prototype.getAdditionalGlProperties = function() {
+    mocu.MocuObject.prototype.getAdditionalGlProperties = function() {
         return {};
     }
 })();

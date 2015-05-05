@@ -140,7 +140,7 @@
                 if (batchIndex >= this.lastBatches.length || batchKey != this.lastBatches[batchIndex].key) {
                     if(batchKey !== lastBatchKey) 
                     {
-                        lastBatch = new mocu.MocuGlBatch(batchKey, mocu.renderer.generatePropertySet());
+                        lastBatch = new mocu.GlBatch(batchKey, mocu.renderer.generatePropertySet());
                         lastBatchKey = batchKey
                         batches.push(lastBatch);
                         indexInBatch = 0;
@@ -158,7 +158,7 @@
                 }
 
                 /*if(batchKey != lastBatchKey) {
-                    lastBatch = new mocu.MocuGlBatch(batchKey, mocu.renderer.generatePropertySet());
+                    lastBatch = new mocu.GlBatch(batchKey, mocu.renderer.generatePropertySet());
                     lastBatchKey = batchKey
                     batches.push(lastBatch);
                 }*/

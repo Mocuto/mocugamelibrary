@@ -58,11 +58,11 @@
     */
 
     mocu.MenuItem = function (pos, size, menu, leftItem, rightItem, topItem, bottomItem) {
-        mocu.MocuGroup.call(this, pos, size);
+        mocu.Group.call(this, pos, size);
         this.adjacentItems = { "left": leftItem, "right": rightItem, "top": topItem, "bottom": bottomItem };
         this.parentMenu = menu;
     };
-    mocu.MenuItem.prototype = new mocu.MocuGroup();
+    mocu.MenuItem.prototype = new mocu.Group();
     mocu.MenuItem.constructor = mocu.MenuItem;
     
 

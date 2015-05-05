@@ -36,7 +36,7 @@
 
 (function () {
     /*
-        MocuSprite constructor. Initializes the object with its location, size, and sprite image
+        Sprite constructor. Initializes the object with its location, size, and sprite image
 
         Parameters:
         point (Point) 
@@ -47,7 +47,7 @@
         - The path to the sprite file.
     */
 
-    mocu.MocuSprite = function (point, size, spriteLocation, dontPreload) {
+    mocu.Sprite = function (point, size, spriteLocation, dontPreload) {
         mocu.MocuObject.call(this, point, size);
 
         if (typeof dontPreload == "undefined") {
@@ -66,7 +66,7 @@
 
         this.frame = new mocu.Point(0, 0);
 
-        this.anim = new mocu.MocuAnimation("Default", "0,0", 20, true);
+        this.anim = new mocu.Animation("Default", "0,0", 20, true);
         this.animations.push(this.anim);
 
         this.flip = new mocu.Point(1, 1);
@@ -84,14 +84,14 @@
         this.animates = true;
 
     }
-    mocu.MocuSprite.prototype = new mocu.MocuObject(new mocu.Point, new mocu.Point);
-    mocu.MocuSprite.constructor = mocu.MocuSprite;
-    mocu.MocuSprite.prototype.constructor = mocu.MocuSprite.constructor;
+    mocu.Sprite.prototype = new mocu.MocuObject(new mocu.Point, new mocu.Point);
+    mocu.Sprite.constructor = mocu.Sprite;
+    mocu.Sprite.prototype.constructor = mocu.Sprite.constructor;
 
-    mocu.MocuSprite.EXTENSION_METHODS = [];
+    mocu.Sprite.EXTENSION_METHODS = [];
 
     /*
-        addAnimation is a function which adds a new animation to the MocuSprite's set of animations
+        addAnimation is a function which adds a new animation to the Sprite's set of animations
 
         Parameters:
         name (String)
@@ -104,8 +104,8 @@
         - Whether the animation loops.
     */
 
-    mocu.MocuSprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
-        var newanim = new mocu.MocuAnimation(name, coords, speed, loop, reverse);
+    mocu.Sprite.prototype.addAnimation = function (name, coords, speed, loop, reverse) {
+        var newanim = new mocu.Animation(name, coords, speed, loop, reverse);
         this.animations.push(newanim);
     }
 
@@ -118,7 +118,7 @@
 
     */
 
-    mocu.MocuSprite.prototype.play = function (name, forceRestart) {
+    mocu.Sprite.prototype.play = function (name, forceRestart) {
         forceRestart = (typeof forceRestart == "undefined") ? false : forceRestart;
         if (typeof this.anim != "undefined") {
             if (this.anim.name === name && forceRestart || this.anim.name !== name)
@@ -142,14 +142,14 @@
 
 
     /*
-        hasAnimationName is a function which returns true if the MocuSprite contains an animation with the specified name
+        hasAnimationName is a function which returns true if the Sprite contains an animation with the specified name
 
         Parameters:
         name (String)
         - The animation name to search for
     */
 
-    mocu.MocuSprite.prototype.hasAnimationNamed = function (name, forceRestart) {
+    mocu.Sprite.prototype.hasAnimationNamed = function (name, forceRestart) {
 
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].name == name) {
@@ -160,7 +160,7 @@
     }
 
     /*
-        animate is a function which updates the MocuSprite's displayed frame based on its current
+        animate is a function which updates the Sprite's displayed frame based on its current
         animation
 
         Parameters:
@@ -168,13 +168,13 @@
         - Time elapsed since the last update call.
     */
 
-    mocu.MocuSprite.prototype.animate = function (deltaT) {
+    mocu.Sprite.prototype.animate = function (deltaT) {
         this.frame.x = this.anim.coordinates[this.anim.frame].x;
         this.frame.y = this.anim.coordinates[this.anim.frame].y;
     }
     
     /*
-        update is a function derived from MocuObject which updates the properties of the caller
+        update is a function derived from Object which updates the properties of the caller
         based on its current state.
 
         Paramaters:
@@ -182,7 +182,7 @@
         - Time elapsed since the last update call.
     */
 
-    mocu.MocuSprite.prototype.update = function (deltaT) {
+    mocu.Sprite.prototype.update = function (deltaT) {
         mocu.MocuObject.prototype.update.call(this, deltaT);
     }
 
@@ -197,7 +197,7 @@
         - The offset given the the object's drawing.
     */
 
-    mocu.MocuSprite.prototype.colorEffect = function (context, displacement) {
+    mocu.Sprite.prototype.colorEffect = function (context, displacement) {
         var blankCanvas = mocu.blankCanvas;
         var blankContext = mocu.blankContext;
         blankCanvas.width = this.width;
@@ -241,7 +241,7 @@
         - The offset given the the object's drawing.
     */
 
-    mocu.MocuSprite.prototype.draw = function (context, displacement) {
+    mocu.Sprite.prototype.draw = function (context, displacement) {
 
         if (this.animates) {
             this.animate(deltaT);

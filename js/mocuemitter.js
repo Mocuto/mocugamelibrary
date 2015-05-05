@@ -81,7 +81,7 @@
 
         this.start();
     }
-    mocu.Emitter.prototype = new mocu.MocuGroup(new mocu.Point, new mocu.Point);
+    mocu.Emitter.prototype = new mocu.Group(new mocu.Point, new mocu.Point);
     mocu.Emitter.constructor = mocu.Emitter;
     mocu.Emitter.defaultProperties = ["x", "y", "width", "height", "velocity.x", "velocity.y", "acceleration.x", "acceleration.y", "img"];
 

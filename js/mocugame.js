@@ -281,7 +281,7 @@
         mocu.gameHeight = gameBounds.y;
         mocu.uniscale = Math.ceil((mocu.resolution.x / mocu.targetResolutionWidth) * 10) / 10;
 
-        mocu.renderer = new mocu.MocuRenderer(context);
+        mocu.renderer = new mocu.WebGL(context);
 
         mocu.touchEnabled = false;
 
@@ -291,7 +291,7 @@
             document.body.addEventListener("MSPointerUp", mocu.onPointerUp, false);
             document.body.addEventListener("MSPointerMove", mocu.onPointerMove, false);
         }
-        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
+        mocu.camera = new mocu.Camera(new mocu.Point(0, 0));
     };
 
     /*

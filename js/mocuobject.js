@@ -87,7 +87,7 @@
 
         this.restitution = 0.0;
         
-        this.cameraTraits = new mocu.MocuCameraTraits(new mocu.Point(1, 1), true, true);
+        this.cameraTraits = new mocu.CameraTraits(new mocu.Point(1, 1), true, true);
 
         this.isWorldPointRight = false;
 
