@@ -55,9 +55,12 @@
     mocu.targetResolutionWidth = 1920;
 
 
-    /*
-        requests a frame from the window. Please kindly ignore this.
+    mocu.isNode = (typeof require !== "undefined") ? require('detect-node') : false;
+
+     /*
+        requests a frame from the window.
     */
+
     window.requestAnimFrame = (function (callback) {
         return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -65,9 +68,12 @@
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame ||
         function (callback) {
+            console.log("Request");
             window.setTimeout(callback, 1000 / 60);
         };
     })();
+
+    requestAnimFrame = window.requestAnimFrame;
 
     /*
         add is a function which adds a MocuObject to the objects array.
@@ -420,6 +426,17 @@
         mocu.animate();
     };
 
+    /**
+        initHeadless is a function that starts the game processing, but only the logical aspect
+    */
+
+    mocu.initForNode = function(state) {
+        mocu.switchState(state);
+        mocu.currentState.fadeRect = new mocu.MocuObject(new mocu.Point(0,0), new mocu.Point(0,0));
+
+        mocu.animateForNode();
+    }
+
     /*
         switchState is a function which clears
         all objects from the currentState, then switches the current MocuState to the one specified.
@@ -437,7 +454,11 @@
         }
         mocu.add(state);
         mocu.currentState = state;
-        mocu.currentState.fadeRect = mocu.camera.fadeRect;
+
+        if(mocu.camera != null)
+        {
+            mocu.currentState.fadeRect = mocu.camera.fadeRect;
+        }
 
         if ((autoInit == true) || (typeof autoInit === "undefined")) {
             mocu.currentState.init();
@@ -583,6 +604,26 @@
         requestAnimFrame(function () {
             mocu.animate();
         });
+    };
+
+    /**
+        animateHeadless is a function which TODO: finish this
+    */
+
+    mocu.animateForNode = function () {
+        // clear
+        var gameloop = require("node-gameloop");
+
+        var id = gameloop.setGameLoop(function(delta) {
+            for (var i = 0; i < mocu.objects.length; i++) {
+                if (mocu.objects[i].exists) {
+                    if (mocu.objects[i].active) {
+                        mocu.objects[i].update();
+                    }
+                }
+            }
+        }, 1000 / 60);
+
     };
     
     /*
