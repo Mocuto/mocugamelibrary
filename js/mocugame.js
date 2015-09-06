@@ -250,7 +250,7 @@
         mocu.gameHeight = gameBounds.y;
         mocu.uniscale = Math.ceil((mocu.resolution.x / mocu.targetResolutionWidth) * 10) / 10;
 
-        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
+        mocu.camera = new mocu.Camera(new mocu.Point(0, 0));
 
         mocu.touchEnabled = false;
         mocu.isWindows8 = true;
@@ -334,7 +334,7 @@
         mocu.gameHeight = gameBounds.y;
         mocu.uniscale = (mocu.resolution.x / mocu.targetResolutionWidth);
 
-        mocu.camera = new mocu.MocuCamera(new mocu.Point(0, 0));
+        mocu.camera = new mocu.Camera(new mocu.Point(0, 0));
     };
 
     /*

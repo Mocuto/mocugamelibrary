@@ -254,7 +254,7 @@
     }
 
     mocu.WebGL.prototype.getBufferForAttribute = function(gl, attributeName) {
-        //if((attributeName in this.bufferCache) == false) 
+        if((attributeName in this.bufferCache) == false) 
         {
             var buffer = gl.createBuffer();
             this.bufferCache[attributeName] = buffer;
