@@ -8,13 +8,7 @@ Welcome to the MocuGame Library 0.9.1, by me, Mocuto.
 	tilemaps, sound effects and looping music, a timeline-based animation system and much more. The main goal of the MocuGame Library is for quick,
 	modern production of HTML5 games that are on par with Flash/Action Script 3 offerings. As the web matures, the MocuGame Library will be
 	brought closer to this goal.
-
-0.1 Author
------------------------------------------------------------
-	The author of this JavaScript game library is the Great Lord Mocuto.
 	
-	Follow me on Twitter: @GreatLordMocuto
-	Follow me on Instagram: @Mocuto
 
 0.1 Dependencies
 -----------------------------------------------------------
@@ -113,109 +107,11 @@ Welcome to the MocuGame Library 0.9.1, by me, Mocuto.
 		The "myCanvas" string can be changed to whatever you like.
 
 
-2.1	Getting Started With The MocuGame Library for Windows 8
------------------------------------------------------------
-	Getting started with the MocuGame Library for Windows 8 is a relatively straight forward process, not much unlike the process for
-	normal web pages. 
-	
-	- First, in Visual Studio, create a blank JavaScript Windows Store App.
-	
-	- Now in your File Explorer, navigate to your extracted MocuGame Library directory. In the MocuGame Library directory, 
-	you will find a folder named js.
-	
-	- In Visual Studio, add a folder named js to your project if it is not already there. If you are using the unminized version of the MGL, add
-	a folder named Dependencies to the js folder.
-	
-	- In Visual Studio, right click your js folder, then navigate to Add -> Add Existing. In the File Explorer dialog, navigate to the js folder of
-	the extracted MocuGame Library folder, and select all of the javascript files (but not Dependencies folder). Then click the drop down arrow
-	next to "Add" and select "Add as Link"
-	
-	- If you are using the unminimized version of the MocuGame Library, repeat these steps for the Dependencies folder in your Visual Studio 
-	Project and the corresponding Dependencies folder in the extracted MocuGame Library folder.
-	
-	In all of your html files that make use of the MocuGame Library, make these changes:
-	
-		If you are using the minimized MGL, simply add this to your <head></head> of the html file:
-		
-			<script src="/js/mocugame-min-0.9.1.js"></script>
-		
-		If you are using the unminimized MGL, add the following to the <head></head> of the html file:
-		
-		    <script src="js/Dependencies/audio-fx.min.js"></script>
-		    <script src="js/Dependencies/keyLib.js"></script>
-		    <script src="js/Dependencies/preloadjs.min.js"></script>
-
-		    <script src="js/mocu.js"></script>
-		    <script src="js/point.js"></script>
-		    <script src="js/pointer.js"></script>
-		    <script src="js/event.js"></script>
-		    <script src="js/action.js"></script>
-		    <script src="js/timeslot.js"></script>
-		    <script src="js/timeline.js"></script>
-		    <script src="js/rgba.js"></script>
-		    <script src="js/mocucameratraits.js"></script>
-		    <script src="js/mocuobject.js"></script>
-		    <script src="js/mocuanimation.js"></script>
-		    <script src="js/mocusprite.js"></script>
-		    <script src="js/mocubackground.js"></script>
-		    <script src="js/mocutext.js"></script>
-		    <script src="js/notification.js"></script>
-		    <script src="js/mocugroup.js"></script>
-		    <script src="js/mocutile.js"></script>
-		    <script src="js/mocutilemap.js"></script>
-		    <script src="js/mocustate.js"></script>
-		    <script src="js/mocuzone.js"></script>
-		    <script src="js/mocucamera.js"></script>
-		    <script src="js/mocucamerazone.js"></script>
-		    <script src="js/mocuemitter.js"></script>
-		    <script src="/js/mocumenu.js"></script>
-		    <script src="/js/mocumenuitem.js"></script>
-		    <script src="js/mocusound.js"></script>
-		    <script src="js/mocumusic.js"></script>
-		    <script src="js/mocugame.js"></script>
-	
-	If you are using the minimized version of the MGL, the following changes will need to be made to your default.js file:
-		
-		Replace the existing app.onactivated function with:
-		
-		app.onactivated = function (args) {
-	        if (args.detail.kind === activation.ActivationKind.launch) {
-	            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
-	                //Call MocuGame.prepareCanvasForWindows8(canvasId, gameBounds, resolution) here
-
-	                //Overload MocuGame.onLoaded here
-
-	                //Call MocuGame.init(state, imageManifest, musicManifest, soundManifest) here
-
-	                MocuGame.targetResolutionWidth = window.innerWidth;
-	                MocuGame.prepareCanvasForWindows8("myCanvas", new MocuGame.Point(6400, 4800),
-	                    new MocuGame.Point(window.innerWidth, window.innerHeight));
-
-	                var state = new MocuGame.MocuState(60);
-	                state.add(new MocuGame.MocuText(new MocuGame.Point(0, 0), new MocuGame.Point(100, 100), "Hello MocuGame!"));
-
-	                MocuGame.init(state);
-
-	            } else {
-	                // TODO: This application has been reactivated from suspension.
-	            }
-	            args.setPromise(WinJS.UI.processAll());
-	        }
-    	};
-
 2.2	Documentation
 -----------------------------------------------------------
 	Documentation of the MocuGame Library is available at https://mocugamelibrary.codeplex.com/documentation
 
 
-3.0	Contact Information
+3.0	Contact
 -----------------------------------------------------------
-	For any questions, concerns, feedback, or ideas, please email me at mocuto@outlook.com
-
-4.0	Credits
------------------------------------------------------------
-	Credits to Flixel, the ActionScript 3 game library that inspired a lot of the design choices I made with the MocuGame Library
-
-5.0 Change Log
------------------------------------------------------------
-	No changes yet!
+	For any questions or feedback please email me at mocuto@outlook.com
